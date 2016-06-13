@@ -17,6 +17,25 @@ EOF
   echo "$3 $4" > /sys/bus/usb-serial/drivers/option1/new_id
 }
 
+init_ak020()
+{
+	if (lsusb | grep 15eb:7d0e > /dev/null && [ -e /dev/ttyUSB0 ])
+	then
+		echo AT+CFUN=1 > /dev/ttyUSB0
+		sleep 1
+		return 0
+	fi
+	echo -n "Configuring modem ... "
+	cat << EOF > /etc/udev/rules.d/40-ak-020.rules
+ACTION=="add", ATTRS{idVendor}=="15eb", ATTRS{idProduct}=="a403", RUN+="/usr/sbin/usb_modeswitch --std-eject --default-vendor 0x15eb --default-product 0xa403 --target-product 0x15eb --target-product 0x7d0e"
+ACTION=="add", ATTRS{idVendor}=="15eb", ATTRS{idProduct}=="7d0e", RUN+="/sbin/modprobe usbserial vendor=0x15eb product=0x7d0e"
+EOF
+	udevadm control --reload
+	echo done.
+	echo Please re-attach modem or reboot.
+	exit 1
+}
+
 dialup()
 {
   cat > /etc/wvdial.conf << EOF
@@ -53,25 +72,6 @@ EOF
   while [ 1 ] ; do wvdial ; sleep 60 ; done
 }
 
-init_ak020()
-{
-	if (lsusb | grep 15eb:7d0e > /dev/null && [ -e /dev/ttyUSB0 ])
-	then
-		echo AT+CFUN=1 > /dev/ttyUSB0
-		sleep 1
-		return 0
-	fi
-	echo -n "Configuring modem ... "
-	cat << EOF > /etc/udev/rules.d/40-ak-020.rules
-ACTION=="add", ATTRS{idVendor}=="15eb", ATTRS{idProduct}=="a403", RUN+="/usr/sbin/usb_modeswitch --std-eject --default-vendor 0x15eb --default-product 0xa403 --target-product 0x15eb --target-product 0x7d0e"
-ACTION=="add", ATTRS{idVendor}=="15eb", ATTRS{idProduct}=="7d0e", RUN+="/sbin/modprobe usbserial vendor=0x15eb product=0x7d0e"
-EOF
-	udevadm control --reload
-	echo done.
-	echo Please re-attach modem or reboot.
-	exit 1
-}
-
 if [ $UID != 0 ]
 then
 	echo please execute as root or use sudo command.
@@ -88,4 +88,7 @@ then
 	echo Found AK-020
 	init_ak020 && \
 	dialup /dev/ttyUSB0 soracom.io sora sora
+else
+	echo No supported modem found. Please wait for a while and re-execute script.
+	exit 1
 fi
