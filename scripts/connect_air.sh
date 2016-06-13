@@ -1,12 +1,5 @@
 #!/bin/bash
-# USB modem device information
-default_vendor=1c9e
-default_product=98ff
-target_vendor=1c9e
-target_product=6801
-tty=/dev/ttyUSB2
-
-init_modem()
+init_fs01bu()
 {
   usb_modeswitch -t <<EOF
 DefaultVendor= 0x$1
@@ -22,6 +15,25 @@ EOF
   modprobe usbserial vendor=0x$3 product=0x$4
   modprobe -v option
   echo "$3 $4" > /sys/bus/usb-serial/drivers/option1/new_id
+}
+
+init_ak020()
+{
+	if (lsusb | grep 15eb:7d0e > /dev/null && [ -e /dev/ttyUSB0 ])
+	then
+		echo AT+CFUN=1 > /dev/ttyUSB0
+		sleep 1
+		return 0
+	fi
+	echo -n "Configuring modem ... "
+	cat << EOF > /etc/udev/rules.d/40-ak-020.rules
+ACTION=="add", ATTRS{idVendor}=="15eb", ATTRS{idProduct}=="a403", RUN+="/usr/sbin/usb_modeswitch --std-eject --default-vendor 0x15eb --default-product 0xa403 --target-product 0x15eb --target-product 0x7d0e"
+ACTION=="add", ATTRS{idVendor}=="15eb", ATTRS{idProduct}=="7d0e", RUN+="/sbin/modprobe usbserial vendor=0x15eb product=0x7d0e"
+EOF
+	udevadm control --reload
+	echo done.
+	echo Please re-attach modem or reboot.
+	exit 1
 }
 
 dialup()
@@ -60,6 +72,23 @@ EOF
   while [ 1 ] ; do wvdial ; sleep 60 ; done
 }
 
-lsusb | grep OMEGA && \
-init_modem $default_vendor $default_product $target_vendor $target_product && \
-dialup $tty soracom.io sora sora
+if [ $UID != 0 ]
+then
+	echo please execute as root or use sudo command.
+	exit 1
+fi
+
+if (lsusb | grep 1c9e: > /dev/null)
+then
+	echo Found FS01BU
+	init_fs01bu 1c9e 98ff 1c9e 6801 && \
+	dialup /dev/ttyUSB2 soracom.io sora sora
+elif (lsusb | grep 15eb: > /dev/null)
+then
+	echo Found AK-020
+	init_ak020 && \
+	dialup /dev/ttyUSB0 soracom.io sora sora
+else
+	echo No supported modem found. Please wait for a while and re-execute script.
+	exit 1
+fi
