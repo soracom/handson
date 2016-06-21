@@ -15,11 +15,7 @@
 [Air SIM の登録](#section1-5)<br>
 [ユーザーコンソールでの Air SIM の登録](#section1-6)<br>
 
-#### [2章 Raspberry Piのセットアップ](#section2)
-[OSをダウンロードする](#section2-1)<br>
-[SDカードにOSを書き込む](#section2-2)<br>
-[Raspberry Pi を起動する](#section2-3)<br>
-[Raspberry Pi に SSH 接続する](#section2-4)<br>
+#### [2章 Raspberry Piへの接続](#section2)
 
 #### [3章 Air SIMを使って、インターネットに接続する](#section3)
 [Raspberry Pi に USBドングルを接続する](#section3-1)<br>
@@ -139,19 +135,16 @@ SORACOMではSIMの登録や「使用開始」「休止」「解約」といっ�
 
 
 ## <a name = "section2">2章 Raspberry Piへの接続
-### Raspberry Piへの接続とセットアップ
+### Raspberry Piへの接続
 
+> SORACOMが実施するハンズオンでは、事前にOSを初期化した Raspberry Pi を用意してあります。
+> 割り当てられたRaspberryPiと、そのIPアドレスをご確認ください。
+> 使用する Raspberry Pi のアドレスは、 192.168.123.(100+ドングルの番号) です
+>
+> 例: ５番のドングルであれば、 192.168.123.105
 
-```
-割り当てられたRaspberryPiと、そのIPアドレスをご確認ください。
-使用する Raspberry Pi のアドレスは、 192.168.123.(100+ドングルの番号) です
-
-例: ５番のドングルであれば、 192.168.123.105
-
-```
-
-PCからRaspberry Piに接続(SSH)します。
-PCのターミナルを立ち上げ、以下のコマンドを実行してください。
+自分の端末からRaspberry Piに接続(SSH)します。
+ターミナルを立ち上げ、以下のコマンドを実行してください。
 
 ```
 ~$ ssh pi@192.168.123.xxx (割り当てられたIPアドレスを指定してください)
@@ -172,10 +165,7 @@ pi@raspberrypi ~ $
 
 ```
 
-
-
-
- 
+Windowsの場合には、PuttyやTeraTerm等を使ってログインしてください。その際、ユーザ名に pi を指定する必要があります。
 
 ## <a name="section3">3章 Air SIMを使って、インターネットに接続する
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
@@ -222,7 +212,7 @@ pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
 ###  <a name = "section3−3">3.	接続スクリプトのダウンロード
 
 以下に、モデムの初期化、APNの設定、ダイアルアップなどを行うスクリプトが用意されています。
-https://gist.github.com/j3tm0t0/65367f971c3d770557f3
+http://soracom-files.s3.amazonaws.com/connect_air.sh
 
 以下のコマンドを実行し、このスクリプトをダウンロードし、接続用シェルスクリプトを作成します。
 
@@ -692,8 +682,6 @@ This をクリックし、テキストボックスに maker と入れると、�
 
 
  Event Name を設定します(ここでは、sensor とします)
- ![](image/7-11.png)
-
 
 これでトリガーの設定は完了です。次にアクションとして、Twitter の設定を行います。
 That をクリックし、テキストボックスに twitter と入れ、Twitter チャンネルを選び、Connect を押します。
