@@ -62,4 +62,18 @@ Disk disk4 ejected
 ```
 
 ### イメージの書き込み(Windowsの場合)
-TODO
+#### SDカードの接続
+PC本体にSDカードスロットがない場合には、USB接続カードリーダー/ライターなどを使って接続して下 さい。
+![USB接続カードリーダー/ライター](../common/image/raspbian-install-003.jpg)
+
+#### Win32 Disk Imager のインストール
+[Win32 Disk Imager](https://osdn.jp/projects/sfnet_win32diskimager/)のサイトから、インストーラーをダウンロード・実行します。
+
+#### イメージファイルの書き込み
+Win32 Disk Imager を起動し、右上のDeviceがSDカードのドライブ名である事を確認します。  
+ドライブ名の左のボタンを押し、イメージファイルの場所を指定します。  
+Write を押すと、SDカードへの書き込みが開始されます。
+![Win32 Disk Imager](../common/image/raspbian-install-004.png)
+
+しばらくして、Write Successful. と表示されれば、書き込み完了です。
+![Win32 Disk Imager](../common/image/raspbian-install-005.png)
