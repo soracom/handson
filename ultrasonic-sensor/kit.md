@@ -207,9 +207,11 @@ PC本体にSDカードスロットがない場合には、USB接続カー�
 Win32 Disk Imager を起動し、右上のDeviceがSDカードのドライブ名である事を確認します。  
 ドライブ名の左のボタンを押し、イメージファイルの場所を指定します。  
 Write を押すと、SDカードへの書き込みが開始されます。
+
 ![Win32 Disk Imager](../common/image/raspbian-install-004.png)
 
 しばらくして、Write Successful. と表示されれば、書き込み完了です。
+
 ![Win32 Disk Imager](../common/image/raspbian-install-005.png)
 
 ### <a name="ssh-login">Raspberry Pi への ログイン</a>
