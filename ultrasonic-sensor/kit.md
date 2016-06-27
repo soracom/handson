@@ -2,10 +2,7 @@
 
 # ハンズオン用テキスト
 
-
-### 2016年05月14日
 ### 株式会社ソラコム
-
 
 #### [1章 ユーザーコンソールを使用してAir SIMを管理する](#section1)
 [SORACOM ユーザーアカウントの作成と設定](#section1-1) <br>
@@ -15,7 +12,7 @@
 [Air SIM の登録](#section1-5)<br>
 [ユーザーコンソールでの Air SIM の登録](#section1-6)<br>
 
-#### [2章 Raspberry Piへの接続](#section2)
+#### [2章 Raspberry Piのセットアップ](#section2)
 
 #### [3章 Air SIMを使って、インターネットに接続する](#section3)
 [Raspberry Pi に USBドングルを接続する](#section3-1)<br>
@@ -132,27 +129,123 @@ SORACOMではSIMの登録や「使用開始」「休止」「解約」といっ�
 
 
 なお、初めての通信、もしくは、ユーザーコンソール/APIで使用開始処理を行うことで、状態は「使用中」に変わります。 まだ通信を行いたくない場合は、ユーザーコンソールもしくはAPIで休止処理を行ってください。これにより「休止中」の状態となり通信は行われません。
-
 
-## <a name = "section2">2章 Raspberry Piへの接続
-### Raspberry Piへの接続
+## <a name = "section2">2章 Raspberry Piのセットアップ</a>
+### <a name="raspbian-install">Raspbian のインストール</a>
+#### Raspbian とは
+Raspberry Pi で使用する事ができる OS は様々なものがありますが、最も多く使われているのは、[Raspbian](https://www.raspbian.org) と呼ばれる Raspberry Pi での動作に最適化された Debian ベースの Linux です。
 
-> SORACOMが実施するハンズオンでは、事前にOSを初期化した Raspberry Pi を用意してあります。
-> 割り当てられたRaspberryPiと、そのIPアドレスをご確認ください。
-> 使用する Raspberry Pi のアドレスは、 192.168.123.(100+ドングルの番号) です
->
-> 例: ５番のドングルであれば、 192.168.123.105
+SORACOMのハンズオンでは、特に理由がない限りは Raspbian を利用する前提でスクリプトや手順が作られています。ここでは、Raspbian のインストール(MicroSDへの書き込み)方法について、解説します。
 
-自分の端末からRaspberry Piに接続(SSH)します。
-ターミナルを立ち上げ、以下のコマンドを実行してください。
+#### 準備
+必要なものは以下となります。
+
+- PC(Mac、Windowsなど)
+- SDカードリーダー/ライター (PC本体にSDスロットがある場合には不要)
+- Micro SD カード (8GB以上が望ましい)  
+ ※もし初代Raspberry Piを利用する場合には、通常サイズのSDカードを用意して下さい
+
+#### OSイメージファイルのダウンロード
+Raspbian は、デスクトップGUI環境を含む通常版と、CUIのみのLite版があります。  
+本ハンズオンでは Raspberry Pi にキーボードやマウスを接続して操作を行わないので、Lite版を利用します。
+
+Raspbian Lite の イメージは、下記URLのミラーサイトからダウンロードするとよいでしょう。  
+http://ftp.jaist.ac.jp/pub/raspberrypi/raspbian_lite/images/
+
+- [2016-05-27バージョン(292MB)](http://ftp.jaist.ac.jp/pub/raspberrypi/raspbian_lite/images/raspbian_lite-2016-05-31/2016-05-27-raspbian-jessie-lite.zip) をダウンロード
+- zipファイルを解凍して、イメージファイル(2016-05-27-raspbian-jessie-lite.img)を取り出す
+
+#### イメージの書き込み(Macの場合)
+##### SDカードの接続
+PC本体にSDカードスロットがある場合には、変換アダプタを介して接続して下さい。
+![SDカードアダプタ](../common/image/raspbian-install-001.jpg) ![SDカードスロット](../common/image/raspbian-install-002.jpg)  
+もしPC本体にSDカードスロットがない場合には、USB接続カードリーダー/ライターなどを使って接続して下 さい。
+![USB接続カードリーダー/ライター](../common/image/raspbian-install-003.jpg)
+
+##### disk番号の確認
+接続をしたら、ターミナルを起動して diskutil list というコマンドを実行します。
 
 ```
-~$ ssh pi@192.168.123.xxx (割り当てられたIPアドレスを指定してください)
-The authenticity of host '192.168.123.xxx (192.168.123.xxx)' can't be established.
-ECDSA key fingerprint is db:ed:1b:37:f2:98:c6:f4:d8:6d:cf:5c:31:6a:16:58.
+~$ diskutil list
+(略) :
+/dev/disk4 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:     FDisk_partition_scheme                        *15.6 GB    disk4
+   1:                 DOS_FAT_32 NO NAME                 15.6 GB    disk4s1
+```
+
+この場合、容量やフォーマットから disk2 がSDカードである事がわかります。環境によって disk3 であったり disk4 であったりする事がありますので、適宜読み替えて下さい。
+
+> 注意： もし誤って disk0 や disk1 に書き込んでしまった場合、OSが起動で きなくなったりする可能性がありますので、十分注意して下さい
+
+##### イメージファイルの書き込み
+diskの番号が確認できたら、パーティションをマウント解除し、disk全体にイメージを書き込みます。 書き込みが終わったら eject して、SDカードを取り外します。
+
+```
+~$ diskutil unmount disk4s1
+Volume NO NAME on disk4s1 unmounted
+~$ cd Downloads (イメージファイルを解凍した場所mに応じて読み替えてください)
+~/Downloads$ sudo dd if=2016-05-27-raspbian-jessie-lite.img of=/dev/rdisk4 bs=1m
+Password: (パスワードを打ち込む)
+1048576 bytes transferred in 0.427695 secs (2451691 bytes/sec)
+1323+0 records in
+1323+0 records out
+1387266048 bytes transferred in 128.769184 secs (10773277 bytes/sec)
+~/Downloads$ diskutil eject disk4
+Disk disk4 ejected
+```
+
+#### イメージの書き込み(Windowsの場合)
+##### SDカードの接続
+PC本体にSDカードスロットがない場合には、USB接続カードリーダー/ライターなどを使って接続して下 さい。
+![USB接続カードリーダー/ライター](../common/image/raspbian-install-003.jpg)
+
+##### Win32 Disk Imager のインストール
+[Win32 Disk Imager](https://osdn.jp/projects/sfnet_win32diskimager/)のサイトから、インストーラーをダウンロード・実行します。
+
+##### イメージファイルの書き込み
+Win32 Disk Imager を起動し、右上のDeviceがSDカードのドライブ名である事を確認します。  
+ドライブ名の左のボタンを押し、イメージファイルの場所を指定します。  
+Write を押すと、SDカードへの書き込みが開始されます。
+![Win32 Disk Imager](../common/image/raspbian-install-004.png)
+
+しばらくして、Write Successful. と表示されれば、書き込み完了です。
+![Win32 Disk Imager](../common/image/raspbian-install-005.png)
+
+### <a name="ssh-login">Raspberry Pi への ログイン</a>
+Raspberry Pi へ SSH を使ってログインします。
+ユーザ名とパスワードは、それぞれ pi / raspberry になります。
+
+#### 接続先の調べ方
+Raspberry Pi は接続元の PC と同じネットワークに有線LANで接続されているものとします。
+
+接続元のPCが以下のいずれかであれば、Raspberry Pi のIPアドレスが分からなくてもログインが可能です。
+
+- Mac を使用している
+- Linux 等でAvahiデーモンが動作している
+- Windows で Bonjour サービスをインストールしている(iTunesのインストールでもOK)
+- Windows10 で mDNS を有効にしている
+
+上記の場合、raspberrypi.local というホスト名でLANに接続された Raspberry Pi に接続が出来ます。
+
+もし上記に該当しない場合、HDMIケーブルを使ってPCモニターやテレビなどに Raspberry Pi を接続し、下記のように画面上に表示される IP アドレスを確認する事が出来ます。
+
+```
+My IP address is 192.168.1.xxx
+```
+
+#### ssh接続
+接続先がわかったら、自分の端末からRaspberry Piに接続(SSH)します。
+
+MacやLinuxの場合には、ターミナルを立ち上げ、以下のコマンドを実行してください。
+
+```
+$ ssh pi@raspberrypi.local
+The authenticity of host 'raspberrypi.local (fe80::bb8:70cb:474d:220%en0)' can't be established.
+ECDSA key fingerprint is SHA256:MOOy0pXAzbJMFh4ZzkYzQS7Dl6YeU2y6TT0mRYKb/MA.
 Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added '192.168.123.xxx' (ECDSA) to the list of known hosts.
-pi@192.168.123.3's password: (raspberry と入力)
+Warning: Permanently added 'raspberrypi.local' (ECDSA) to the list of known hosts.
+pi@raspberrypi.local's password: (raspberry と入力)
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -160,12 +253,15 @@ individual files in /usr/share/doc/*/copyright.
 
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
-Last login: Thu Sep 24 15:51:43 2015 from 192.168.123.254
-pi@raspberrypi ~ $
-
+Last login: Sun Jun 26 07:09:55 2016 from 192.168.1.101
+pi@raspberrypi:~ $
 ```
 
-Windowsの場合には、PuttyやTeraTerm等を使ってログインしてください。その際、ユーザ名に pi を指定する必要があります。
+Windowsの場合は、[TeraTerm](https://osdn.jp/projects/ttssh2/)を使用するといいでしょう。
+
+パッケージをダウンロードしてインストールした後、プログラムを立ち上げて以下のように接続先を指定して接続します。
+
+![TeraTerm接続先](../common/image/connect-air-001.png)![TeraTerm認証情報](../common/image/connect-air-002.png)
 
 ## <a name="section3">3章 Air SIMを使って、インターネットに接続する
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
@@ -190,11 +286,11 @@ Air SIMを取り外します。Air SIMの端子を触らないように気をつ
 
 
 ### <a name = "section3−2">2.	必要なパッケージのインストール
+> ここから先の作業は、Raspberry Pi にログインした状態でコマンドを実行してください
 
 USBドングルを使用するために、以下のパッケージをインストールし、RaspberryPiをセットアップします。
 -	usb-modeswitch
 -	wvdial
-
 
 ###### usb-modeswitchとwvdialのインストールコマンド
 
