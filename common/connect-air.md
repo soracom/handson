@@ -82,7 +82,9 @@ USBドングルを使用するために、以下のパッケージをインス�
 ```
 pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
 ```
-> 	パッケージのインストール中、
->  Sorry.  You can retry the autodetection at any time by running "wvdialconf".
->     (Or you can create /etc/wvdial.conf yourself.)
+>  パッケージのインストール中、  
+>  Sorry.  You can retry the autodetection at any time by running "wvdialconf".  
+>     (Or you can create /etc/wvdial.conf yourself.)  
 と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
+
+### 接続スクリプトのダウンロードと実行
