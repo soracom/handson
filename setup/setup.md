@@ -1,4 +1,4 @@
-# 「SORACOM x RaspberryPi ハンズオン <br> 〜超音波センサー編〜」
+# 「SORACOM x RaspberryPi ハンズオン 」
 
 # ハンズオン用テキスト
 
@@ -13,6 +13,8 @@
 [ユーザーコンソールでの Air SIM の登録](#section1-6)<br>
 
 #### [2章 Raspberry Piのセットアップ](#section2)
+<a name="raspbian-install"> Raspbian のインストール</a>
+<a name="ssh-login"> Raspberry Pi への ログイン</a>
 
 #### [3章 Air SIMを使って、インターネットに接続する](#section3)
 [Raspberry Pi に USBドングルを接続する](#section3-1)<br>
@@ -29,16 +31,17 @@
 
 ## はじめに
 
-このハンズオンでは、SORACOMとRaspberry Piと超音波センサを用いてクラウドにデータを送り可視化したり、IFTTTを利用してデータ転送からTwitterへの呟きに連動させます。まずは、SORACOMのユーザーアカウントを作成してみましょう。
+このハンズオンでは、SORACOMとRaspberryPiのセットアップを行います。
+まずは、SORACOMのユーザーアカウントを作成してみましょう。
 
-## <a name="section1">1章 ユーザーコンソールを使用してAir SIMを管理する
-ここでは、SORACOM ユーザーコンソール(以降、ユーザーコンソール)を使用して、SORACOM AirのSIM (以降、Air SIM)をSORACOMのユーザーアカウントに登録します。ユーザーコンソールを使用するために、ユーザーアカウントの作成、および、支払情報の設定(クレジットカード情報)の登録を行います。
+## <a name="section1"> 1章 ユーザーコンソールを使用してAir SIMを管理する</a>
+ここでは、SORACOM ユーザーコンソール(以降、ユーザーコンソール)を使用して、SORACOM AirのSIM (以降、Air SIM)を SORACOMのユーザーアカウントに登録します。ユーザーコンソールを使用するために、ユーザーアカウントの作成、および、支払情報の設定(クレジットカード情報)の登録を行います。
 
 
-#### <a name="section1-1">1.SORACOM ユーザーアカウントの作成と設定
+#### <a name="section1-1"> 1.SORACOM ユーザーアカウントの作成と設定</a>
 ユーザーコンソールを使用するためには、SORACOMユーザーアカウント(以降、SORACOMアカウント)の作成が必要となります。アカウントの作成には、メールアドレスが必要となります。
 
-#### <a name="section1-2">SORACOM アカウントの作成
+#### <a name="section1-2"> SORACOM アカウントの作成</a>
 ユーザーコンソールをご利用いただくためには、まずSORACOM アカウントを作成してください。
 https://console.soracom.io/#/signup にアクセスします。
 「アカウント作成」画面が表示されますのでメールアドレスおよびパスワードを入力して、[アカウントを作成] ボタンをクリックします。
@@ -56,7 +59,7 @@ https://console.soracom.io/#/signup にアクセスします。
 
 自動的にログイン画面に遷移しますので、メールアドレスとパスワードを入力してログインしてください。
 
-#### <a name="section1-3">ユーザーコンソールへのログイン
+#### <a name="section1-3"> ユーザーコンソールへのログイン</a>
 ログイン画面が表示されるので、アカウント作成時に登録したメールアドレスとパスワードを入力し、 [ログイン] ボタンをクリックしてください。(ログイン画面が表示されない場合はブラウザで https://console.soracom.io にアクセスします。)
 ![](image/4.png)
 
@@ -68,7 +71,7 @@ https://console.soracom.io/#/signup にアクセスします。
 
 
 
-#### <a name="section1-4">支払情報の設定
+#### <a name="section1-4"> 支払情報の設定</a>
 通信料の支払い方法はクレジットカードになります。クレジットカードの情報を登録するには、メイン画面上部のユーザー名から[お支払い方法設定]を開きます。
 
 ![](image/6.png)
@@ -80,9 +83,9 @@ https://console.soracom.io/#/signup にアクセスします。
 ![](image/7.png)
 
 
-### <a name="section1-5">3.Air SIM の登録
+### <a name="section1-5"> 3.Air SIM の登録</a>
 
-#### <a name="section1-6">ユーザーコンソールでの Air SIM の登録
+#### <a name="section1-6"> ユーザーコンソールでの Air SIM の登録</a>
 
 ユーザーコンソールにログインして、Air SIM の登録を行います。左上の [SIM登録] ボタンをクリックします。
 ![](image/8.png)
@@ -107,8 +110,8 @@ SORACOMではSIMの登録や「使用開始」「休止」「解約」といっ�
 
 なお、初めての通信、もしくは、ユーザーコンソール/APIで使用開始処理を行うことで、状態は「使用中」に変わります。 まだ通信を行いたくない場合は、ユーザーコンソールもしくはAPIで休止処理を行ってください。これにより「休止中」の状態となり通信は行われません。
 
-## <a name = "section2">2章 Raspberry Piのセットアップ</a>
-### <a name="raspbian-install">Raspbian のインストール</a>
+## <a name = "section2"> 2章 Raspberry Piのセットアップ</a>
+### <a name="raspbian-install"> Raspbian のインストール</a>
 #### Raspbian とは
 Raspberry Pi で使用する事ができる OS は様々なものがありますが、最も多く使われているのは、[Raspbian](https://www.raspbian.org) と呼ばれる Raspberry Pi での動作に最適化された Debian ベースの Linux です。
 
@@ -191,7 +194,7 @@ Write を押すと、SDカードへの書き込みが開始されます。
 
 ![Win32 Disk Imager](../common/image/raspbian-install-005.png)
 
-### <a name="ssh-login">Raspberry Pi への ログイン</a>
+### <a name="ssh-login"> Raspberry Pi への ログイン</a>
 Raspberry Pi へ SSH を使ってログインします。
 ユーザ名とパスワードは、それぞれ pi / raspberry になります。
 
@@ -242,10 +245,10 @@ Windowsの場合は、[TeraTerm](https://osdn.jp/projects/ttssh2/)を使用す�
 
 ![TeraTerm接続先](../common/image/connect-air-001.png)![TeraTerm認証情報](../common/image/connect-air-002.png)
 
-## <a name="section3">3章 Air SIMを使って、インターネットに接続する
+## <a name="section3"> 3章 Air SIMを使って、インターネットに接続する</a>
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
 
-### <a name = "section3−１">1.	Raspberry Pi に USBドングルを接続する
+### <a name = "section3−１"> 1.	Raspberry Pi に USBドングルを接続する</a>
 
 ![](image/3-1.jpg)
 
@@ -264,7 +267,7 @@ Air SIMを取り外します。Air SIMの端子を触らないように気をつ
 ![](image/3-6.jpg)
 
 
-### <a name = "section3−2">2.	必要なパッケージのインストール
+### <a name = "section3−2"> 2.	必要なパッケージのインストール</a>
 > ここから先の作業は、Raspberry Pi にログインした状態でコマンドを実行してください
 
 USBドングルを使用するために、以下のパッケージをインストールし、RaspberryPiをセットアップします。
@@ -284,7 +287,7 @@ pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
 と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
 ```
 
-###  <a name = "section3−3">3.	接続スクリプトのダウンロード
+###  <a name = "section3−3"> 3.	接続スクリプトのダウンロード</a>
 
 以下に、モデムの初期化、APNの設定、ダイアルアップなどを行うスクリプトが用意されています。
 http://soracom-files.s3.amazonaws.com/connect_air.sh
@@ -301,7 +304,7 @@ pi@raspberrypi ~ $ sudo mv connect_air.sh /usr/local/sbin/
 
 ```
 
-### <a name = "section3−4">4.	Air SIM を使って、インターネットに接続する
+### <a name = "section3−4"> 4.	Air SIM を使って、インターネットに接続する</a>
 
 接続の準備ができましたので、接続スクリプトを実行します。接続スクリプトは root 権限で実行する必要があるため、sudoで実行します。
 
@@ -399,13 +402,13 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 
  
 
-## <a name = "section4"> 4章 ユーザーコンソールによる通信の確認
+## <a name = "section4"> 4章 ユーザーコンソールによる通信の確認</a>
 インターネットに接続できましたので、ユーザーコンソールからデータ通信量、利用料金を確認して、監視機能を設定しましょう。
 
 
-### <a name = "section4-1">1.	データ通信量と利用料金の確認
+### <a name = "section4-1"> 1.	データ通信量と利用料金の確認</a>
 
-#### <a name = "section4-2">Air SIMのデータ通信量の確認
+#### <a name = "section4-2"> Air SIMのデータ通信量の確認</a>
 ユーザーコンソールでは、データ通信量をSORACOM AirのSIM(以降、Air SIM)ごとにチャート形式で確認することができます。<br>
 データ通信量を確認したいAir SIMにチェックを入れ [詳細] ボタンをクリックします。
 ![](image/4-1.png)
@@ -419,7 +422,7 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 
 ![](image/4-2.png)
 
-#### <a name = "section4-3">利用料金の確認
+#### <a name = "section4-3"> 利用料金の確認</a>
 
 ユーザーコンソールからデータ通信料金と基本料金を確認できます。
 メイン画面上部のナビゲーションバーから [課金情報] を選択します。
@@ -445,7 +448,7 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 ✓	タグ、グループ
 ```
 
-#### <a name = "section4-4">監視機能の確認
+#### <a name = "section4-4"> 監視機能の確認</a>
 通信量にしきい値を設定し、超えた場合にメールでの通知と通信帯域制限をすることができます。監視できる項目は以下のとおりです。
 ●	各 SIM の日次通信量
 ●	各 SIM の今月の合計通信量
