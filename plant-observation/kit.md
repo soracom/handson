@@ -239,3 +239,98 @@ http://bit.ly/temp-graph
 > 全ての SIM カードからの情報が集まっていますので、もし自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi=[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
 
 ![](image/5-12.png)
+
+## USBカメラを使う
+Raspberry Pi に USBのカメラ(いわゆるWebカメラ)を接続してみましょう。本キットでは Buffalo 社の　BSWHD06M シリーズを使用しています。
+
+### セットアップ
+#### 接続
+USB カメラは、Raspberry Pi の USB スロットに接続して下さい。
+
+(TODO: 接続する写真)
+
+#### パッケージのインストール
+fswebcam というパッケージを使用します。apt-getコマンドでインストールして下さい。
+
+```
+pi@raspberrypi:~ $ sudo apt-get install -y fswebcam
+```
+
+> トラブルシュート：  
+> E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?  
+> と表示されたら、 sudo apt-get update を行ってから、再度 apt-get install してみてください
+
+#### コマンドラインによるテスト撮影
+インストールが出来たら、実際に撮影してみましょう。先ほどインストールした、fswebcam コマンドを使います。 -r オプションで解像度を指定する事が出来ます。
+
+```
+pi@raspberrypi:~ $ fswebcam -r 640x480 test.jpg
+--- Opening /dev/video0...
+Trying source module v4l2...
+/dev/video0 opened.
+No input was specified, using the first.
+--- Capturing frame...
+Captured frame in 0.00 seconds.
+--- Processing captured image...
+Writing JPEG image to 'test.jpg'.
+```
+
+scp コマンドなどを使って、PCにファイルを転送して開いてみましょう。
+
+##### Macの場合
+```
+~$ scp pi@raspberrypi.local:test.jpg .
+pi@raspberrypi.local's password:
+test.jpg                                      100%  121KB 121.0KB/s   00:00    
+~$ open test.jpg
+```
+
+TODO: 何かのテスト画像
+
+##### Windowsの場合
+TODO: winscp を使う？
+
+> もし難しければ、次に進んで Web ブラウザ経由でも確認出来ますので、スキップして構いません
+
+### Webカメラとして使う
+Raspberry PiをWebサーバにして、アクセスした時にリアルタイムの画像を確認できるようにしてみましょう。
+
+まずapache2 パッケージをインストールします
+```
+pi@raspberrypi:~ $ sudo apt-get install -y apache2
+```
+
+インストールが出来たら、CGIが実行出来るようにします。
+```
+pi@raspberrypi:~ $ sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
+pi@raspberrypi:~ $ sudo gpasswd -a www-data video
+Adding user www-data to group video
+pi@raspberrypi:~ $ sudo service apache2 restart
+```
+
+最後にCGIプログラムをダウンロードして設置します。
+```
+pi@raspberrypi:~ $ cd /usr/lib/cgi-bin/
+pi@raspberrypi:/usr/lib/cgi-bin $ sudo wget https://soracom-files.s3.amazonaws.com/camera
+--2016-07-14 08:04:34--  https://soracom-files.s3.amazonaws.com/camera
+Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 54.231.225.58
+Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.225.58|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 374 [text/plain]
+Saving to: ‘camera’
+
+camera              100%[=====================>]     374  --.-KB/s   in 0s     
+
+2016-07-14 08:04:35 (1.45 MB/s) - ‘camera’ saved [374/374]
+
+pi@raspberrypi:/usr/lib/cgi-bin $ sudo chmod +x camera
+```
+
+ここまで設定をしたら、Webブラウザでアクセスしてみましょう。
+
+http://raspberrypi.local/cgi-bin/camera
+
+> Windowsの場合や、複数のRaspberry PiがLAN内にある場合には、http://{RaspberryPiのIPアドレス}/cgi-bin/camera でアクセスをしてみて下さい。
+
+リロードをするたびに、新しく画像を撮影しますので、撮影する対象の位置決めをする際などに使えると思います。  
+一度位置を固定したら、カメラの位置や対象物の下にビニールテープなどで位置がわかるように印をしておくとよいでしょう。
