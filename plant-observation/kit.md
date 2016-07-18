@@ -334,3 +334,91 @@ http://raspberrypi.local/cgi-bin/camera
 
 リロードをするたびに、新しく画像を撮影しますので、撮影する対象の位置決めをする際などに使えると思います。  
 一度位置を固定したら、カメラの位置や対象物の下にビニールテープなどで位置がわかるように印をしておくとよいでしょう。
+
+### 定点観測を行う
+毎分カメラで撮影した画像を所定のディレクトリに保存してみましょう。
+
+#### 準備
+
+まず保存するディレクトリを作成して、アクセス権限を変更します。
+
+```
+pi@raspberrypi:~ $ sudo mkdir /var/www/html/image
+pi@raspberrypi:~ $ sudo chown -R pi:pi /var/www/html/
+```
+
+#### スクリプトのダウンロードと実行
+
+次にスクリプトをダウンロードしてテスト実行してみましょう。
+
+```
+pi@raspberrypi:~ $ wget http://soracom-files.s3.amazonaws.com/take_picture.sh
+--2016-07-19 02:19:01--  http://soracom-files.s3.amazonaws.com/take_picture.sh
+Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 54.231.228.9
+Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.228.9|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 444 [text/plain]
+Saving to: ‘take_picture.sh’
+
+take_picture.sh           100%[====================================>]     444  --.-KB/s   in 0.001s
+
+2016-07-19 02:19:01 (451 KB/s) - ‘take_picture.sh’ saved [444/444]
+pi@raspberrypi:~ $ chmod +x take_picture.sh
+pi@raspberrypi:~ $ ./take_picture.sh
+checking current temperature ... 29.75 [c]
+taking picture ...
+--- Opening /dev/video0...
+Trying source module v4l2...
+/dev/video0 opened.
+No input was specified, using the first.
+--- Capturing frame...
+Captured frame in 0.00 seconds.
+--- Processing captured image...
+Setting title "Temperature: 29.75 (c)".
+Writing JPEG image to '201607190219.jpg'.
+```
+
+現在の温度を取得して、温度をキャプションとした画像を保存する事に成功しました。
+
+http://raspberrypi.local/images/
+> Windowsの場合や、複数のRaspberry PiがLAN内にある場合には、http://{RaspberryPiのIPアドレス}/images でアクセスをしてみて下さい。
+
+にアクセスするとファイルが出来ていると思います。
+
+あとはこれを定期的に実行するように設定しましょう。
+
+#### cron設定
+
+先ほどの温度センサー情報と同じく、cronの設定を行います。
+
+```
+* * * * * ~/take_picure.sh &> /dev/null
+```
+
+のように crontab に追記すれば、毎分撮影となります。
+
+画像サイズは場合にもよりますが、640x480ドットでだいたい150キロバイト前後になります。
+もし毎分撮った場合には、１日に約210MB程度の容量となります。
+画像を撮る感覚が狭ければ狭いほど、より滑らかな画像となりますが、SDカードの容量には限りがありますので、もし長期に渡り撮影をするのであれば、
+
+```
+*/5 * * * * ~/take_picure.sh &> /dev/null
+```
+
+のように５分毎に撮影を行ったり、
+
+```
+0 * * * * ~/take_picure.sh &> /dev/null
+```
+
+のように毎時０分に撮影を行ったりする事で、間隔を間引いてあげるとよいでしょう。
+
+### 画像をクラウドにアップロードする
+Coming soon... (サーバ環境準備中)
+
+## おまけ
+### 低速度撮影(time-lapse)動画を作成する
+Coming soon...
+
+### 動画をストリーミングする
+Coming soon...
