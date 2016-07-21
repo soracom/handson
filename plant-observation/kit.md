@@ -1,63 +1,29 @@
 # ラズパイ x ソラコムキャンペーン 植物観察キット
 
 ***
-### 目次
-#### [はじめに](#section1)
-#### [概要](#section2)
-#### [必要なもの](#section3) <br>
-* ###### [SORACOM アカウントの作成](#section1-2)<br>
+## 目次
+- [はじめに](#section1)
+- [概要](#section2)
+- [必要なもの](#section3)
+  - [SORACOM アカウントの作成](#section1-2)
 
-####  <a name="section4">温度センサー DS18B20+ を使う
-* ##### <a name="section4-1">セットアップ
-* ###### <a name="section4-1.1">配線する
-* ###### <a name="section4-1.2">Raspberry Pi でセンサーを使えるように設定する
+- [温度センサー DS18B20+ を使う](#section4)
+  - [セットアップ](#section4-1)
+  - [クラウドにデータを送る](#section4-2)
+  - [クラウド上でデータを確認する](#section4-3)
 
-##### <a name="section5">クラウドにデータを送る
-* ###### <a name="section5-1">SORACOM Beamとは
+- [USBカメラを使う](#section5)
+  - [セットアップ](#section5-1)
+  - [Webカメラとして使う](#section5-2)
+  - [定点観測を行う](#section5-3)
+  - [画像をクラウドにアップロードする](#section5-4)
 
-* ###### <a name="section5-2">SORACOM Beamの設定
- * <a name="section5-2.1">グループの作成
-
- * <a name="section5-2.2">SIMのグループ割り当て
-
- * <a name="section5-2.3">ESへのデータ転送設定
-
- * <a name="section5-2.4">メタデータサービスの設定
-* ###### <a name="section5-3">プログラムのダウンロード・実行
-* ###### <a name="section6">クラウド上でデータを確認する
-
-#### <a name="section6">USBカメラを使う
-
-* ###### <a name="section6-1">セットアップ
-  * <a name="section6-1.1">接続
-
-  * <a name="section6-1.2">パッケージのインストール
-
-  * <a name="section6-1.3">コマンドラインによるテスト撮影
-
-    * <a name="section6-1.3.1">Macの場合
-
-    * <a name="section6-1.4">Windowsの場合
-
-* ###### <a name="section6-2">Webカメラとして使う
-* ###### <a name="section6-3">定点観測を行う
-  * <a name="section6-3.1">準備
-
-  * <a name="section6-3.2">スクリプトのダウンロードと実行
-
-  * <a name="section6-3.3">cron設定
-
-* ###### <a name="section6-4">画像をクラウドにアップロードする
-
-#### <a name="section7">おまけ
-
-* ###### <a name="section7-1">低速度撮影(time-lapse)動画を作成する
-
-* ###### <a name="section7-2">動画をストリーミングする
-
+- [おまけ](#section6)
+  - [低速度撮影(time-lapse)動画を作成する](#section6-1)
+  - [動画をストリーミングする](#section6-2)
 ***
 
-## <a name="section1">はじめに
+## <a name="section1">はじめに</a>
 このドキュメントは、ラズパイ(Raspberry Pi)と SORACOM の SIM を使って、植物などを定点観測するための仕組みを作る方法を解説します。
 
 静止画を撮りためていくと、以下の様な動画を作成する事も可能なので、ぜひお試し下さい。
@@ -66,7 +32,7 @@
 <iframe width="420" height="315" src="https://www.youtube.com/embed/3--gMeGOV1I" frameborder="0" allowfullscreen></iframe>
 -->
 
-## <a name="section2">概要
+## <a name="section2">概要</a>
 このキットを使うと、以下のような事ができます。
 
 - 温度センサーからの温度データを、毎分クラウドにアップロードし、可視化(グラフ化)する
@@ -75,13 +41,13 @@
 
 これを使って、植物などの成長を観察してみましょう。
 
-## <a name="section3">必要なもの
+## <a name="section3">必要なもの</a>
 1. SORACOM Air で通信が出来ている Raspberry Pi  
  - Raspberry Pi に Raspbian (2016-05-27-raspbian-jessie-lite.img を使用)をインストール
  - Raspberry Pi へ ssh で接続ができる(またはモニターやキーボードを刺してコマンドが実行出来る)
  - Raspberry Pi から SORACOM Air で通信が出来ている
 
-  事前にこちら(TODO:リンクする)のテキストを参考に、SORACOM Air の接続ができているものとします
+  事前に[こちらのテキスト](../setup/setup.md)を参考に、SORACOM Air の接続ができているものとします
 2. ブレッドボード
 3. 温度センサー DS18B20+  
   Raspberry Piには接続しやすい、ADコンバータのいらない温度センサー
@@ -90,9 +56,9 @@
 5. ジャンパワイヤ(オス-メス) x 3 (黒・赤・その他の色の３本を推奨)
 6. USB接続のWebカメラ(Raspbianで認識出来るもの)
 
-##  <a name="section4">温度センサー DS18B20+ を使う
-### <a name="section4-1">セットアップ
-#### <a name="section4-1.1">配線する
+##  <a name="section4">温度センサー DS18B20+ を使う</a>
+### <a name="section4-1">セットアップ</a>
+#### <a name="section4-1.1">配線する</a>
 Raspberry Pi の GPIO(General Purpose Input/Output)端子に、温度センサーを接続します。
 
 ![回路図](image/circuit.png)
@@ -101,7 +67,7 @@ Raspberry Pi の GPIO(General Purpose Input/Output)端子に、温度センサ�
 
 ![配線図: TODO ピンボケなので撮り直し](image/wiring.jpg)
 
-#### <a name="section4-1.2">Raspberry Pi でセンサーを使えるように設定する
+#### <a name="section4-1.2">Raspberry Pi でセンサーを使えるように設定する</a>
 Raspberry Piの設定として、２つのファイルに追記して(以下の例ではcatコマンドで追記していますが、vi や nano などのエディタを利用してもよいです)、適用するために再起動します。
 
 ```
@@ -139,14 +105,14 @@ t=30625 で得られた数字は、摂氏温度の1000倍の数字となって�
 > トラブルシュート：
 > もし数値が０となる場合、抵抗のつなぎ方が間違っている可能性があります
 
-### <a name="section5">クラウドにデータを送る
+### <a name="section4-2">クラウドにデータを送る</a>
 センサーで取得した温度をSORACOM Beam を使ってクラウドへデータを送ってみましょう。
 
 今回のハンズオンではAWSのElasticsearch Service(以下、ES)へデータを送って、可視化を行います。このハンズオンでは簡略化のため、すでにハンズオン用に事前にセットアップされたESのエンドポイントを用いてハンズオンを行います。
 
 ![構成図](image/5-1.png)
 
-#### <a name="section5-1">SORACOM Beamとは
+#### <a name="section4-2.1">SORACOM Beamとは</a>
 
 SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理や接続先の設定を、クラウドにオフロードできるサービスです。Beam を利用することによって、暗号化処理が難しいデバイスに代わって、デバイスからサーバー間の通信を暗号化することが可能になります。
 
@@ -159,7 +125,7 @@ SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理�
 
 また、上記のプロトコル変換に加え、Webサイト全体を Beam で転送することもできます。(Webサイトエントリポイント) 全てのパスに対して HTTP で受けた通信を、HTTP または HTTPS で転送を行う設定です。
 
-#### <a name="section5-2">SORACOM Beamの設定
+#### <a name="section4-2.2">SORACOM Beamの設定</a>
 当ハンズオンでは、以下の用途でBeamを使用します。
 
 - ESへのデータ転送設定 (Webエンドポイント)
@@ -167,7 +133,7 @@ SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理�
 ここでは、ESへのデータ転送設定 (Webエンドポイント)を設定します。
 Beam は Air SIM のグループに対して設定するので、まず、グループを作成します。
 
-##### <a name="section5-2.1">グループの作成
+##### <a name="section4-2.2.1">グループの作成</a>
 
 コンソールのメニューから[グループ]から、[追加]をクリックします。
 ![](image/5-3.png)
@@ -180,14 +146,14 @@ Beam は Air SIM のグループに対して設定するので、まず、グル
 次に、SIMをこのグループに紐付けします。
 ![](image/5-5.png)
 
-##### <a name="section5-2.2">SIMのグループ割り当て
+##### <a name="section4-2.2.2">SIMのグループ割り当て</a>
 ![](image/5-6.png)
 
 SIM管理画面から、SIMを選択して、操作→所属グループ変更を押します
 
 つづいて、Beamの設定を行います。
 
-##### <a name="section5-2.3">ESへのデータ転送設定
+##### <a name="section4-2.2.3">ESへのデータ転送設定</a>
 先ほど作成したグループを選択し、[SORACOM Beam 設定] のタブを選択します。
 
 ![](image/5-7.png)
@@ -209,7 +175,7 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 
 以上でBeamの設定は完了です。
 
-##### <a name="section5-2.4">メタデータサービスの設定
+##### <a name="section4-2.2.4">メタデータサービスの設定</a>
 次にメタデータサービスを設定してください。
 メタデータサービスとは、SORACOM Beamではなく、SORACOM Airのサービスとなります。
 デバイス自身が使用している Air SIM の情報を HTTP 経由で取得、更新することができます。
@@ -222,7 +188,7 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 
 [メタデータサービス設定]を[ON]にして、[保存]をクリックします。
 
-#### <a name="section5-3">プログラムのダウンロード・実行
+#### <a name="section4-2.3">プログラムのダウンロード・実行</a>
 
 クラウドへの送信をおこないます。
 以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
@@ -284,7 +250,7 @@ pi@raspberrypi:~ $ crontab -l
 * * * * * python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slave &> /dev/null
 ```
 
-### <a name="section5-4">クラウド上でデータを確認する
+### <a name="section4-3">クラウド上でデータを確認する</a>
 Elasticsearch Service 上にインストールされている Kibana にアクセスします。  
 http://bit.ly/kibana4
 
@@ -297,16 +263,15 @@ http://bit.ly/temp-graph
 
 ![](image/5-12.png)
 
-## <a name="section6">USBカメラを使う
+## <a name="section5">USBカメラを使う</a>
 Raspberry Pi に USBのカメラ(いわゆるWebカメラ)を接続してみましょう。本キットでは Buffalo 社の　BSWHD06M シリーズを使用しています。
 
-### <a name="section6-1">セットアップ
-#### <a name="section6-1.1">接続
+### <a name="section5-1">セットアップ</a>
+#### <a name="section5-1.1">接続</a>
 USB カメラは、Raspberry Pi の USB スロットに接続して下さい。
+![カメラの設定](image/camera_setting.jpg)
 
-(TODO: 接続する写真)
-
-#### <a name="section6-1.2">パッケージのインストール
+#### <a name="section5-1.2">パッケージのインストール</a>
 fswebcam というパッケージを使用します。apt-getコマンドでインストールして下さい。
 
 ```
@@ -317,7 +282,7 @@ pi@raspberrypi:~ $ sudo apt-get install -y fswebcam
 > E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?  
 > と表示されたら、 sudo apt-get update を行ってから、再度 apt-get install してみてください
 
-#### <a name="section6-1.3">コマンドラインによるテスト撮影
+#### <a name="section5-1.3">コマンドラインによるテスト撮影</a>
 インストールが出来たら、実際に撮影してみましょう。先ほどインストールした、fswebcam コマンドを使います。 -r オプションで解像度を指定する事が出来ます。
 
 ```
@@ -334,22 +299,21 @@ Writing JPEG image to 'test.jpg'.
 
 scp コマンドなどを使って、PCにファイルを転送して開いてみましょう。
 
-##### <a name="section6-1.3.1">Macの場合
+##### <a name="section5-1.3.1">Macの場合</a>
 ```
 ~$ scp pi@raspberrypi.local:test.jpg .
 pi@raspberrypi.local's password:
 test.jpg                                      100%  121KB 121.0KB/s   00:00    
 ~$ open test.jpg
 ```
+![観察画像](image/plant_photo.jpeg)
 
-TODO: 何かのテスト画像
-
-##### <a name="section6-1.4">Windowsの場合
+##### <a name="section5-1.4">Windowsの場合</a>
 TODO: winscp を使う？
 
 > もし難しければ、次に進んで Web ブラウザ経由でも確認出来ますので、スキップして構いません
 
-### <a name="section6-2">Webカメラとして使う
+### <a name="section5-2">Webカメラとして使う</a>
 
 Raspberry PiをWebサーバにして、アクセスした時にリアルタイムの画像を確認できるようにしてみましょう。
 
@@ -393,10 +357,10 @@ http://raspberrypi.local/cgi-bin/camera
 リロードをするたびに、新しく画像を撮影しますので、撮影する対象の位置決めをする際などに使えると思います。  
 一度位置を固定したら、カメラの位置や対象物の下にビニールテープなどで位置がわかるように印をしておくとよいでしょう。
 
-### <a name="section6-3">定点観測を行う
+### <a name="section5-3">定点観測を行う</a>
 毎分カメラで撮影した画像を所定のディレクトリに保存してみましょう。
 
-#### <a name="section6-3.1">準備
+#### <a name="section5-3.1">準備</a>
 
 まず保存するディレクトリを作成して、アクセス権限を変更します。
 
@@ -405,7 +369,7 @@ pi@raspberrypi:~ $ sudo mkdir /var/www/html/image
 pi@raspberrypi:~ $ sudo chown -R pi:pi /var/www/html/
 ```
 
-#### <a name="section6-3.2">スクリプトのダウンロードと実行
+#### <a name="section5-3.2">スクリプトのダウンロードと実行</a>
 
 次にスクリプトをダウンロードしてテスト実行してみましょう。
 
@@ -445,7 +409,7 @@ http://raspberrypi.local/images/
 
 あとはこれを定期的に実行するように設定しましょう。
 
-#### <a name="section6-3.3">cron設定
+#### <a name="section5-3.3">cron設定</a>
 
 先ほどの温度センサー情報と同じく、cronの設定を行います。
 
@@ -471,12 +435,12 @@ http://raspberrypi.local/images/
 
 のように毎時０分に撮影を行ったりする事で、間隔を間引いてあげるとよいでしょう。
 
-### <a name="section6-4">画像をクラウドにアップロードする
+### <a name="section5-4">画像をクラウドにアップロードする</a>
 Coming soon... (サーバ環境準備中)
 
-## <a name="section7">おまけ
-### <a name="section7-1">低速度撮影(time-lapse)動画を作成する
+## <a name="section6">おまけ</a>
+### <a name="section6-1">低速度撮影(time-lapse)動画を作成する</a>
 Coming soon...
 
-### <a name="section7-2">動画をストリーミングする
+### <a name="section6-2">動画をストリーミングする</a>
 Coming soon...
