@@ -26,7 +26,7 @@
 ## <a name="section1">はじめに</a>
 このドキュメントは、ラズパイ(Raspberry Pi)と SORACOM の SIM を使って、植物などを定点観測するための仕組みを作る方法を解説します。
 
-静止画を撮りためていくと、以下の様な動画を作成する事も可能なので、ぜひお試し下さい。
+カメラで撮影したデータと温度データをSORACOMを使ってクラウドに連携し、貯めたデータをタイムラプス動画として表示、温度のデータはElasticSearch(kibana)を使って可視化します。お好きな観察物を選んで、変化を楽しんでください。
 
 <!--
 <iframe width="420" height="315" src="https://www.youtube.com/embed/3--gMeGOV1I" frameborder="0" allowfullscreen></iframe>
@@ -65,7 +65,7 @@ Raspberry Pi の GPIO(General Purpose Input/Output)端子に、温度センサ�
 
 使うピンは、3.3Vの電源ピン(01)、Ground、GPIO 4の３つです。
 
-![配線図: TODO ピンボケなので撮り直し](image/wiring.jpg)
+![配線図](image/wiring2.jpg)
 
 #### <a name="section4-1.2">Raspberry Pi でセンサーを使えるように設定する</a>
 Raspberry Piの設定として、２つのファイルに追記して(以下の例ではcatコマンドで追記していますが、vi や nano などのエディタを利用してもよいです)、適用するために再起動します。
