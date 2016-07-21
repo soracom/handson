@@ -303,7 +303,7 @@ Raspberry Pi に USBのカメラ(いわゆるWebカメラ)を接続してみま�
 ### <a name="section6-1">セットアップ
 #### <a name="section6-1.1">接続
 USB カメラは、Raspberry Pi の USB スロットに接続して下さい。
-
+![カメラの設定](image/camera_setting.jpg)
 (TODO: 接続する写真)
 
 #### <a name="section6-1.2">パッケージのインストール
@@ -341,7 +341,7 @@ pi@raspberrypi.local's password:
 test.jpg                                      100%  121KB 121.0KB/s   00:00    
 ~$ open test.jpg
 ```
-
+![観察画像](image/plant_photo.jpeg)
 TODO: 何かのテスト画像
 
 ##### <a name="section6-1.4">Windowsの場合
