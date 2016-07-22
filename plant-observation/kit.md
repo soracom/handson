@@ -28,9 +28,7 @@
 
 カメラで撮影したデータと温度データをSORACOMを使ってクラウドに連携し、貯めたデータをタイムラプス動画として表示、温度のデータはElasticSearch(kibana)を使って可視化します。お好きな観察物を選んで、変化を楽しんでください。
 
-<!--
 <iframe width="420" height="315" src="https://www.youtube.com/embed/3--gMeGOV1I" frameborder="0" allowfullscreen></iframe>
--->
 
 ## <a name="section2">概要</a>
 このキットを使うと、以下のような事ができます。
