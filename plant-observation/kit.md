@@ -1,6 +1,7 @@
 # ラズパイ x ソラコムキャンペーン 植物観察キット
 
 ***
+
 ## 目次
 - [はじめに](#section1)
 - [概要](#section2)
@@ -21,6 +22,7 @@
 - [おまけ](#section6)
   - [低速度撮影(time-lapse)動画を作成する](#section6-1)
   - [動画をストリーミングする](#section6-2)
+
 ***
 
 ## <a name="section1">はじめに</a>
@@ -28,7 +30,7 @@
 
 カメラで撮影したデータと温度データをSORACOMを使ってクラウドに連携し、貯めたデータをタイムラプス動画として表示、温度のデータはElasticSearch(kibana)を使って可視化します。お好きな観察物を選んで、変化を楽しんでください。
 
-<iframe width="420" height="315" src="https://www.youtube.com/embed/3--gMeGOV1I" frameborder="0" allowfullscreen></iframe>
+[タイムラプス動画サンプル(YouTube)](https://www.youtube.com/watch?v=3--gMeGOV1I)
 
 ## <a name="section2">概要</a>
 このキットを使うと、以下のような事ができます。
