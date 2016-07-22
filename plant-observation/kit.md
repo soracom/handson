@@ -28,9 +28,7 @@
 
 カメラで撮影したデータと温度データをSORACOMを使ってクラウドに連携し、貯めたデータをタイムラプス動画として表示、温度のデータはElasticSearch(kibana)を使って可視化します。お好きな観察物を選んで、変化を楽しんでください。
 
-<!--
 <iframe width="420" height="315" src="https://www.youtube.com/embed/3--gMeGOV1I" frameborder="0" allowfullscreen></iframe>
--->
 
 ## <a name="section2">概要</a>
 このキットを使うと、以下のような事ができます。
@@ -438,7 +436,119 @@ http://raspberrypi.local/images/
 のように毎時０分に撮影を行ったりする事で、間隔を間引いてあげるとよいでしょう。
 
 ### <a name="section5-4">画像をクラウドにアップロードする</a>
-Coming soon... (サーバ環境準備中)
+撮影した画像をインターネットから参照出来るように、クラウドストレージにアップロードしてみましょう。
+その際、画像がどのSIMを持つデバイスから送信されたのかを証明するために、SORACOM Endorse を利用します。
+
+#### <a name="section5-4.1">SORACOM Endorse とは</a>
+SORACOM Endorse(以下、Endorse) は、Air SIM を使用しているデバイスに対して、SORACOM が認証プロバイダーとしてデバイスの認証サービスを提供します。 SIM を使用した認証を Wi-Fi などの SIM 以外の通信にも使うことが可能となります。
+
+![SORACOM Endorse](https://soracom.jp/img/fig_endorse01.png)
+
+Air SIM で接続後、Endorse に対して認証トークンの発行リクエストを送ると、Endorse が IMSI、IMEI などのデータを含んだ認証トークンを発行します。このトークンは SORACOM の秘密鍵で署名がされています。
+
+デバイスがこのトークンをサーバーに送信すると、サーバー側はこのトークンが SORACOM が発行した正しいものかどうかを、SORACOM の公開鍵で検証することができます。一旦トークンの受け渡しが終われば、サーバーは接続元のデバイスがどの SIM を持っているかを把握できるため、例えばそのままサーバーにログインするような仕組みを作ることもできます。そして一旦認証トークンの受け渡しが終わり認証が完了すれば、接続経路が Air SIM ではなく、Wi-Fi を使用していても、利用者のシステムではどの SIM から接続されているのかを確かなものとして扱うことができます。
+
+### <a name="section5-5">システム構成</a>
+下図のような仕組みで、画像をアップロードします。
+
+![構成図](image/upload_image.png)
+
+1. SORACOM Endorse にアクセスをしてトークンを取得
+2. 一番最近撮影した画像に、1. で得られたトークン情報をカスタムヘッダとして付与して、アップロード
+3. AWS上のプログラム(Lambda)でヘッダ(トークン)が正しいものかどうかを確認し、正しいものと確認できた場合にのみ公開用の領域にコピー
+4. スマホ等からIMSI毎の公開URLにアクセスすると、アップロードされた画像にアクセスできます
+
+> 3番のクラウド側の処理は、SORACOM側で用意してあります
+
+### <a name="section5-6">設定</a>
+#### SORACOM Endorse設定
+SORACOM Endose を有効にします。
+
+1. グループ設定画面で、SORACOM Endorseを開き、下記のように IMSI にチェックボックスを入れて、保存を押します
+![Endorse設定その１](image/endorse1.png)
+2. 下記のようなダイアログが表示されますので、OKを押します
+![Endorse設定その2](image/endorse2.png)
+
+SORACOM 側の設定は以上になります。
+
+> アカウント作成から１年以内であれば、無料利用枠に SORACOM Endorse の SIMカード１枚分が無料となります
+> ２枚以上でEndorseを有効にしたり、作成から１年以上経ちましたアカウントでは、追加の料金が発生する旨、お気をつけください
+
+### <a name="section5-6.2">Raspberry Pi設定</a>
+次に Raspberry Pi の設定を行います。
+
+#### PyJWT のインストール
+Python で Endorse で使われている JWT(JSON Web Token) を扱うためのライブラリ、PyJWTをインストールします。
+```
+pi@raspberrypi:~ $ sudo pip install pyjwt
+Downloading/unpacking pyjwt
+  Downloading PyJWT-1.4.1-py2.py3-none-any.whl
+Installing collected packages: pyjwt
+Successfully installed pyjwt
+Cleaning up...
+```
+
+#### スクリプトのダウンロード＆実行
+```
+pi@raspberrypi:~ $ wget http://soracom-files.s3.amazonaws.com/upload_image.py
+--2016-07-22 05:27:36--  http://soracom-files.s3.amazonaws.com/upload_image.py
+Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 52.219.4.1
+Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|52.219.4.1|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1073 (1.0K) [text/plain]
+Saving to: ‘upload_image.py’
+
+upload_image.py                     100%[====================================================================>]   1.05K  --.-KB/s   in 0s
+
+2016-07-22 05:27:36 (32.9 MB/s) - ‘upload_image.py’ saved [1073/1073]
+pi@raspberrypi:~ $ python upload_image.py /var/www/html/image.jpg
+- SORACOM Endorse にアクセスして token を取得中 ...
+{
+    "aud": "soracom-endorse-audience",
+    "iss": "https://soracom.io",
+    "soracom-endorse-claim": {
+        "imsi": "440101111111111"
+    },
+    "jti": "kENUDfNrej4LE2N1VQawlQ",
+    "exp": 1469165906,
+    "iat": 1469165306,
+    "nbf": 1469165246,
+    "sub": "soracom-endorse"
+}
+- Amazon S3 にファイルをアップロード中 ...
+PUT https://soracom-handson.s3.amazonaws.com/incoming/camera/kENUDfNrej4LE2N1VQawlQ
+status: 200
+```
+
+最後に status が 200 となっていれば、アップロードが無事完了しています。
+
+アップロードが完了してから数秒おいて、 ```http://soracom-handson.s3.amazonaws.com/camera/{IMSI}``` にアクセスすると、アップロードした画像にアクセスすることが出来ます。
+
+#### 定期的な実行(cron設定)
+毎分撮影したとしても、必ずしも毎分画像をアップロードする必要はありません。  
+仮に画像サイズが平均150KBであるとすると、月間の転送にかかる費用(s1.minimumを使用した場合)は、下記のようになります。
+
+|頻度|転送回数/月|転送容量/月|概算費用/月|
+|---|---:|---:|---:|
+|毎分|43200|約 6.3GB|約 1265円|
+|5分毎|8640|約 1.3GB|約 253円|
+|10分毎|4320|約 0.6GB|約 126円|
+
+用途やニーズに合わせて頻度を調整してみるとよいでしょう。
+
+頻度の調整は、やはりcronの設定で行います。
+
+##### 毎分
+```
+* * * * * python upload_image.py /var/www/html/image.jpg &> /dev/null
+```
+
+##### ５分毎
+```
+* * * * * python upload_image.py /var/www/html/image.jpg &> /dev/null
+```
+
+しばらくしてから、先ほどのURLをリロードし、画像が更新されていることを確かめましょう。
 
 ## <a name="section6">おまけ</a>
 ### <a name="section6-1">低速度撮影(time-lapse)動画を作成する</a>
