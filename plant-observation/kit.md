@@ -42,6 +42,8 @@
 これを使って、植物などの成長を観察してみましょう。
 
 ## <a name="section3">必要なもの</a>
+![必要な物](image/kit.png)
+
 1. SORACOM Air で通信が出来ている Raspberry Pi  
  - Raspberry Pi に Raspbian (2016-05-27-raspbian-jessie-lite.img を使用)をインストール
  - Raspberry Pi へ ssh で接続ができる(またはモニターやキーボードを刺してコマンドが実行出来る)
