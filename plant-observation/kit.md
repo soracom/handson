@@ -367,7 +367,7 @@ http://raspberrypi.local/cgi-bin/camera
 まず保存するディレクトリを作成して、アクセス権限を変更します。
 
 ```
-pi@raspberrypi:~ $ sudo mkdir /var/www/html/image
+pi@raspberrypi:~ $ sudo mkdir /var/www/html/images
 pi@raspberrypi:~ $ sudo chown -R pi:pi /var/www/html/
 ```
 
