@@ -214,7 +214,7 @@ send_temp_to_cloud.py     100%[====================================>]   1.18K  -
 
 2016-07-18 10:46:41 (36.3 MB/s) - ‘send_temp_to_cloud.py’ saved [1208/1208]
 
-pi@raspberrypi ~ $ pi@raspberrypi:~ $ python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slave
+pi@raspberrypi ~ $ python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slave
 - メタデータサービスにアクセスして IMSI を確認中 ... 440103125380131
 - ただいまの温度 30.375000
 - Beam 経由でデータを送信します
