@@ -222,12 +222,24 @@ pi@raspberrypi ~ $ python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slav
 ```
 
 うまくデータが送信出来たのを確認したら、cronを使って１分に１回通信を行うようにしてみましょう。
-
-(以下ではcronの設定をコマンドラインから行っていますが、crontab -e から行っても構いません)
+以下の様な手順で cronの設定を行います。
 
 ```
-pi@raspberrypi:~ $ ( crontab -l ; echo '* * * * * python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slave &> /dev/null' ) | crontab -
-pi@raspberrypi:~ $ crontab -l
+pi@raspberrypi:~ $ crontab -e
+no crontab for root - using an empty one
+
+Select an editor.  To change later, run 'select-editor'.
+  1. /bin/ed
+  2. /bin/nano        <---- easiest
+  3. /usr/bin/vim.tiny
+
+Choose 1-3 [2]: 3
+crontab: installing new crontab
+```
+
+以下のようにvi エディタが起動しますので、`# m h  dom mon dow   command
+`の下に`* * * * * python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slave &> /dev/null`と記載して保存してください。
+```
 # Edit this file to introduce tasks to be run by cron.
 #
 # Each task to run has to be defined through a single line
@@ -251,6 +263,7 @@ pi@raspberrypi:~ $ crontab -l
 # m h  dom mon dow   command
 * * * * * python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slave &> /dev/null
 ```
+
 
 ### <a name="section4-3">クラウド上でデータを確認する</a>
 Elasticsearch Service 上にインストールされている Kibana にアクセスします。  
