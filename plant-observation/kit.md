@@ -195,7 +195,7 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 クラウドへの送信をおこないます。
 以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
 
-Beamを使用する(「send_temp_to_cloud.py」の実行時)には、SORACOM Airで通信している必要があります。
+__<font color="red">Beamを使用する(「send_temp_to_cloud.py」の実行時)には、SORACOM Airで通信している必要があります。</font>__
 
 ```
 pi@raspberrypi:~ $ sudo apt-get install -y python-pip  
@@ -220,6 +220,11 @@ pi@raspberrypi ~ $ python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slav
 - Beam 経由でデータを送信します
 {u'_type': u'temperature', u'_id': u'AVX9nyA6DpzhkadZHaVx', u'created': True, u'_version': 1, u'_index': u'sensor'}
 ```
+
+> トラブルシュート  
+> requests.exceptions.ConnectionError: ('Connection aborted.', error(110, 'Connection timed out'))  
+> になる場合、SORACOM Air による 3G 接続を行っていない可能性があります。  
+> 必ず connect_air.sh を実行しながら、実行してください。
 
 うまくデータが送信出来たのを確認したら、cronを使って１分に１回通信を行うようにしてみましょう。
 
