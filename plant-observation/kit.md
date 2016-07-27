@@ -168,7 +168,7 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 
 - 設定名：ES(別の名前でも構いません)
 - 転送先のプロトコル：HTTPS
-- ホスト名 : search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
+- ホスト名 : __search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com__
 
 ![](image/5-9.png)
 __※上記のスクリーンショットはホスト名が完全には表示されていないので、必ず画像の上に掲載されているアドレスをコピーして入力して下さい__
