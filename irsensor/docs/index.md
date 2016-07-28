@@ -59,3 +59,6 @@
 - Raspberry Piにプログラムをダウンロード
 - ホストPCにプログラムをダウンロード
 - SORACOM Beam経由で赤外線信号を送信する
+
+[chapter1]: chapter1.md#chapter1
+[chapter2]: chapter2.md#chapter2
