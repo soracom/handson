@@ -24,6 +24,10 @@
 - ユーザーコンソールでの Air SIM の登録
 
 #### [2章 Raspberry Piのセットアップ][chapter2]
+- Raspbian のインストール
+- イメージの書き込み(Macの場合)
+- イメージの書き込み(Windowsの場合)
+- Raspberry Pi への ログイン
 
 #### [3章 Air SIMを使って、インターネットに接続する][chapter3]
 - Raspberry Pi に USBドングルを接続する
