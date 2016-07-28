@@ -62,3 +62,10 @@
 
 [chapter1]: chapter1.md#chapter1
 [chapter2]: chapter2.md#chapter2
+[chapter3]: chapter3.md#chapter3
+[chapter4]: chapter4.md#chapter4
+[chapter5]: chapter5.md#chapter5
+[chapter6]: chapter6.md#chapter6
+[chapter7]: chapter7.md#chapter7
+[chapter8]: chapter8.md#chapter8
+[chapter9]: chapter9.md#chapter9
