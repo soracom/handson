@@ -11,7 +11,7 @@
 - MQTTクライアントをインストール  
 `$ sudo gem install mqtt`
 
-- MQTTを受信する
+- MQTTを受信する  
 `$ ruby ir_tools/subscriber.rb`
 
 上記のプログラムを起動したまま別のタブでホストPCにログイン
