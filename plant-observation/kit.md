@@ -421,7 +421,7 @@ http://raspberrypi.local/images/
 先ほどの温度センサー情報と同じく、cronの設定を行います。
 
 ```
-* * * * * ~/take_picure.sh &> /dev/null
+* * * * * ~/take_picture.sh &> /dev/null
 ```
 
 のように crontab に追記すれば、毎分撮影となります。
@@ -431,13 +431,13 @@ http://raspberrypi.local/images/
 画像を撮る感覚が狭ければ狭いほど、より滑らかな画像となりますが、SDカードの容量には限りがありますので、もし長期に渡り撮影をするのであれば、
 
 ```
-*/5 * * * * ~/take_picure.sh &> /dev/null
+*/5 * * * * ~/take_picture.sh &> /dev/null
 ```
 
 のように５分毎に撮影を行ったり、
 
 ```
-0 * * * * ~/take_picure.sh &> /dev/null
+0 * * * * ~/take_picture.sh &> /dev/null
 ```
 
 のように毎時０分に撮影を行ったりする事で、間隔を間引いてあげるとよいでしょう。
