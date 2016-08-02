@@ -11,6 +11,9 @@
 - MQTTクライアントをインストール  
 `$ sudo gem install mqtt`
 
+- 環境変数を設定する
+`$ export MQTT_USERNAME=<Sangoで取得したユーザ名>`
+
 - MQTTを受信する  
 `$ ruby ir_tools/subscriber.rb`
 
@@ -27,7 +30,7 @@
 
 ```
 export MQTT_PASSWORD=<Sangoで取得したパスワードを入力>
-export MQTT_USERNAME=<Githubのユーザ名を入力>@github
+export MQTT_USERNAME=<Sangoで取得したユーザ名>
 ```
 - 下記スクリプトでMQTTを送信し、赤外線信号が送信されることを確認  
 `$ ruby ir_tools/publisher.rb power_on`  
