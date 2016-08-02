@@ -11,7 +11,7 @@
 - MQTTクライアントをインストール  
 `$ sudo gem install mqtt`
 
-- 環境変数を設定する
+- 環境変数を設定する  
 `$ export MQTT_USERNAME=<Sangoで取得したユーザ名>`
 
 - MQTTを受信する  
