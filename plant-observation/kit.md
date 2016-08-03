@@ -664,7 +664,7 @@ video:669kB audio:0kB other streams:0kB global headers:0kB muxing overhead: 0.79
 
 上記の例で出力されたファイルは、 https://raspberrypi.local/timelapse.mp4 でアクセスする事が出来ます。
 
-<video src="http://soracom-files.s3.amazonaws.com/timelapse.mp4">サンプル動画</video>
+[サンプル動画](http://soracom-files.s3.amazonaws.com/timelapse.mp4)
 
 ### <a name="section6-2">動画をストリーミングする</a>
 Coming soon...
