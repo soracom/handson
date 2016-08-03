@@ -402,6 +402,7 @@ xxx.xxx.65.54.in-addr.arpa domain name pointer ec2-54-65-xx-xxx.ap-northeast-1.c
 CurlコマンドによるIPアドレスとhostコマンドにより、EC2からインターネットに接続されていることがわかりました。
 
 **（参考）Raspberry Pi が起動したタイミングで自動的に connect_air.sh を実行するには**
+
 Raspberry Pi が起動したタイミングで自動的に 3G 接続を行うには、以下のように設定してください。
 
 * vi や nano で /etc/rc.local ファイルを開きます。
