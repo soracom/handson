@@ -559,7 +559,112 @@ status: 200
 
 ## <a name="section6">おまけ</a>
 ### <a name="section6-1">低速度撮影(time-lapse)動画を作成する</a>
-Coming soon...
+撮りためた画像を使用して、低速度撮影(タイムラプス)動画を作成してみましょう。
+
+植物の成長や雲の動きなど、ゆっくり変化をするようなものを一定間隔(例えば１分毎)に撮影した画像を使って、仮に１秒間に30コマ使用すると１時間が動画では約２秒となるような動画を作成する事が出来ます。こういった映像を「低速度撮影(タイムラプス)映像」と呼びます。
+
+#### パッケージのインストール
+動画へのコンバートには、avconv というプログラムを利用しますので、下記のコマンドでパッケージをインストールして下さい。
+
+```
+pi@raspberrypi:~ $ sudo apt-get install -y libav-tools
+```
+
+> 非常に多くのパッケージをダウンロードしますので、3G接続を切って有線接続でインストールした方がよいかもしれません。
+
+#### スクリプトのダウンロード
+スクリプトをダウンロードします。
+
+```
+pi@raspberrypi:~ $ wget http://soracom-files.s3.amazonaws.com/timelapse.sh
+--2016-08-02 09:13:16--  http://soracom-files.s3.amazonaws.com/timelapse.sh
+Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 52.219.16.1
+Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|52.219.16.1|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1262 (1.2K) [text/plain]
+Saving to: ‘timelapse.sh’
+
+timelapse.sh                100%[===========================================>]   1.23K  --.-KB/s   in 0s
+
+2016-08-02 09:13:16 (41.6 MB/s) - ‘timelapse.sh’ saved [1262/1262]
+
+pi@raspberrypi:~ $ chmod +x timelapse.sh
+pi@raspberrypi:~ $ ./timelapse.sh
+Usage: ./timelapse.sh [options] /full/path/to/output.mp4
+Options:
+ -d /path/to/images/ (default=/var/www/html/images/)
+ -f filter_string (default=no filter)
+ -s N (speed, default=30 frames per seconds)
+```
+
+引数なしで実行すると、コマンドの説明が表示されます。
+
+```
+使い方: ./timelapse.sh [options] /full/path/to/output.mp4 # 出力するMP4ファイルへのフルパス
+Options:
+ -d /path/to/images/ (default=/var/www/html/images/) # 元となる画像の格納場所
+ -f filter_string (default=no filter) # ファイル名のフィルタ
+ -s N (speed, default=30 frames per seconds) # スピード、デフォルトでは 30枚/秒、１分に一回撮影したものであれば、30分/秒となる
+```
+
+それでは、実際に画像を動画を変換してみましょう。
+
+オプションをを指定しない場合、/var/www/html/images 以下の画像ファイルを全て使用して、動画を作成します。
+変換が終わった後の動画をすぐにブラウザで見れるように、/var/www/html/ 以下に動画ファイルを出力しておくと便利です。
+画像の枚数やラズパイのバージョンによって変換にかかる時間が変わるので、変換が終わるまで気長に待ちましょう。
+
+```
+pi@raspberrypi:~ $ ./timelapse.sh /var/www/html/timelapse.mp4
+-- 1. mkdir /var/tmp/time-lapse-2043 for workspace
+-- 2. symlinking images as seqeuntial filename (it may take a while...)
+288 files found.
+
+-- 3. converting jpeg files to MPEG-4 video (it may also take a while...)
+avconv version 11.6-6:11.6-1~deb8u1+rpi1, Copyright (c) 2000-2014 the Libav developers
+  built on Mar 22 2016 15:53:22 with gcc 4.9.2 (Raspbian 4.9.2-10)
+Input #0, image2, from '%08d.jpg':
+  Duration: 00:00:09.60, start: 0.000000, bitrate: N/A
+    Stream #0.0: Video: mjpeg, yuvj420p, 640x480 [PAR 96:96 DAR 4:3], 30 fps, 30 tbn
+[libx264 @ 0x19d8040] using SAR=1/1
+[libx264 @ 0x19d8040] using cpu capabilities: ARMv6 NEON
+[libx264 @ 0x19d8040] profile High, level 3.0
+[libx264 @ 0x19d8040] 264 - core 142 r2431 a5831aa - H.264/MPEG-4 AVC codec - Copyleft 2003-2014 - http://www.videolan.org/x264.html - options: cabac=1 ref=3 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=7 psy=1 psy_rd=1.00:0.00 mixed_ref=1 me_range=16 chroma_me=1 trellis=1 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=-2 threads=6 lookahead_threads=1 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=2 keyint=250 keyint_min=25 scenecut=40 intra_refresh=0 rc_lookahead=40 rc=crf mbtree=1 crf=23.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/var/www/html/timelapse.mp4':
+  Metadata:
+    encoder         : Lavf56.1.0
+    Stream #0.0: Video: libx264, yuv420p, 640x480 [PAR 1:1 DAR 4:3], q=-1--1, 30 fps, 30 tbn, 30 tbc
+    Metadata:
+      encoder         : Lavc56.1.0 libx264
+Stream mapping:
+  Stream #0:0 -> #0:0 (mjpeg (native) -> h264 (libx264))
+Press ctrl-c to stop encoding
+frame=  288 fps=  8 q=-1.0 Lsize=     674kB time=9.50 bitrate= 581.1kbits/s    its/s
+video:669kB audio:0kB other streams:0kB global headers:0kB muxing overhead: 0.798229%
+[libx264 @ 0x19d8040] frame I:2     Avg QP:23.87  size: 21094
+[libx264 @ 0x19d8040] frame P:83    Avg QP:24.61  size:  5384
+[libx264 @ 0x19d8040] frame B:203   Avg QP:26.61  size:   960
+[libx264 @ 0x19d8040] consecutive B-frames:  0.7%  4.9% 33.3% 61.1%
+[libx264 @ 0x19d8040] mb I  I16..4:  5.7% 84.4% 10.0%
+[libx264 @ 0x19d8040] mb P  I16..4:  1.9%  6.2%  0.2%  P16..4: 53.0% 12.1%  6.7%  0.0%  0.0%    skip:20.0%
+[libx264 @ 0x19d8040] mb B  I16..4:  0.2%  0.4%  0.0%  B16..8: 28.8%  1.1%  0.2%  direct: 1.1%  skip:68.1%  L0:44.1% L1:53.2% BI: 2.7%
+[libx264 @ 0x19d8040] 8x8 transform intra:75.8% inter:82.4%
+[libx264 @ 0x19d8040] coded y,uvDC,uvAC intra: 56.5% 72.5% 32.5% inter: 14.1% 20.1% 0.6%
+[libx264 @ 0x19d8040] i16 v,h,dc,p: 33% 42% 13% 12%
+[libx264 @ 0x19d8040] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 21% 24% 37%  2%  3%  2%  5%  2%  6%
+[libx264 @ 0x19d8040] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 26% 29% 18%  3%  4%  3%  7%  4%  6%
+[libx264 @ 0x19d8040] i8c dc,h,v,p: 57% 23% 18%  2%
+[libx264 @ 0x19d8040] Weighted P-Frames: Y:49.4% UV:18.1%
+[libx264 @ 0x19d8040] ref P L0: 48.9% 22.8% 15.6%  9.1%  3.6%
+[libx264 @ 0x19d8040] ref B L0: 64.0% 28.6%  7.4%
+[libx264 @ 0x19d8040] ref B L1: 84.2% 15.8%
+[libx264 @ 0x19d8040] kb/s:569.96
+
+-- 4. cleanup...
+```
+
+上記の例で出力されたファイルは、 https://raspberrypi.local/timelapse.mp4 でアクセスする事が出来ます。
+
+<video src="http://soracom-files.s3.amazonaws.com/timelapse.mp4">サンプル動画</video>
 
 ### <a name="section6-2">動画をストリーミングする</a>
 Coming soon...
