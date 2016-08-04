@@ -1,7 +1,11 @@
 ## <a name="chapter9">9章 SORACOM Beam経由で赤外線信号を送信する
+- 全体構成
 - Raspberry Piにプログラムをダウンロード
 - ホストPCにプログラムをダウンロード
 - SORACOM Beam経由で赤外線信号を送信する
+
+### 全体構成
+![](images/demo_pic.png)
 
 ### Raspberry Piにプログラムをダウンロード
 
