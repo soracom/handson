@@ -11,6 +11,6 @@ client = MQTT::Client.new(
 )
 
 client.connect do |c|
-  TOPIC = "#{MQTT_USERNAME}/ir_controller"
+  TOPIC = "#{USERNAME}/ir_controller"
   c.publish(TOPIC, ARGV[0])
 end
