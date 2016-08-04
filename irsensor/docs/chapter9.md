@@ -29,12 +29,11 @@
 - MQTTクライアントをインストール  
 `$ gem install mqtt`
 
-### SORACOM Beam経由で赤外線信号を送信する
 - 環境変数を設定する
 
 ```
-export MQTT_PASSWORD=<Sangoで取得したパスワードを入力>
-export MQTT_USERNAME=<Sangoで取得したユーザ名>
+$ export MQTT_PASSWORD=<Sangoで取得したパスワードを入力>
+$ export MQTT_USERNAME=<Sangoで取得したユーザ名>
 ```
 - 下記スクリプトでMQTTを送信し、赤外線信号が送信されることを確認  
 `$ ruby ir_tools/publisher.rb power_on`  
