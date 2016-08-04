@@ -49,6 +49,13 @@ pi@raspberrypi:~ $ lsmod | grep lirc
 `pi@raspberrypi:~ $ sudo /etc/init.d/lirc stop`
 
 ### 配線
+- 下記の配線図のように配線を行います。
+![](images/5-4.png)
+
+- 配線後、下記の写真のようになっていることを確認してください(Raspberry Pi 2 B+を使用)
+![](images/5-1.JPG)
+![](images/5-2.JPG)
+![](images/5-3.JPG)
 
 ### センサーの動作確認
 上記コマンドを実行した後、センサーに向かってリモコンのボタンを押す。
