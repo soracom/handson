@@ -9,9 +9,6 @@
 
 ### Raspberry Piにプログラムをダウンロード
 
-- プログラムをダウンロード  
-`pi@raspberrypi:~ $ curl -O hogehoge`
-
 - MQTTクライアントをインストール  
 `pi@raspberrypi:~ $ sudo gem install mqtt`
 
@@ -21,7 +18,7 @@
 - スクリプトをダウンロードしてMQTTを受信する
 ```
 pi@raspberrypi:~ $ wget https://s3-ap-northeast-1.amazonaws.com/soracom-demo/ir_tools/subscriber.rb
-pi@raspberrypi:~ $ ruby ir_tools/subscriber.rb
+pi@raspberrypi:~ $ ruby subscriber.rb
 ```
 
 上記のプログラムを起動したまま別のタブでホストPCにログイン
