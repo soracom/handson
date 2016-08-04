@@ -1,13 +1,14 @@
 require 'mqtt'
 
 MQTTHOST = "beam.soracom.io"
+USERNAME = ENV["MQTT_USERNAME"]
 
 client = MQTT::Client.new(
   MQTTHOST
 )
 
 client.connect do |c|
-  TOPIC = "#"
+  TOPIC = "#{USERNAME}/#"
   c.get(TOPIC) do |topic, message|
     if /\/ir_controller\Z/ === topic
       puts "#{topic}: #{message}"
