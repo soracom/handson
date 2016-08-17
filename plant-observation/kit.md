@@ -67,7 +67,7 @@ Raspberry Pi の GPIO(General Purpose Input/Output)端子に、温度センサ�
 
 使うピンは、3.3Vの電源ピン(01)、Ground、GPIO 4の３つです。
 
-![配線図](image/wiring2.jpg)
+![配線図](image/wiring3.jpg)
 
 #### <a name="section4-1.2">Raspberry Pi でセンサーを使えるように設定する</a>
 Raspberry Piの設定として、２つのファイルに追記して(以下の例ではcatコマンドで追記していますが、vi や nano などのエディタを利用してもよいです)、適用するために再起動します。
