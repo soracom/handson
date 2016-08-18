@@ -277,6 +277,8 @@ USBドングルを使用するために、以下のパッケージをインス�
 ###### usb-modeswitchとwvdialのインストールコマンド
 
 ```
+pi@raspberrypi:~ $ sudo apt-get update
+
 pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
 ```
 
