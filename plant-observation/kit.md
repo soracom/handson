@@ -310,6 +310,10 @@ fswebcam というパッケージを使用します。apt-getコマンドでイ�
 pi@raspberrypi:~ $ sudo apt-get install -y fswebcam
 ```
 
+> トラブルシュート：  
+> E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?  
+> と表示されたら、 sudo apt-get update を行ってから、再度 apt-get install してみてください
+
 #### <a name="section5-1.3">コマンドラインによるテスト撮影</a>
 インストールが出来たら、実際に撮影してみましょう。先ほどインストールした、fswebcam コマンドを使います。 -r オプションで解像度を指定する事が出来ます。
 
