@@ -307,8 +307,6 @@ USB カメラは、Raspberry Pi の USB スロットに接続して下さい。
 fswebcam というパッケージを使用します。apt-getコマンドでインストールして下さい。
 
 ```
-pi@raspberrypi:~ $ sudo apt-get update
-
 pi@raspberrypi:~ $ sudo apt-get install -y fswebcam
 ```
 
@@ -369,9 +367,8 @@ pi@raspberrypi:~ $ sudo service apache2 restart
 
 最後にCGIプログラムをダウンロードして設置します。
 ```
-pi@raspberrypi:~ $ cd /usr/lib/cgi-bin/
+pi@raspberrypi:~ $ sudo wget -O /usr/lib/cgi-bin/camera https://soracom-files.s3.amazonaws.com/camera
 
-pi@raspberrypi:/usr/lib/cgi-bin $ sudo wget https://soracom-files.s3.amazonaws.com/camera
 --2016-07-14 08:04:34--  https://soracom-files.s3.amazonaws.com/camera
 Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 54.231.225.58
 Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.225.58|:443... connected.
@@ -383,7 +380,7 @@ camera              100%[=====================>]     374  --.-KB/s   in 0s
 
 2016-07-14 08:04:35 (1.45 MB/s) - ‘camera’ saved [374/374]
 
-pi@raspberrypi:/usr/lib/cgi-bin $ sudo chmod +x camera
+pi@raspberrypi:~ $ sudo chmod +x /usr/lib/cgi-bin/camera
 ```
 
 ここまで設定をしたら、Webブラウザでアクセスしてみましょう。
@@ -403,8 +400,6 @@ http://raspberrypi.local/cgi-bin/camera
 まず保存するディレクトリを作成して、アクセス権限を変更します。
 
 ```
-pi@raspberrypi:~ $ cd
-
 pi@raspberrypi:~ $ sudo mkdir /var/www/html/images
 
 pi@raspberrypi:~ $ sudo chown -R pi:pi /var/www/html/
