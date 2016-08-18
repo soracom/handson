@@ -59,7 +59,7 @@
 [タイムラプス動画サンプル(YouTube)](https://www.youtube.com/watch?v=3--gMeGOV1I)
 
 ## <a name="section2">概要</a>
-このセミナーでは以下のような事に
+このセミナーでは以下のような事に取り組みます。
 
 - 温度センサーからの温度データを、毎分クラウドにアップロードし、可視化(グラフ化)する
 - USBカメラで静止画を取り、クラウドストレージにアップロードして、スマホなどから確認する
@@ -156,6 +156,7 @@ SORACOMのハンズオンでは、特に理由がない限りは Raspbian を利
 
 ### <a name="raspbian-install"> Raspberry Piの準備
 - OSイメージを書き込んだSDカードをRaspberry Piに差し込みます。
+  - OSイメージの書き込みが終わっていない場合は、[「セットアップの手順」](../setup/setup.md)を参考にしてください。
 - LANケーブル、電源ケーブルを接続し、起動します。数分で起動しますので、しばらく待ってから次のステップ「Raspberry Pi への ログイン」へ進んでください。
 
 ### <a name="ssh-login"> Raspberry Pi への ログイン</a>
@@ -175,12 +176,12 @@ Raspberry Pi へ SSH を使ってログインします。
 MacやLinuxの場合には、ターミナルを立ち上げ、以下のコマンドを実行してください。
 
 ```
-$ ssh pi@raspberrypi.local
-The authenticity of host 'raspberrypi.local (fe80::bb8:70cb:474d:220%en0)' can't be established.
+$ ssh pi@192.168.123.xxx (割り当てられたIPアドレスを指定してください)
+The authenticity of host '192.168.123.xxx (fe80::bb8:70cb:474d:220%en0)' can't be established.
 ECDSA key fingerprint is SHA256:MOOy0pXAzbJMFh4ZzkYzQS7Dl6YeU2y6TT0mRYKb/MA.
 Are you sure you want to continue connecting (yes/no)? yes
-Warning: Permanently added 'raspberrypi.local' (ECDSA) to the list of known hosts.
-pi@raspberrypi.local's password: (raspberry と入力)
+Warning: Permanently added '192.168.123.xxx' (ECDSA) to the list of known hosts.
+pi@192.168.123.xxx's password: (raspberry と入力)
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -716,44 +717,8 @@ pi@raspberrypi:~ $ sudo apt-get install -y fswebcam
 > E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?  
 > と表示されたら、 sudo apt-get update を行ってから、再度 apt-get install してみてください
 
-#### <a name="section5-1.3">コマンドラインによるテスト撮影</a>
-インストールが出来たら、実際に撮影してみましょう。先ほどインストールした、fswebcam コマンドを使います。 -r オプションで解像度を指定する事が出来ます。
-
-```
-pi@raspberrypi:~ $ fswebcam -r 640x480 test.jpg
---- Opening /dev/video0...
-Trying source module v4l2...
-/dev/video0 opened.
-No input was specified, using the first.
---- Capturing frame...
-Captured frame in 0.00 seconds.
---- Processing captured image...
-Writing JPEG image to 'test.jpg'.
-```
-
-scp コマンドなどを使って、PCにファイルを転送して開いてみましょう。
-
-##### <a name="section5-1.3.1">Macの場合</a>
-**この操作はお手元のMacで行ってください。Raspberry Piにログインする必要はありません。**
-
-新しいTerminalウィンドウを開き以下のコマンドを実行します。
-
-```
-~$ scp pi@raspberrypi.local:test.jpg .
-pi@raspberrypi.local's password:
-test.jpg                                      100%  121KB 121.0KB/s   00:00    
-
-~$ open test.jpg
-```
-![観察画像](image/plant_photo.jpeg)
-
-##### <a name="section5-1.4">Windowsの場合</a>
-WinSCPなど、SCPできるアプリケーションをインストールすると、手元のPCに画像を転送できます。
-もし難しければ、次に進んで Web ブラウザ経由でも確認出来ますので、スキップして構いません
 
 ### <a name="section5-2">Webカメラとして使う</a>
-**この操作はRaspberry Piにログインして行います。Raspberry PiにSSH接続したウィンドウでコマンドを実行してください。**
-
 Raspberry PiをWebサーバにして、アクセスした時にリアルタイムの画像を確認できるようにしてみましょう。
 
 まずapache2 パッケージをインストールします
@@ -791,9 +756,7 @@ pi@raspberrypi:~ $ sudo chmod +x /usr/lib/cgi-bin/camera
 
 ここまで設定をしたら、Webブラウザでアクセスしてみましょう。
 
-http://raspberrypi.local/cgi-bin/camera
-
-> Windowsの場合や、複数のRaspberry PiがLAN内にある場合には、http://{RaspberryPiのIPアドレス}/cgi-bin/camera でアクセスをしてみて下さい。
+http://{RaspberryPiのIPアドレス}/cgi-bin/camera
 
 リロードをするたびに、新しく画像を撮影しますので、撮影する対象の位置決めをする際などに使えると思います。  
 一度位置を固定したら、カメラの位置や対象物の下にビニールテープなどで位置がわかるように印をしておくとよいでしょう。
@@ -846,8 +809,7 @@ Writing JPEG image to '201607190219.jpg'.
 
 現在の温度を取得して、温度をキャプションとした画像を保存する事に成功しました。
 
-http://raspberrypi.local/images/
-> Windowsの場合や、複数のRaspberry PiがLAN内にある場合には、http://{RaspberryPiのIPアドレス}/images でアクセスをしてみて下さい。
+http://{RaspberryPiのIPアドレス}/images
 
 にアクセスするとファイルが出来ていると思います。
 
@@ -1118,7 +1080,7 @@ video:669kB audio:0kB other streams:0kB global headers:0kB muxing overhead: 0.79
 -- 4. cleanup...
 ```
 
-上記の例で出力されたファイルは、 https://raspberrypi.local/timelapse.mp4 でアクセスする事が出来ます。
+上記の例で出力されたファイルは、 https://{Raspberry PiのIPアドレス}/timelapse.mp4 でアクセスする事が出来ます。
 
 [サンプル動画](http://soracom-files.s3.amazonaws.com/timelapse.mp4)
 
