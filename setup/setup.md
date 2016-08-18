@@ -243,7 +243,21 @@ Windowsの場合は、[TeraTerm](https://osdn.jp/projects/ttssh2/)を使用す�
 
 パッケージをダウンロードしてインストールした後、プログラムを立ち上げて以下のように接続先を指定して接続します。
 
-![TeraTerm接続先](../common/image/connect-air-001.png)![TeraTerm認証情報](../common/image/connect-air-002.png)
+```
+- ホスト：raspberrypi.local
+- サービス：SSH
+```
+
+![TeraTerm接続先](../common/image/connect-air-001.png)
+
+ユーザ名、パスワードを以下のとおり指定してログインします。
+
+```
+- ユーザ名: pi
+- パスワード: raspberry
+```
+
+![TeraTerm認証情報](../common/image/connect-air-002.png)
 
 ## <a name="section3"> 3章 Air SIMを使って、インターネットに接続する</a>
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
