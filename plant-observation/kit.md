@@ -6,7 +6,7 @@
 - [はじめに](#section1)
 - [概要](#section2)
 - [必要なもの](#section3)
-  - [SORACOM アカウントの作成](#section1-2)
+  - [connect_air.shの自動起動をセットアップする](#section3-1)
 
 - [温度センサー DS18B20+ を使う](#section4)
   - [セットアップ](#section4-1)
@@ -58,6 +58,23 @@
 5. ジャンパワイヤ(オス-メス) x 3 (黒・赤・その他の色の３本を推奨)
 6. USB接続のWebカメラ(Raspbianで認識出来るもの)
 
+### <a name="section3-1">connect_air.shの自動起動をセットアップする</a>
+このハンズオンでは、Air SIMを使って定期的にセンサーや写真をクラウドにアップロードを行います。
+
+アップロードのたびにconnect_air.shを実行する手間を省くために、Raspberry Pi が起動したタイミングで自動的に 3G 接続を行うようセットアップします。
+
+nano で /etc/rc.local ファイルを開きます。
+
+```
+pi@raspberrypi:~ $ nano /etc/rc.local
+```
+
+ファイルの中にあるexit 0 の前の行に、```/usr/local/sbin/connect_air.sh & ```と書き込み、[Ctrl+W]で保存します。
+
+保存できたら[Ctrl+X]でnanoを閉じて、設定完了です。
+
+**この設定を行うことでRaspberry Pi が起動すると自動的にAir SIMでネットワーク接続が行われるようになります。データのアップロードには通信料金が発生しますのでご注意ください。**
+
 ##  <a name="section4">温度センサー DS18B20+ を使う</a>
 ### <a name="section4-1">セットアップ</a>
 #### <a name="section4-1.1">配線する</a>
@@ -76,15 +93,20 @@ Raspberry Piの設定として、２つのファイルに追記して(以下の�
 pi@raspberrypi:~ $ sudo su -
 root@raspberrypi:~# cat >> /boot/config.txt
 dtoverlay=w1-gpio-pullup,gpiopin=4
-(Ctrl+D)
+(Ctrl+Dを押します)
+
 root@raspberrypi:~# cat >> /etc/modules
 w1-gpio
 w1-therm
-(Ctrl+D)
+(Ctrl+Dを押します)
+
 root@raspberrypi:~# reboot
 ```
 
-再起動後、センサーは /sys/bus/w1/devices/ 以下にディレクトリとして現れます(28-で始まるものがセンサーです)。
+しばらく待つと、再起動が完了します。もう一度Raspberry Piにログインしてください。
+* ログイン方法は[セットアップテキスト](../setup/setup.md#-raspberry-pi-への-ログイン)を参照してください。
+
+ログインできたら、Raspberry Piがセンサーを認識できているか確認します。再起動後、センサーは /sys/bus/w1/devices/ 以下にディレクトリとして現れます(28-で始まるものがセンサーです)。
 
 ```
 pi@raspberrypi:~ $ ls /sys/bus/w1/devices/
@@ -92,7 +114,7 @@ pi@raspberrypi:~ $ ls /sys/bus/w1/devices/
 ```
 
 > トラブルシュート：
-> もしディレクトリが見れない場合、配線が間違っている可能性があります
+> もし28-で始まるディレクトリが表示されない場合は、配線が間違っている可能性があります
 
 ファイル名は、センサー１つ１つ異なるIDがついています。センサー値を cat コマンドで読み出してみましょう。
 
@@ -193,11 +215,13 @@ __※上記のスクリーンショットはホスト名が完全には表示さ
 #### <a name="section4-2.3">プログラムのダウンロード・実行</a>
 
 クラウドへの送信をおこないます。
-以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
 
 __<font color="red">Beamを使用する(「send_temp_to_cloud.py」の実行時)には、SORACOM Airで通信している必要があります。</font>__
 
+以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
+
 ```
+
 pi@raspberrypi:~ $ sudo apt-get install -y python-pip  
 :
 pi@raspberrypi ~ $ sudo pip install elasticsearch
@@ -232,6 +256,7 @@ pi@raspberrypi ~ $ python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slav
 
 ```
 pi@raspberrypi:~ $ ( crontab -l ; echo '* * * * * python send_temp_to_cloud.py /sys/bus/w1/devices/28-*/w1_slave &> /dev/null' ) | crontab -
+
 pi@raspberrypi:~ $ crontab -l
 # Edit this file to introduce tasks to be run by cron.
 #
@@ -259,12 +284,12 @@ pi@raspberrypi:~ $ crontab -l
 
 ### <a name="section4-3">クラウド上でデータを確認する</a>
 Elasticsearch Service 上にインストールされている Kibana にアクセスします。  
-http://bit.ly/kibana4
+http://bit.ly/kibana4　（新しいウィンドウで開いてください）
 
 ![](image/5-11.png)
 
 さらに、折れ線グラフとして可視化されている様子を見てみましょう。  
-http://bit.ly/temp-graph
+http://bit.ly/temp-graph　（新しいウィンドウで開いてください）
 
 > 全ての SIM カードからの情報が集まっていますので、もし自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi=[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
 
@@ -282,12 +307,10 @@ USB カメラは、Raspberry Pi の USB スロットに接続して下さい。
 fswebcam というパッケージを使用します。apt-getコマンドでインストールして下さい。
 
 ```
+pi@raspberrypi:~ $ sudo apt-get update
+
 pi@raspberrypi:~ $ sudo apt-get install -y fswebcam
 ```
-
-> トラブルシュート：  
-> E: Unable to fetch some archives, maybe run apt-get update or try with --fix-missing?  
-> と表示されたら、 sudo apt-get update を行ってから、再度 apt-get install してみてください
 
 #### <a name="section5-1.3">コマンドラインによるテスト撮影</a>
 インストールが出来たら、実際に撮影してみましょう。先ほどインストールした、fswebcam コマンドを使います。 -r オプションで解像度を指定する事が出来ます。
@@ -307,20 +330,25 @@ Writing JPEG image to 'test.jpg'.
 scp コマンドなどを使って、PCにファイルを転送して開いてみましょう。
 
 ##### <a name="section5-1.3.1">Macの場合</a>
+**この操作はお手元のMacで行ってください。Raspberry Piにログインする必要はありません。**
+
+新しいTerminalウィンドウを開き以下のコマンドを実行します。
+
 ```
 ~$ scp pi@raspberrypi.local:test.jpg .
 pi@raspberrypi.local's password:
 test.jpg                                      100%  121KB 121.0KB/s   00:00    
+
 ~$ open test.jpg
 ```
 ![観察画像](image/plant_photo.jpeg)
 
 ##### <a name="section5-1.4">Windowsの場合</a>
-TODO: winscp を使う？
-
-> もし難しければ、次に進んで Web ブラウザ経由でも確認出来ますので、スキップして構いません
+WinSCPなど、SCPできるアプリケーションをインストールすると、手元のPCに画像を転送できます。
+もし難しければ、次に進んで Web ブラウザ経由でも確認出来ますので、スキップして構いません
 
 ### <a name="section5-2">Webカメラとして使う</a>
+**この操作はRaspberry Piにログインして行います。Raspberry PiにSSH接続したウィンドウでコマンドを実行してください。**
 
 Raspberry PiをWebサーバにして、アクセスした時にリアルタイムの画像を確認できるようにしてみましょう。
 
@@ -332,14 +360,17 @@ pi@raspberrypi:~ $ sudo apt-get install -y apache2
 インストールが出来たら、CGIが実行出来るようにします。
 ```
 pi@raspberrypi:~ $ sudo ln -s /etc/apache2/mods-available/cgi.load /etc/apache2/mods-enabled/
+
 pi@raspberrypi:~ $ sudo gpasswd -a www-data video
 Adding user www-data to group video
+
 pi@raspberrypi:~ $ sudo service apache2 restart
 ```
 
 最後にCGIプログラムをダウンロードして設置します。
 ```
 pi@raspberrypi:~ $ cd /usr/lib/cgi-bin/
+
 pi@raspberrypi:/usr/lib/cgi-bin $ sudo wget https://soracom-files.s3.amazonaws.com/camera
 --2016-07-14 08:04:34--  https://soracom-files.s3.amazonaws.com/camera
 Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 54.231.225.58
@@ -372,7 +403,10 @@ http://raspberrypi.local/cgi-bin/camera
 まず保存するディレクトリを作成して、アクセス権限を変更します。
 
 ```
+pi@raspberrypi:~ $ cd
+
 pi@raspberrypi:~ $ sudo mkdir /var/www/html/images
+
 pi@raspberrypi:~ $ sudo chown -R pi:pi /var/www/html/
 ```
 
@@ -392,7 +426,9 @@ Saving to: ‘take_picture.sh’
 take_picture.sh           100%[====================================>]     444  --.-KB/s   in 0.001s
 
 2016-07-19 02:19:01 (451 KB/s) - ‘take_picture.sh’ saved [444/444]
+
 pi@raspberrypi:~ $ chmod +x take_picture.sh
+
 pi@raspberrypi:~ $ ./take_picture.sh
 checking current temperature ... 29.75 [c]
 taking picture ...
@@ -418,13 +454,28 @@ http://raspberrypi.local/images/
 
 #### <a name="section5-3.3">cron設定</a>
 
-先ほどの温度センサー情報と同じく、cronの設定を行います。
+先ほどの温度センサー情報と同じく、cronの設定を行います。crontabを編集して設定を追加しましょう。
+
+以下のコマンドを実行し、crontabの編集画面を開きます。
+
+```
+pi@raspberrypi:~ $ crontab -e
+no crontab for root - using an empty one
+
+Select an editor.  To change later, run 'select-editor'.
+  1. /bin/ed
+  2. /bin/nano        <---- easiest
+  3. /usr/bin/vim.tiny
+
+Choose 1-3 [2]: 2 （2を選択します）
+crontab: installing new crontab
+```
+
+編集画面が開いたら、以下のように crontab に追記すると、毎分撮影となります。
 
 ```
 * * * * * ~/take_picture.sh &> /dev/null
 ```
-
-のように crontab に追記すれば、毎分撮影となります。
 
 画像サイズは場合にもよりますが、640x480ドットでだいたい150キロバイト前後になります。
 もし毎分撮った場合には、１日に約210MB程度の容量となります。
@@ -441,6 +492,8 @@ http://raspberrypi.local/images/
 ```
 
 のように毎時０分に撮影を行ったりする事で、間隔を間引いてあげるとよいでしょう。
+
+設定を書き込んだら、[Ctrl+W] を押して保存し、[Ctrl+X] を押してcrontab編集画面を閉じてください。
 
 ### <a name="section5-4">画像をクラウドにアップロードする</a>
 撮影した画像をインターネットから参照出来るように、クラウドストレージにアップロードしてみましょう。
@@ -508,6 +561,7 @@ Saving to: ‘upload_image.py’
 upload_image.py                     100%[====================================================================>]   1.05K  --.-KB/s   in 0s
 
 2016-07-22 05:27:36 (32.9 MB/s) - ‘upload_image.py’ saved [1073/1073]
+
 pi@raspberrypi:~ $ python upload_image.py /var/www/html/image.jpg
 - SORACOM Endorse にアクセスして token を取得中 ...
 {
@@ -552,7 +606,7 @@ status: 200
 
 ##### ５分毎
 ```
-* * * * * python upload_image.py /var/www/html/image.jpg &> /dev/null
+*/5 * * * * python upload_image.py /var/www/html/image.jpg &> /dev/null
 ```
 
 しばらくしてから、先ほどのURLをリロードし、画像が更新されていることを確かめましょう。
@@ -570,7 +624,7 @@ status: 200
 pi@raspberrypi:~ $ sudo apt-get install -y libav-tools
 ```
 
-> 非常に多くのパッケージをダウンロードしますので、3G接続を切って有線接続でインストールした方がよいかもしれません。
+非常に多くのパッケージをダウンロードしますので、少し時間がかかります。3G接続を切って有線接続でインストールした方がよいかもしれません。
 
 #### スクリプトのダウンロード
 スクリプトをダウンロードします。
@@ -589,6 +643,7 @@ timelapse.sh                100%[===========================================>]  
 2016-08-02 09:13:16 (41.6 MB/s) - ‘timelapse.sh’ saved [1262/1262]
 
 pi@raspberrypi:~ $ chmod +x timelapse.sh
+
 pi@raspberrypi:~ $ ./timelapse.sh
 Usage: ./timelapse.sh [options] /full/path/to/output.mp4
 Options:
