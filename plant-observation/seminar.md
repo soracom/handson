@@ -385,7 +385,7 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 nano で /etc/rc.local ファイルを開きます。
 
 ```
-pi@raspberrypi:~ $ nano /etc/rc.local
+pi@raspberrypi:~ $ sudo nano /etc/rc.local
 ```
 
 ファイルの中にあるexit 0 の前の行に、```/usr/local/sbin/connect_air.sh & ```と書き込み、[Ctrl+O]で保存します。
