@@ -386,9 +386,11 @@ nano で /etc/rc.local ファイルを開きます。
 pi@raspberrypi:~ $ nano /etc/rc.local
 ```
 
-ファイルの中にあるexit 0 の前の行に、```/usr/local/sbin/connect_air.sh & ```と書き込み、[Ctrl+W]で保存します。
+ファイルの中にあるexit 0 の前の行に、```/usr/local/sbin/connect_air.sh & ```と書き込み、[Ctrl+O]で保存します。
 
 保存できたら[Ctrl+X]でnanoを閉じて、設定完了です。
+
+- 参考：nanoの操作方法を紹介した動画は[こちら](image/nano.gif)をご覧ください。
 
 **この設定を行うことでRaspberry Pi が起動すると自動的にAir SIMでネットワーク接続が行われるようになります。データのアップロードには通信料金が発生しますのでご注意ください。**
 
@@ -834,7 +836,7 @@ Choose 1-3 [2]: 2 （2を選択します）
 crontab: installing new crontab
 ```
 
-編集画面が開いたら、以下のように crontab に追記すると、毎分撮影となります。
+編集画面が開いたら、以下のように crontab に追記して保存すると、毎分撮影となります。
 
 ```
 * * * * * ~/take_picture.sh &> /dev/null
