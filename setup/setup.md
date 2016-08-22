@@ -13,14 +13,15 @@
 [ユーザーコンソールでの Air SIM の登録](#section1-6)<br>
 
 #### [2章 Raspberry Piのセットアップ](#section2)
-<a name="raspbian-install"> Raspbian のインストール</a>
-<a name="ssh-login"> Raspberry Pi への ログイン</a>
+[Raspbian のインストール](#raspbian-install)<br>
+[Raspberry Pi への ログイン](#ssh-login)<br>
 
 #### [3章 Air SIMを使って、インターネットに接続する](#section3)
 [Raspberry Pi に USBドングルを接続する](#section3-1)<br>
 [必要なパッケージのインストール](#section3-2)<br>
 [接続スクリプトのダウンロード](#section3-3)<br>
 [Air SIM を使って、インターネットに接続する](#section3-4)<br>
+[参考：Raspberry Pi が起動したタイミングで自動的に connect_air.sh を実行するには](#section3−appendix)<br>
 
 #### [4章 ユーザーコンソールによる通信の確認](#section4)
 [データ通信量と利用料金の確認](#section4-1)<br>
@@ -303,7 +304,7 @@ pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
 と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
 ```
 
-###  <a name = "section3−3"> 3.	接続スクリプトのダウンロード</a>
+### <a name = "section3−3"> 3.	接続スクリプトのダウンロード</a>
 
 以下に、モデムの初期化、APNの設定、ダイアルアップなどを行うスクリプトが用意されています。
 http://soracom-files.s3.amazonaws.com/connect_air.sh
@@ -417,13 +418,24 @@ xxx.xxx.65.54.in-addr.arpa domain name pointer ec2-54-65-xx-xxx.ap-northeast-1.c
 
 CurlコマンドによるIPアドレスとhostコマンドにより、EC2からインターネットに接続されていることがわかりました。
 
-**（参考）Raspberry Pi が起動したタイミングで自動的に connect_air.sh を実行するには**
+### <a name = "section3−appendix"> 参考：Raspberry Pi が起動したタイミングで自動的に connect_air.sh を実行するには</a>
+Raspberry Piで事前に設定を行っておくと、起動のタイミングで自動的にconnect_air.shが実行され、3G 接続を行うようにできます。
 
-Raspberry Pi が起動したタイミングで自動的に 3G 接続を行うには、以下のように設定してください。
+**この設定を行うと、Raspberry Pi が起動したタイミングで自動的にAir SIMでネットワーク接続が行われるようになります。通信を行うと料金が発生しますのでご注意ください。**
 
-* vi や nano で /etc/rc.local ファイルを開きます。
-* ファイルの中にある```exit 0``` の前の行に、```/usr/local/sbin/connect_air.sh &``` と書き込みます。
-* /etc/rc.local ファイルを保存して終了すると、設定完了です。
+nano で /etc/rc.local ファイルを開きます。
+
+```
+pi@raspberrypi:~ $ sudo nano /etc/rc.local
+```
+
+ファイルの中にあるexit 0 の前の行に、```/usr/local/sbin/connect_air.sh & ```と書き込み、[Ctrl+O]を押し、続いてEnterを押して保存します。
+
+保存できたら[Ctrl+X]でnanoを閉じて、設定完了です。
+
+![](image/nano.gif)
+
+自動起動の設定を無効にしたい場合、rc.local から```/usr/local/sbin/connect_air.sh & ```の行を削除してファイルを保存してください。
 
 
 ## <a name = "section4"> 4章 ユーザーコンソールによる通信の確認</a>
