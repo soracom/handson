@@ -688,13 +688,13 @@ pi@raspberrypi:~ $ crontab -l
 ```
 
 ### <a name="section4-3">クラウド上でデータを確認する</a>
-Elasticsearch Service 上にインストールされている Kibana にアクセスします。  
-http://bit.ly/kibana4　（新しいウィンドウで開いてください）
+Elasticsearch Service 上にインストールされている Kibana にアクセスします。
+[http://bit.ly/kibana4](http://bit.ly/kibana4) （新しいウィンドウで開いてください）
 
 ![](image/5-11.png)
 
-さらに、折れ線グラフとして可視化されている様子を見てみましょう。  
-http://bit.ly/temp-graph　（新しいウィンドウで開いてください）
+さらに、折れ線グラフとして可視化されている様子を見てみましょう。
+[http://bit.ly/temp-graph](http://bit.ly/temp-graph) （新しいウィンドウで開いてください）
 
 > 全ての SIM カードからの情報が集まっていますので、もし自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi=[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
 
@@ -858,7 +858,7 @@ crontab: installing new crontab
 
 のように毎時０分に撮影を行ったりする事で、間隔を間引いてあげるとよいでしょう。
 
-設定を書き込んだら、[Ctrl+W] を押して保存し、[Ctrl+X] を押してcrontab編集画面を閉じてください。
+設定を書き込んだら、[Ctrl+W] を押し、続いて [Enter] を押して保存します。保存できたら、[Ctrl+X] を押してcrontab編集画面を閉じてください。
 
 ### <a name="section5-4">画像をクラウドにアップロードする</a>
 撮影した画像をインターネットから参照出来るように、クラウドストレージにアップロードしてみましょう。
