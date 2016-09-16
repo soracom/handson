@@ -388,6 +388,25 @@ Use 'dstport 0' to get default and quiet this message
 - Registering 100.64.152.132 as a peer
 ```
 
+#### エラーメッセージについて
+コマンド実行の際に以下のようなエラーメッセージが出力されることがありますが、そのまま次のステップに進んで問題ありません。  
+このメッセージは、vxlanの設定投入前など、カーネルモジュール(vxlan)の読み込みが行われていない場合に出力されるものです。  
+
+```
+rmmod: ERROR: Module vxlan is not currently loaded
+```
+
+また、以下も問題ないメッセージですので、そのまま次のステップに進んでください。
+
+```
+vxlan: destination port not specified
+Will use Linux kernel default (non-standard value)
+Use 'dstport 4789' to get the IANA assigned value
+Use 'dstport 0' to get default and quiet this message
+```
+
+上記はコマンド引数の指定形式に対するメッセージです。今回はportオプションを使ってVXLANのsrc/dst portを指定しているため、そのまま進んで構いません。
+
 ### ステップ 7: Gate を有効化する
 Gate を有効化します。有効化すると、Gate Peer と VPG での通信が可能となり、さらにデバイス間での通信も可能となります。
 
