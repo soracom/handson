@@ -7,14 +7,24 @@
 本ハンズオンでは、以下を前提としています。
 
 - SORACOM のアカウントをお持ちであること
-- SORACOM Air の SIM(Air SIM)、および使用できるデバイス、スマートフォンをお持ちであること
+- SORACOM Air の SIM(Air SIM)、および使用できるデバイス(スマートフォン・タブレット、モバイルルータなど)をお持ちであること
 - AWSのアカウントをお持ちであること
+
+### SORACOM のアカウント開設とSIMの登録
+SORACOMのアカウントを取得されていない方は、以下のガイドに従い、アカウントの作成と支払情報の設定を行ってください。
+
+- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#account">アカウントの作成</a>
+- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#payment">支払い情報の設定</a>
+
+既にアカウントをお持ちであるか、上記を済ませた後、SIMの登録をお済ませください。
+
+- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#registsim">Air SIMの登録</a>
 
 ### Amazon VPCについて
 VPC について詳しく知りたい方は、以下のガイド(AWS公式ドキュメント)も合わせてご参照ください。
 
-- [VPC 入門ガイド　](http://docs.aws.amazon.com/AmazonVPC/latest/GettingStartedGuide/)
-- [VPC ピアリングの機能解説](http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/)
+- <a target="\_blank" href="http://docs.aws.amazon.com/AmazonVPC/latest/GettingStartedGuide/">VPC 入門ガイド</a>
+- <a target="\_blank" href="http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/">VPC ピアリングの機能解説</a>
 
 ## ハンズオンの流れ
 ハンズオンは以下のような流れで行います
@@ -63,11 +73,51 @@ Canal の利用を開始するステップは、以下の通りです。(当ガ�
 
 ![](img/gs_canal/canal02_vpc01.png)
 
-# TODO: ここは CloudForamtion を使用するようにざっくり変更する
+本ハンズオンでは、Cloud Formation テンプレートを使用して VPC、および EC2 インスタンスを作成します。
 
-PC のブラウザを起動して、アクセスしてみましょう。
+> もし全て手動で構成をしてみたいという方は、[「SORACOM Canal Getting Started ガイド - ステップ1」](https://dev.soracom.io/jp/start/canal/#step1) を参照下さい。
 
-SSH でのログインに使用したドメイン(例えば、ec2-52-196-xxx-xxx.ap-northeast-1.compute.amazonaws.com)でアクセスします。
+事前に EC2 インスタンスのキーペアが必要です。まずキーペアを作成してください。
+
+<a target="\_blank" href="https://ap-northeast-1.console.aws.amazon.com/ec2/v2/home?region=ap-northeast-1#KeyPairs:sort=keyName">AWS マネジメントコンソールの EC2 ダッシュボード</a> から、「キーペアの作成」を行います。
+
+![](img/gs_canal/canal06_cf01.png)
+
+キーペア名を入力します。
+
+![](img/gs_canal/canal06_cf02.png)
+
+次に、Cloud Formation テンプレートから VPC、EC2 を作成します。
+
+<a target="\_blank" href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#cstack=sn~canal-test|turl~https://s3.amazonaws.com/soracom-files/canal-ec2.json">こちらのリンク</a> から、CloudFormation の　Stack 作成画面を開き、「Next」をクリックします。
+
+![](img/gs_canal/canal06_cf04.png)
+
+スタックの名前とパラメータを指定します。
+
+- 「Stack name」は任意の名前をつけてください。
+- 「KeyName」は先ほど作成したキーペア名となります。
+- 「InstanceType」は AWS の無料使用枠を使うのであればデフォルトの「t2.micro」のまま、もし無料枠の対象でない場合には、「t2.nano」に変更してもよいでしょう。
+
+![](img/gs_canal/canal06_cf05.png)
+
+「Next」をクリックします。
+
+![](img/gs_canal/canal06_cf06.png)
+
+「Create」をクリックします。
+
+![](img/gs_canal/canal06_cf07.png)
+
+Status が「CREATE_COMPLETE」となれば作成されています。
+
+![](img/gs_canal/canal06_cf08.png)
+
+必要な情報が「Outputs」タブに表示されているので、ご確認ください。
+
+![](img/gs_canal/canal06_cf09.png)
+
+Outputs の ec2PublicIp に表示されているIPアドレスにPCのブラウザでアクセスしてみましょう。
 
 ![](img/gs_canal/canal03_ec209.png)
 
@@ -217,11 +267,23 @@ SORACOM ユーザーコンソールから「グループ」を選択します。
 
 ![](img/gs_canal/canal05_connect06.png)
 
+### SIMを再接続する(重要)
+
+SIMが接続するVPGの設定を変更しましたので、既に接続中のデバイスについては、設定変更後に一旦接続を切ってから繋ぎ直してください。
+
+再接続する方法には、以下があります
+
+- デバイスが手元にある場合
+  - スマホ・タブレット等：Air Plane (＜機内＞)モードがある場合 On / Off
+  - ラズパイ等の場合：3G/LTEの再接続(pppのリスタートなど)
+  - その他：デバイス自体の再起動
+- デバイスが遠隔地にある場合
+  - ユーザコンソールから、当該のSIM を一旦「休止」して、再度「使用開始」を行う
+  - <a target="\_blank" href="https://dev.soracom.io/jp/docs/api/#!/Subscriber/deleteSubscriberSession">deleteSubscriberSession API</a>を実行する
+
 ###  Air SIM からプライベートアドレスでアクセスする
 
 VPG を使用するグループから、「ステップ 1: VPC、および EC2 インスタンスを作成する」で作成した VPC 内の EC2 インスタンスにアクセスします。
-
-グループを変更しましたので、既に接続中のデバイスについては、設定変更後に一旦接続を切ってから繋ぎ直してください。（Air Plain (＜機内＞)モードの On / Off、SIM の状態を一旦「休止状態」にしするなど）
 
 ブラウザを起動し、EC2 インスタンスのプライベートアドレスを入力します。
 
@@ -234,32 +296,3 @@ VPG を使用するグループから、「ステップ 1: VPC、および EC2 �
 Canal を利用することにより、インターネットを介することなく、VPC にアクセスすることが可能となります。また、 VPC もインターネットにポートを開ける必要はありません。
 
 当ガイドでは、VPG のインターネットゲートウェイを「ON」として作成しましたが、「OFF」(ピア接続先のみ)を設定した場合は、インターネットアクセスを許可しない完全閉域網となります。インターネットからデバイスにマルウエアを仕込まれるリスクを回避することも可能となります。
-
-
-## [参考] Cloud Formation テンプレートを使用して VPC、および EC2 インスタンスを作成する
-
-ここでは、「ステップ 1: VPC、および EC2 インスタンスを作成する」で作成、および設定した VPC、EC2 を Cloud Formation テンプレート を使用して作成します。
-
-事前に EC2 インスタンスのキーペアが必要です。まずキーペアを作成してください。
-
-AWS マネジメントコンソールの EC2 ダッシュボードから、「キーペア」をクリックし、「キーペアの作成」を行います。
-
-キーペア名を入力します。
-
-次に、Cloud Formation テンプレートから VPC、EC2 を作成します。[こちら](/jp/files/canal-ec2.json)から、Cloud Formation テンプレートをダウンロードしてください。
-
-AWS マネジメントコンソールの Cloud Formation ダッシュボードから、「Create Stack」をクリックします。
-
-[こちらからダウンロード](/jp/files/canal-ec2.json)したファイルを選択します。
-
-「Stack name」、「KeyName」を入力します。「Stack name」は任意の名前をつけてください。「KeyName」は先ほど作成したキーペア名となります。
-
-「Next」をクリックします。
-
-「Create」をクリックします。
-
-Status が「CREATE\_COMPLETE」となれば作成されています。
-
-Canal の作成に必要な情報が「Outputs」タブに表示されているので、ご確認ください。
-
-引き続き、を行ってください。
