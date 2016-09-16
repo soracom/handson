@@ -68,7 +68,9 @@ Canal の利用を開始するステップは、以下の通りです。(当ガ�
 
 以降、上記の4つのステップにそって、手順をご説明します。なお、ステップ1については、AWS Cloud Formation のテンプレートを用意しています。
 
-## ステップ 1: VPC、および EC2 インスタンスを作成する
+## SORACOM Canal のセットアップ
+
+### ステップ 1: VPC、および EC2 インスタンスを作成する
 ここでは、以下の赤の点線部分を作成します。
 
 ![](img/gs_canal/canal02_vpc01.png)
@@ -127,13 +129,13 @@ Apache にアクセスすることができました。
 
 以上で、「ステップ 1: VPC、および EC2インスタンスを作成する」は完了です。
 
-## ステップ 2: VPG を作成し、VPC ピア接続を設定する
+### ステップ 2: VPG を作成し、VPC ピア接続を設定する
 
 ここでは、VPG を作成し、VPC ピア接続を設定します。以下の赤の点線部分を作成します。
 
 ![](img/gs_canal/canal04_vpg01.png)
 
-###  VPG の作成
+####  VPG の作成
 
 SORACOM のユーザーコンソールにログインします。
 
@@ -177,7 +179,7 @@ VPC ID と VPC のアドレスレンジ(VPC CIDR)は AWS マネジメントコ�
 
 ![](img/gs_canal/canal04_vpg08.png)
 
-###  VPC ピア接続の設定
+####  VPC ピア接続の設定
 
 では、ピア接続を設定します。
 
@@ -197,7 +199,7 @@ VPC ID と VPC のアドレスレンジ(VPC CIDR)は AWS マネジメントコ�
 
 以上で、「ステップ 2: VPG を作成し、VPC ピア接続を設定します。」は完了です。
 
-## ステップ 3: ピアリング接続を受諾し、ネットワークを設定
+### ステップ 3: ピアリング接続を受諾し、ネットワークを設定
 
 ここでは、「ステップ 1: VPC、および EC2 インスタンスを作成する」で作成した VPC で、ピア接続を受諾し、ネットワークの設定(ルートテーブルの設定)を行います。
 
@@ -225,7 +227,7 @@ VPG のアドレスレンジは、100.64.0.0/16 となりますので、当ア�
 
 以上で、ピア接続の受諾、および、ルートテーブルの設定は完了しました。
 
-## ステップ 4: 閉域網で接続する
+### ステップ 4: 閉域網で接続する
 
 いよいよ、Canal を通じて、閉域網の接続を行います。
 
@@ -235,7 +237,7 @@ VPG のアドレスレンジは、100.64.0.0/16 となりますので、当ア�
 - Air SIM をグループに所属させる
 - Air SIM からプライベートアドレスでアクセスします。
 
-###  グループを作成し VPG を設定する
+####  グループを作成し VPG を設定する
 
 SORACOM ユーザーコンソールから「グループ」を選択します。
 
@@ -258,7 +260,7 @@ SORACOM ユーザーコンソールから「グループ」を選択します。
 > VPG を指定したグループに含まれる Air SIM は VPG を利用することになります。  
 > Air SIM の所属するグループを切り替えることで、同じ Air SIM であっても VPG を利用する/しないを切り替えることができます。これにより、閉域網接続の可否を切り替えることができます。
 
-###  Air SIM をグループに所属させる
+#### Air SIM をグループに所属させる
 「SIM 管理」メニューから、接続を行う SIM を選択し、「所属グループ変更」をクリックします。
 
 ![](img/gs_canal/canal05_connect05.png)
@@ -267,7 +269,7 @@ SORACOM ユーザーコンソールから「グループ」を選択します。
 
 ![](img/gs_canal/canal05_connect06.png)
 
-### SIMを再接続する(重要)
+#### SIMを再接続する(重要)
 
 SIMが接続するVPGの設定を変更しましたので、既に接続中のデバイスについては、設定変更後に一旦接続を切ってから繋ぎ直してください。
 
@@ -281,7 +283,7 @@ SIMが接続するVPGの設定を変更しましたので、既に接続中の�
   - ユーザコンソールから、当該のSIM を一旦「休止」して、再度「使用開始」を行う
   - <a target="\_blank" href="https://dev.soracom.io/jp/docs/api/#!/Subscriber/deleteSubscriberSession">deleteSubscriberSession API</a>を実行する
 
-###  Air SIM からプライベートアドレスでアクセスする
+####  Air SIM からプライベートアドレスでアクセスする
 
 VPG を使用するグループから、「ステップ 1: VPC、および EC2 インスタンスを作成する」で作成した VPC 内の EC2 インスタンスにアクセスします。
 
@@ -291,8 +293,205 @@ VPG を使用するグループから、「ステップ 1: VPC、および EC2 �
 
 ![](img/gs_canal/canal05_connect07.png)
 
-以上で、「SORACOM Canal を使用して閉域網でサーバーに接続する」は完了です。
+以上で、「SORACOM Canal のセットアップ」は完了です。
 
 Canal を利用することにより、インターネットを介することなく、VPC にアクセスすることが可能となります。また、 VPC もインターネットにポートを開ける必要はありません。
 
-当ガイドでは、VPG のインターネットゲートウェイを「ON」として作成しましたが、「OFF」(ピア接続先のみ)を設定した場合は、インターネットアクセスを許可しない完全閉域網となります。インターネットからデバイスにマルウエアを仕込まれるリスクを回避することも可能となります。
+> 当ガイドでは、VPG のインターネットゲートウェイを「ON」として作成しましたが、「OFF」(ピア接続先のみ)を設定した場合は、インターネットアクセスを許可しない完全閉域網となります。インターネットからデバイスにマルウエアを仕込まれるリスクを回避することも可能となります。
+
+## SORACOM Gate とは
+
+SORACOM Gate（以下、Gate）はお客様のネットワークとデバイスを LAN 接続するサービスで、IoT デバイスへのセキュアな接続を実現します。SORACOM外のネットワークに、ゲートウェイとなるサーバ（以下、Gate Peer）を作成し SORACOM Virtual Private Gateway (以下、VPG) と仮想的な L2 ネットワークを構築することで、お客様のVPCからデバイスへのセキュアな接続とデバイス間での通信が可能となります。
+
+### Gate の特徴
+Gate には IoT デバイスの活用に役立つ2つの特徴があります。
+
+#### お客様VPCからデバイスへの直接アクセス機能
+SORACOM 外のネットワークと Gate を有効化した VPG との間で、トンネルを張ることによって仮想的な L2 ネットワークを構成することができます。トンネリングされた SORACOM 外のネットワークと、VPG 配下のデバイスのネットワークが接続され、SORACOM 外のネットワークからVPGを経由してデバイスにプライベート IP アドレスでアクセスできるようになります。なお、現時点ではトンネリング技術として VXLAN を採用しています。
+
+#### デバイス間通信機能
+Gate を有効化すると、VPGとIoTデバイスが同じ仮想的なサブネット (Virtual Subnet) に配置されます。すなわち、Gateが有効化されているグループに所属するデバイスであれば、グループ内のデバイス同士で通信することも可能です。
+
+> 本ハンズオンでは、デバイス間の直接アクセスを行うステップは含まれておりません。  
+> 追加で Air SIM を入手して、同じ VPG に所属させることで簡単にアクセスが出来ますので、ぜひお試し下さい。
+
+次章では、Canal と Gate を組み合わせ、Amazon Web Services(AWS) 上に構築したお客様の仮想プライベートクラウド環境(Amazon Virtual Private Cloud、以下、VPC)と、デバイスが双方向で通信できる環境を構築する手順を紹介します。
+
+## SORACOM Gate のセットアップ
+セットアップから接続確認までは6つのステップに分かれています。
+
+- [ステップ 5: Gate Peer となる EC2 インスタンスを登録する](#step5)
+- [ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する](#step6)
+- [ステップ 7: Gate を有効化する](#step7)
+- [ステップ 8: Gate Peer からデバイスに接続できることを確認する](#step8)
+- [ステップ 9: 使い終わったリソースを削除する](#step9)
+- [参考: トンネリング技術の概要](#tunneling)
+
+![](img/gs_gate/overview.png)
+
+### ステップ 5: Gate Peer となる EC2 インスタンスを登録する
+VPG 設定画面＞「高度な設定」で、「お客様の Gate Peer 一覧」にある「Gate Peer を追加」ボタンをクリックします。
+
+![](img/gs_gate/register_gate_peer_1.png)
+
+ダイアログで Gate Peer の IP アドレスを登録します。
+
+- トンネル接続用 IP アドレス: Gate Peer となる EC2 インスタンスのプライベート IP アドレスを指定してください。この項目は入力必須です。
+- デバイスサブネット内 IP アドレス：この項目の入力は任意です。Gate Peer が仮想的な L2 ネットワーク内で使用する IP アドレスを指定することができます。空欄にしておくと自動割当となります。
+
+![](img/gs_gate/register_gate_peer_2.png)
+
+### ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する
+Gate Peer の登録が完了したら、続いて VXLAN の設定を行います。
+
+#### AWS マネジメントコンソールでの設定
+まず、AWS マネジメントコンソールにて、以下のポート/プロトコルで通信ができるよう Gate Peer の EC2 セキュリティグループの設定を行います。
+
+- 22/tcp (SSH) …設定を行うPCから SSH 接続できるように設定
+- 4789/udp (VXLAN)…100.64.0.0/16 (SORACOM VPC)からの通信を許可するように設定
+- ICMP (ping)…0.0.0.0/0 からの ping に応答するように設定
+- 同一 VPC 内からデバイスへの通信に使用するプロトコル…例えば、デバイスへ http アクセスしたいなら 80/tcp を通す、全ての通信を許可するのであればアクセス元としてお客様の VPC CIDR を指定し全ての通信を許可するよう設定
+
+次に、AWS マネジメントコンソールで Gate Peer の送信元/送信先チェックを外します。この設定は、Gate Peer 以外のサーバから Gate Peer を経由して通信するために必要な設定です。具体的な設定方法は[Amazon VPC ユーザーガイド「送信元/送信先チェックを無効にする」]("http://docs.aws.amazon.com/ja_jp/AmazonVPC/latest/UserGuide/VPC_NAT_Instance.html#EIP_Disable_SrcDestCheck")を参照してください。
+
+#### Gate Peer の情報を確認
+
+VPG 設定画面＞「高度な設定」の、「VPG の Gate Peer 一覧」で必要な情報が確認できます。この後の手順で「トンネル接続用 IP アドレス」に記載されている IP アドレス（API レスポンスの innerIpAddress に該当するIPアドレス）を使います。
+
+![](img/gs_gate/vpg_ip.png)
+
+### Gate Peer に SSH 接続し、VXLAN の設定を投入
+続いて Gate Peer となる EC2 インスタンスに VXLAN の設定を投入します。Gate Peer に SSH 接続し、以下の順序でコマンドを root 権限で実行します。
+
+<div class="warning-block">
+  <div class="title">注意</div>
+  <ul>
+    <li>本ステップは Amazon Linux または Ubuntu を Gate Peer として利用する想定で書かれています。他の OS では設定方法が異なる場合があります。</li>
+    <li>本ステップでのルーティング設定、パケットの転送設定は<b> Gate Peer を再起動すると設定が削除されます。</b>Gate Peer を永続的に利用する場合には、設定スクリプトを作成するなどして、これらの設定が再起動時に自動的に行われるようにしてください。</li>
+  </ul>
+</div>
+
+デバイスへのルーティング設定を行います。以下の項目は VPG や Gate Peer の IP アドレスに読み替えてください。
+
+* ```{gate_peer_outerIpAddress}``` : Gate Peer に実際に割り当てられているIPアドレス。ユーザコンソールでは「トンネル接続用 IP アドレス」と表示されています。
+* ```{gate_peer_innerIpAddress}``` :  Gate Peer がデバイスとの通信に使用するIPアドレス。ユーザコンソールでは「デバイスサブネット内 IP アドレス」と表示されています。
+* ```{vpg_outerIpAddress1}``` : ステップ2で確認した VPG の IP アドレスのうち1つ（100.64.xxx.4）
+* ```{vpg_outerIpAddress2}``` : ステップ2で確認した VPG の IP アドレスのうち1つ（100.64.xxx.132）
+
+VXLAN を使用するためのカーネルモジュールを読み込みます。
+
+```
+# rmmod vxlan
+# modprobe vxlan udp_port=4789
+```
+
+コマンド実行の際に以下のようなメッセージが出力されることがありますが、そのまま次のステップに進んで問題ありません。
+
+```
+# rmmod vxlan
+
+＝＝出力例＝＝
+rmmod: ERROR: Module vxlan is not currently loaded
+```
+
+上記メッセージは、vxlanの設定投入前などカーネルモジュール(vxlan)の読み込みが行われていない場合に出力されるものです。そのまま次のステップに進んでください。
+
+続いて、VXLAN のインタフェースを設定します。
+
+```
+# ip link add vxlan0 type vxlan local {gate_peer_outerIpAddress} id 10 port 4789 4789 dev eth0
+# ifconfig vxlan0 {gate_peer_innerIpAddress}/9 up
+```
+
+このときもコマンド実行の際に以下のようなメッセージが出力されることがありますが、そのまま次のステップに進んでください。
+
+```
+# ip link add vxlan0 type vxlan local {gate_peer_outerIpAddress} id 10 port 4789 4789 dev eth0　
+
+＝＝出力例＝＝
+vxlan: destination port not specified
+Will use Linux kernel default (non-standard value)
+Use 'dstport 4789' to get the IANA assigned value
+Use 'dstport 0' to get default and quiet this message
+```
+
+こちらはコマンド引数の指定形式に対するメッセージです。今回はportオプションを使ってVXLANのsrc/dst portを指定しているため、そのまま次のステップに進んで構いません。
+
+次に、パケットの転送設定を行います。
+
+```
+# bridge fdb append 00:00:00:00:00:00 dev vxlan0 dst {vpg_outerIpAddress1}
+# bridge fdb append 00:00:00:00:00:00 dev vxlan0 dst {vpg_outerIpAddress2}
+```
+
+パケットの転送を有効化します。
+
+```
+# echo 1 > /proc/sys/net/ipv4/ip_forward
+# iptables -t nat -A POSTROUTING  -o vxlan0 -j MASQUERADE
+```
+
+### ステップ 7: Gate を有効化する
+Gate を有効化します。有効化すると、Gate Peer と VPG での通信が可能となり、さらにデバイス間での通信も可能となります。
+
+VPG 設定画面＞「高度な設定」の、「Gate を有効にする」を ON に設定し、保存します。
+
+![](img/gs_gate/vpg_gate_open.png)
+
+### ステップ 8: Gate Peer からデバイスに接続できることを確認する
+ここまでの設定が終わると、お客様の VPC とデバイスが Gate で接続された状態になっています。Gate Peer からデバイスに接続できることを確認しましょう。
+
+まず、Air SIM を使ってデバイスをネットワークに接続します。
+
+- 参考：デバイスの接続例は[Getting Started: 各種デバイスで SORACOM Air を使用する](/jp/start/device_setting/)を参照してください。
+
+Air SIM でデバイスを接続できたら、Gate Peer からデバイスに ping や http でアクセスしてみましょう。
+
+以下は Gate Peer でコマンドを実行し、USB ドングルでネットワーク接続した Raspberry pi に 対して ping と http でアクセスした例です。プライベート IP アドレスで疎通が取れています。
+
+```
+[ec2-user@Gate Peer]$ ping 10.219.96.63
+PING 10.219.96.63 (10.219.96.63) 56(84) bytes of data.
+64 bytes from 10.219.96.63: icmp_seq=1 ttl=64 time=816 ms
+64 bytes from 10.219.96.63: icmp_seq=2 ttl=64 time=403 ms
+64 bytes from 10.219.96.63: icmp_seq=3 ttl=64 time=423 ms
+64 bytes from 10.219.96.63: icmp_seq=4 ttl=64 time=422 ms
+
+[ec2-user@Gate Peer]$  curl http://10.219.96.63
+Hello World!
+```
+
+以上で Gate のセットアップと動作確認は終了です。
+
+Canalを設定したことで、デバイスからお客様のVPCへの通信が可能となり、Gate を設定したことで、お客様のVPCからデバイスへの通信が可能となりました。
+
+Gate の機能を使わない時には、ユーザコンソールまたは closeGate API によって Gate を無効化することができます。Gate を無効化すると、デバイスへのアクセスを停止することができます。
+
+> Gate の有効化・無効化を切り替える際には数秒間の通信断が発生します。
+
+### ステップ 9: 使い終わったリソースを削除する
+SORACOM VPG と Canal, Gate Peer となる AWS EC2 には利用料金がかかります。不要であれば削除しておきましょう。
+
+#### VPG を削除する
+VPG を削除する場合、まずは VPC ピア接続の削除とグループの解除が必要です。ユーザコンソールの「閉域網接続」メニューの「基本設定」タブから VPG を選択し VPC ピア接続とグループの解除を実行します。
+
+![](img/gs_gate/remove_pcx_group.png)
+
+VPC ピア接続とグループの解除が終わったら、続いて「高度な設定」タブで「この VPG を削除」ボタンをクリックします。これで VPG が削除され、グループに対する Canal の設定も解除されます。
+
+![](img/gs_gate/remove_vpg.png)
+
+#### Gate Peer を削除する
+Cloud Formation スタックの削除を行ってください。削除手順は[AWS CloudFormation ユーザーガイド](https://aws.amazon.com/jp/documentation/cloudformation/)をご覧ください。
+
+## おわりに
+以上で SORACOM Canal および Gate のハンズオンは終了となります。
+
+## 参考: トンネリング技術とオーバレイネットワークの概要
+Gate で使用している仮想的な L2 ネットワークは、トンネリング技術と、その上で構築されるオーバレイネットワークによって実現されています。これらの技術の背景を把握しておくと Gate の特徴がよく理解できますので、ここで簡単に技術解説をします。
+
+「トンネリング」とは、あるネットワークの上に、仮想的に別のネットワークを構築することを意味しています。このとき仮想的に構築されたネットワークは、もともとのネットワークの上に重なる(overlay)ように構成されるため、「オーバレイネットワーク」と呼ばれます。トンネリングを使ったオーバレイネットワークの実現方法にはいろいろな種類がありますが、Gate では VXLAN が使われています。
+
+トンネリングを使った通信では、本来別々のネットワークにある機器同士で通信を行うために、トンネルの両端にあるエンドポイントでパケットのカプセル化が行われます。具体的には、VXLAN 上で使われるIPアドレス（Inner IP Address）を宛先に持ったパケットを、エンドポイントの IP アドレス（Outer IP Address）を宛先に持つパケットでカプセル化することとなります。これによって、デバイスとお客様のサーバは L3 で分断されているにも関わらず、VXLAN によってデバイスとお客様のサーバは L2 で同じネットワークに接続されているのと同じように通信ができるようになります。
+
+![](img/gs_gate/tunneling.png)
