@@ -1,0 +1,189 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "keyName": {
+      "Type": "String",
+      "Description": "Keypair Name"
+    },
+    "instanceType": {
+      "Type": "String",
+      "Description": "Instance Type (use t2.micro for freetier)",
+      "Default": "t2.micro"
+    }
+  },
+  "Resources": {
+    "customerVpc": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true
+      }
+    },
+    "customerSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/24",
+        "VpcId": {
+          "Ref": "customerVpc"
+        }
+      }
+    },
+    "customerRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "customerVpc"
+        }
+      }
+    },
+    "customerSubnetRouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "customerRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "customerSubnet"
+        }
+      }
+    },
+    "customerIgw": {
+      "Type": "AWS::EC2::InternetGateway"
+    },
+    "customerIgwAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "InternetGatewayId": {
+          "Ref": "customerIgw"
+        },
+        "VpcId": {
+          "Ref": "customerVpc"
+        }
+      }
+    },
+    "customerRouteDefault": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "customerRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "customerIgw"
+        }
+      },
+      "DependsOn": "customerIgw"
+    },
+    "customerSg": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "VpcId": {
+          "Ref": "customerVpc"
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "22",
+            "ToPort": "22",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "icmp",
+            "FromPort": "8",
+            "ToPort": "-1",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "80",
+            "ToPort": "80",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "4789",
+            "ToPort": "4789",
+            "CidrIp": "100.64.0.0/16"
+          }
+        ],
+        "GroupDescription": "allow ssh/ping/http/vxlan"
+      }
+    },
+    "customerLinux": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "InstanceType": { "Ref": "instanceType" },
+        "ImageId": "ami-29160d47",
+        "KeyName": {
+          "Ref": "keyName"
+        },
+        "SourceDestCheck": "false",
+        "NetworkInterfaces": [
+          {
+            "DeviceIndex": 0,
+            "PrivateIpAddress": "10.0.0.254",
+            "AssociatePublicIpAddress": "true",
+            "SubnetId": {
+              "Ref": "customerSubnet"
+            },
+            "GroupSet": [
+              {
+                "Ref": "customerSg"
+              }
+            ]
+          }
+        ],
+        "UserData": {
+          "Fn::Base64": "#!/bin/bash\nyum install -y httpd\nchkconfig httpd on\nservice httpd start\necho this is web server running inside customer vpc | tee /var/www/html/index.html"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "customer linux"
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "accountId": {
+      "Description": "Account ID",
+      "Value": {
+        "Ref": "AWS::AccountId"
+      }
+    },
+    "vpcId": {
+      "Description": "VPC ID",
+      "Value": {
+        "Ref": "customerVpc"
+      }
+    },
+    "vpcCidr": {
+      "Description": "VPC Cidr",
+      "Value": {
+        "Fn::GetAtt": [
+          "customerVpc",
+          "CidrBlock"
+        ]
+      }
+    },
+    "ec2PrivateIp": {
+      "Description": "EC2 Private IP address",
+      "Value": {
+        "Fn::GetAtt": [
+          "customerLinux",
+          "PrivateIp"
+        ]
+      }
+    },
+    "ec2PublicIp": {
+      "Description": "EC2 Public IP address",
+      "Value": {
+        "Fn::GetAtt": [
+          "customerLinux",
+          "PublicIp"
+        ]
+      }
+    }
+  }
+}
