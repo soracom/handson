@@ -1,7 +1,7 @@
 # SORACOM Canal ＆ Gate ハンズオン
 
 ## はじめに
-このハンズオンでは、SORACOM と AWS を使用したモバイル閉域網接続環境を実際に構築し、プライベートIPアドレスで端末とEC2インスタンス間で通信が行えることを確認します。
+このハンズオンでは、SORACOM と AWS を使用したモバイル閉域網接続環境を実際に構築し、プライベートIPアドレスで端末とEC2インスタンス間で相互に通信が行えることを確認します。
 
 ## 前提
 本ハンズオンでは、以下を前提としています。
@@ -13,18 +13,18 @@
 ### SORACOM のアカウント開設とSIMの登録
 SORACOMのアカウントを取得されていない方は、以下のガイドに従い、アカウントの作成と支払情報の設定を行ってください。
 
-- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#account">アカウントの作成</a>
-- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#payment">支払い情報の設定</a>
+- [アカウントの作成](https://dev.soracom.io/jp/start/console/#account)
+- [支払い情報の設定](https://dev.soracom.io/jp/start/console/#payment)
 
 既にアカウントをお持ちであるか、上記を済ませた後、SIMの登録をお済ませください。
 
-- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#registsim">Air SIMの登録</a>
+- [Air SIMの登録](https://dev.soracom.io/jp/start/console/#registsim)
 
 ### Amazon VPCについて
 VPC について詳しく知りたい方は、以下のガイド(AWS公式ドキュメント)も合わせてご参照ください。
 
-- <a target="\_blank" href="http://docs.aws.amazon.com/AmazonVPC/latest/GettingStartedGuide/">VPC 入門ガイド</a>
-- <a target="\_blank" href="http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/">VPC ピアリングの機能解説</a>
+- [VPC 入門ガイド](http://docs.aws.amazon.com/AmazonVPC/latest/GettingStartedGuide/)
+- [VPC ピアリングの機能解説](http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/)
 
 ## ハンズオンの流れ
 ハンズオンは以下のような流れで行います
@@ -81,7 +81,7 @@ Canal の利用を開始するステップは、以下の通りです。(当ガ�
 
 事前に EC2 インスタンスのキーペアが必要です。まずキーペアを作成してください。
 
-<a target="\_blank" href="https://ap-northeast-1.console.aws.amazon.com/ec2/v2/home?region=ap-northeast-1#KeyPairs:sort=keyName">AWS マネジメントコンソールの EC2 ダッシュボード</a> から、「キーペアの作成」を行います。
+[AWS マネジメントコンソールの EC2 ダッシュボード](https://ap-northeast-1.console.aws.amazon.com/ec2/v2/home?region=ap-northeast-1#KeyPairs:sort=keyName)から、「キーペアの作成」を行います。
 
 ![](img/gs_canal/canal06_cf01.png)
 
@@ -91,7 +91,7 @@ Canal の利用を開始するステップは、以下の通りです。(当ガ�
 
 次に、Cloud Formation テンプレートから VPC、EC2 を作成します。
 
-<a target="\_blank" href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#cstack=sn~canal-test|turl~https://s3.amazonaws.com/soracom-files/canal-ec2.json">こちらのリンク</a> から、CloudFormation の　Stack 作成画面を開き、「Next」をクリックします。
+[CloudFormation の Stack 作成画面](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#cstack=sn~canal-test|turl~https://s3.amazonaws.com/soracom-files/canal-ec2.json)を開き、「Next」をクリックします。
 
 ![](img/gs_canal/canal06_cf04.png)
 
@@ -281,7 +281,7 @@ SIMが接続するVPGの設定を変更しましたので、既に接続中の�
   - その他：デバイス自体の再起動
 - デバイスが遠隔地にある場合
   - ユーザコンソールから、当該のSIM を一旦「休止」して、再度「使用開始」を行う
-  - <a target="\_blank" href="https://dev.soracom.io/jp/docs/api/#!/Subscriber/deleteSubscriberSession">deleteSubscriberSession API</a>を実行する
+  - [deleteSubscriberSession API](https://dev.soracom.io/jp/docs/api/#!/Subscriber/deleteSubscriberSession)を実行する
 
 ####  Air SIM からプライベートアドレスでアクセスする
 
@@ -292,6 +292,13 @@ VPG を使用するグループから、「ステップ 1: VPC、および EC2 �
 プライベートアドレスである「10.0.0.254」でアクセスできています！
 
 ![](img/gs_canal/canal05_connect07.png)
+
+#### トラブルシュート
+もし接続が出来ない場合、下記を確認してみてください
+
+- VPC Peering のリクエストを許可しているか
+- VPC の RouteTable に適切に経路を設定しているか
+- Air SIM　の所属グループを変更した後に、3G/LTE通信を再接続しているかどうか
 
 以上で、「SORACOM Canal のセットアップ」は完了です。
 
