@@ -384,16 +384,6 @@ VPG 設定画面＞「高度な設定」で、「お客様の Gate Peer 一覧�
 ### <a name="7-2">ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する</a>
 Gate Peer の登録が完了したら、続いて VXLAN の設定を行います。
 
-#### AWS マネジメントコンソールでの設定
-まず、AWS マネジメントコンソールにて、以下のポート/プロトコルで通信ができるよう Gate Peer の EC2 セキュリティグループの設定を行います。
-
-- 22/tcp (SSH) …設定を行うPCから SSH 接続できるように設定
-- 4789/udp (VXLAN)…100.64.0.0/16 (SORACOM VPC)からの通信を許可するように設定
-- ICMP (ping)…0.0.0.0/0 からの ping に応答するように設定
-- 同一 VPC 内からデバイスへの通信に使用するプロトコル…例えば、デバイスへ http アクセスしたいなら 80/tcp を通す、全ての通信を許可するのであればアクセス元としてお客様の VPC CIDR を指定し全ての通信を許可するよう設定
-
-次に、AWS マネジメントコンソールで Gate Peer の送信元/送信先チェックを外します。この設定は、Gate Peer 以外のサーバから Gate Peer を経由して通信するために必要な設定です。具体的な設定方法は[Amazon VPC ユーザーガイド「送信元/送信先チェックを無効にする」]("http://docs.aws.amazon.com/ja_jp/AmazonVPC/latest/UserGuide/VPC_NAT_Instance.html#EIP_Disable_SrcDestCheck")を参照してください。
-
 #### Gate Peer の情報を確認
 
 VPG 設定画面＞「高度な設定」の、「VPG の Gate Peer 一覧」で必要な情報が確認できます。この後の手順で「トンネル接続用 IP アドレス」に記載されている IP アドレス（API レスポンスの innerIpAddress に該当するIPアドレス）を使います。
@@ -403,7 +393,7 @@ VPG 設定画面＞「高度な設定」の、「VPG の Gate Peer 一覧」で�
 ### <a name="7-3">Gate Peer に SSH 接続し、VXLAN の設定を投入</a>
 続いて Gate Peer となる EC2 インスタンスに VXLAN の設定を投入します。Gate Peer に SSH 接続し、以下の順序でコマンドを root 権限で実行します。
 
-> 本ステップは Amazon Linux または Ubuntu を Gate Peer として利用する想定で書かれています。他の OS では設定方法が異なる場合があります。  
+> Gate Peer となる EC2　インスタンスの Public IP address は、CloudFormation の Outputs に出力されています。  
 > 本ステップでのルーティング設定、パケットの転送設定は Gate Peer を再起動すると設定が削除されます。  
 > Gate Peer を永続的に利用する場合には、設定スクリプトを作成するなどして、これらの設定が再起動時に自動的に行われるようにしてください。
 
@@ -412,6 +402,16 @@ VXLANの設定を行うスクリプト [gate_init_vxlan.sh](http://soracom-files
 デバイスへのルーティング設定を行います。以下の項目は VPG や Gate Peer の IP アドレスに読み替えてください。
 
 ```
+(ローカルマシン)$ ssh ec2-user@xxx.xxx.xxx.xxx
+Last login: Fri Sep 16 17:11:41 2016 from yyy.yyy.yyy.yyy
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux AMI
+      ___|\___|___|
+
+https://aws.amazon.com/amazon-linux-ami/2016.03-release-notes/
+20 package(s) needed for security, out of 38 available
+Run "sudo yum update" to apply all updates.
 [ec2-user@ip-10-0-0-254 ~]$ wget http://soracom-files.s3.amazonaws.com/gate_init_vxlan.sh
 [ec2-user@ip-10-0-0-254 ~]$ chmod +x gate_init_vxlan.sh
 [ec2-user@ip-10-0-0-254 ~]$ sudo ./gate_init_vxlan.sh eth0 10.0.0.254 vxlan0 10.254.0.254 9 100.64.152.4 100.64.152.132
