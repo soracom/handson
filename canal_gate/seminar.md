@@ -170,9 +170,11 @@ Apache にアクセスすることができました。
 
 SORACOM のユーザーコンソールにログインします。
 
-画面上部のメニューから「閉域網接続」を選択します。
+画面左上のメニューを開き、「VPG」を選択します。
 
-![](img/gs_canal/canal04_vpg02.png)
+![](img/gs_canal/VPG_menu1.png)
+
+![](img/gs_canal/VPG_menu2.png)
 
 「VPG を追加」をクリックします。
 
