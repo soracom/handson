@@ -47,6 +47,10 @@ SORACOMのアカウントを取得されていない方は、以下のガイド�
 
 - [Air SIMの登録](https://dev.soracom.io/jp/start/console/#registsim)
 
+また、クーポンコードをもらった人は、下記の手順に従い、自分のアカウントに紐付けを行ってください
+
+- [クーポンの使い方](http://bit.ly/soracom-coupon)
+
 ### Amazon VPCについて</a>
 VPC について詳しく知りたい方は、以下のガイド(AWS公式ドキュメント)も合わせてご参照ください。
 
