@@ -412,6 +412,8 @@ VXLANの設定を行うスクリプト [gate_init_vxlan.sh](http://soracom-files
 デバイスへのルーティング設定を行います。以下の項目は VPG や Gate Peer の IP アドレスに読み替えてください。
 
 ```
+[ec2-user@ip-10-0-0-254 ~]$ wget http://soracom-files.s3.amazonaws.com/gate_init_vxlan.sh
+[ec2-user@ip-10-0-0-254 ~]$ chmod +x gate_init_vxlan.sh
 [ec2-user@ip-10-0-0-254 ~]$ sudo ./gate_init_vxlan.sh eth0 10.0.0.254 vxlan0 10.254.0.254 9 100.64.152.4 100.64.152.132
 rmmod: ERROR: Module vxlan is not currently loaded
 - Creating vxlan interface vxlan0
