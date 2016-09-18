@@ -1,32 +1,63 @@
+目次
+
+- [はじめに](#1-0)
+- [前提](#2-0)
+  - [SORACOM のアカウント開設とSIMの登録](#2-1)
+  - [Amazon VPCについて](#2-2)
+- [ハンズオンの流れ](#3-0)
+- [SORACOM Canal とは](#4-0)
+- [SORACOM Canal のセットアップ](#5-0)
+  - [ステップ 1: VPC、および EC2 インスタンスを作成する](#5-1)
+  - [ステップ 2: VPG を作成し、VPC ピア接続を設定する](#5-2)
+  - [ステップ 3: ピアリング接続を受諾し、ネットワークを設定](#5-3)
+  - [ステップ 4: 閉域網で接続する](#5-4)
+- [SORACOM Gate とは](#6-0)
+  - [Gate の特徴](#6-1)
+- [SORACOM Gate のセットアップ](#7-0)
+  - [ステップ 5: Gate Peer となる EC2 インスタンスを登録する](#7-1)
+  - [ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する](#7-2)
+  - [Gate Peer に SSH 接続し、VXLAN の設定を投入](#7-3)
+  - [ステップ 7: Gate を有効化する](#7-4)
+  - [ステップ 8: Gate Peer からデバイスに接続できることを確認する](#7-5)
+  - [ステップ 9: 使い終わったリソースを削除する](#7-6)
+- [おわりに](#8-0)
+- [参考: トンネリング技術とオーバレイネットワークの概要](#9-0)
+
+----
+
 # SORACOM Canal ＆ Gate ハンズオン
 
-## はじめに
-このハンズオンでは、SORACOM と AWS を使用したモバイル閉域網接続環境を実際に構築し、プライベートIPアドレスで端末とEC2インスタンス間で通信が行えることを確認します。
+## <a name="1-0">はじめに</a>
+このハンズオンでは、SORACOM と AWS を使用したモバイル閉域網接続環境を実際に構築し、プライベートIPアドレスで端末とEC2インスタンス間で相互に通信が行えることを確認します。
 
-## 前提
+## <a name="2-0">前提</a>
 本ハンズオンでは、以下を前提としています。
 
 - SORACOM のアカウントをお持ちであること
 - SORACOM Air の SIM(Air SIM)、および使用できるデバイス(スマートフォン・タブレット、モバイルルータなど)をお持ちであること
 - AWSのアカウントをお持ちであること
 
-### SORACOM のアカウント開設とSIMの登録
+### SORACOM のアカウント開設とSIMの登録</a>
 SORACOMのアカウントを取得されていない方は、以下のガイドに従い、アカウントの作成と支払情報の設定を行ってください。
 
-- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#account">アカウントの作成</a>
-- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#payment">支払い情報の設定</a>
+- [アカウントの作成](https://dev.soracom.io/jp/start/console/#account)
+- [支払い情報の設定](https://dev.soracom.io/jp/start/console/#payment)
 
 既にアカウントをお持ちであるか、上記を済ませた後、SIMの登録をお済ませください。
 
-- <a target="\_blank" href="https://dev.soracom.io/jp/start/console/#registsim">Air SIMの登録</a>
+- [Air SIMの登録](https://dev.soracom.io/jp/start/console/#registsim)
 
-### Amazon VPCについて
+また、クーポンコードをもらった人は、下記の手順に従い、自分のアカウントに紐付けを行ってください
+
+- [クーポンの使い方](http://bit.ly/soracom-coupon)
+
+### Amazon VPCについて</a>
 VPC について詳しく知りたい方は、以下のガイド(AWS公式ドキュメント)も合わせてご参照ください。
 
-- <a target="\_blank" href="http://docs.aws.amazon.com/AmazonVPC/latest/GettingStartedGuide/">VPC 入門ガイド</a>
-- <a target="\_blank" href="http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/">VPC ピアリングの機能解説</a>
+- [VPC 入門ガイド](http://docs.aws.amazon.com/AmazonVPC/latest/GettingStartedGuide/)
+- [VPC ピアリングの機能解説](http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/)
 
-## ハンズオンの流れ
+## <a name="3-0">ハンズオンの流れ</a>
 ハンズオンは以下のような流れで行います
 
 - SORACOM アカウントの作成 〜 Air SIM の登録
@@ -39,7 +70,7 @@ VPC について詳しく知りたい方は、以下のガイド(AWS公式ドキ
   - インスタンス上でVXLANの設定を行う
   - インスタンスからデバイスにアクセスする
 
-## SORACOM Canal とは
+## <a name="4-0">SORACOM Canal とは</a>
 
 SORACOM Canal （以下、Canal）は、Amazon Web Services(AWS) 上に構築したお客様の仮想プライベートクラウド環境(Amazon Virtual Private Cloud、以下、VPC)と SORACOM プラットフォームを直接接続するプライベート接続サービスです。
 
@@ -68,9 +99,9 @@ Canal の利用を開始するステップは、以下の通りです。(当ガ�
 
 以降、上記の4つのステップにそって、手順をご説明します。なお、ステップ1については、AWS Cloud Formation のテンプレートを用意しています。
 
-## SORACOM Canal のセットアップ
+## <a name="5-0">SORACOM Canal のセットアップ</a>
 
-### ステップ 1: VPC、および EC2 インスタンスを作成する
+### ステップ 1: VPC、および EC2 インスタンスを作成する</a>
 ここでは、以下の赤の点線部分を作成します。
 
 ![](img/gs_canal/canal02_vpc01.png)
@@ -81,7 +112,7 @@ Canal の利用を開始するステップは、以下の通りです。(当ガ�
 
 事前に EC2 インスタンスのキーペアが必要です。まずキーペアを作成してください。
 
-<a target="\_blank" href="https://ap-northeast-1.console.aws.amazon.com/ec2/v2/home?region=ap-northeast-1#KeyPairs:sort=keyName">AWS マネジメントコンソールの EC2 ダッシュボード</a> から、「キーペアの作成」を行います。
+[AWS マネジメントコンソールの EC2 ダッシュボード](https://ap-northeast-1.console.aws.amazon.com/ec2/v2/home?region=ap-northeast-1#KeyPairs:sort=keyName)から、「キーペアの作成」を行います。
 
 ![](img/gs_canal/canal06_cf01.png)
 
@@ -91,7 +122,7 @@ Canal の利用を開始するステップは、以下の通りです。(当ガ�
 
 次に、Cloud Formation テンプレートから VPC、EC2 を作成します。
 
-<a target="\_blank" href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#cstack=sn~canal-test|turl~https://s3.amazonaws.com/soracom-files/canal-ec2.json">こちらのリンク</a> から、CloudFormation の　Stack 作成画面を開き、「Next」をクリックします。
+[CloudFormation の Stack 作成画面](https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#cstack=sn~canal-test|turl~https://s3.amazonaws.com/soracom-files/canal-ec2.json)を開き、「Next」をクリックします。
 
 ![](img/gs_canal/canal06_cf04.png)
 
@@ -129,7 +160,7 @@ Apache にアクセスすることができました。
 
 以上で、「ステップ 1: VPC、および EC2インスタンスを作成する」は完了です。
 
-### ステップ 2: VPG を作成し、VPC ピア接続を設定する
+### ステップ 2: VPG を作成し、VPC ピア接続を設定する</a>
 
 ここでは、VPG を作成し、VPC ピア接続を設定します。以下の赤の点線部分を作成します。
 
@@ -199,7 +230,7 @@ VPC ID と VPC のアドレスレンジ(VPC CIDR)は AWS マネジメントコ�
 
 以上で、「ステップ 2: VPG を作成し、VPC ピア接続を設定します。」は完了です。
 
-### ステップ 3: ピアリング接続を受諾し、ネットワークを設定
+### ステップ 3: ピアリング接続を受諾し、ネットワークを設定</a>
 
 ここでは、「ステップ 1: VPC、および EC2 インスタンスを作成する」で作成した VPC で、ピア接続を受諾し、ネットワークの設定(ルートテーブルの設定)を行います。
 
@@ -227,7 +258,7 @@ VPG のアドレスレンジは、100.64.0.0/16 となりますので、当ア�
 
 以上で、ピア接続の受諾、および、ルートテーブルの設定は完了しました。
 
-### ステップ 4: 閉域網で接続する
+### ステップ 4: 閉域網で接続する</a>
 
 いよいよ、Canal を通じて、閉域網の接続を行います。
 
@@ -281,7 +312,7 @@ SIMが接続するVPGの設定を変更しましたので、既に接続中の�
   - その他：デバイス自体の再起動
 - デバイスが遠隔地にある場合
   - ユーザコンソールから、当該のSIM を一旦「休止」して、再度「使用開始」を行う
-  - <a target="\_blank" href="https://dev.soracom.io/jp/docs/api/#!/Subscriber/deleteSubscriberSession">deleteSubscriberSession API</a>を実行する
+  - [deleteSubscriberSession API](https://dev.soracom.io/jp/docs/api/#!/Subscriber/deleteSubscriberSession)を実行する
 
 ####  Air SIM からプライベートアドレスでアクセスする
 
@@ -293,17 +324,24 @@ VPG を使用するグループから、「ステップ 1: VPC、および EC2 �
 
 ![](img/gs_canal/canal05_connect07.png)
 
+#### トラブルシュート
+もし接続が出来ない場合、下記を確認してみてください
+
+- VPC Peering のリクエストを許可しているか
+- VPC の RouteTable に適切に経路を設定しているか
+- Air SIM　の所属グループを変更した後に、3G/LTE通信を再接続しているかどうか
+
 以上で、「SORACOM Canal のセットアップ」は完了です。
 
 Canal を利用することにより、インターネットを介することなく、VPC にアクセスすることが可能となります。また、 VPC もインターネットにポートを開ける必要はありません。
 
 > 当ガイドでは、VPG のインターネットゲートウェイを「ON」として作成しましたが、「OFF」(ピア接続先のみ)を設定した場合は、インターネットアクセスを許可しない完全閉域網となります。インターネットからデバイスにマルウエアを仕込まれるリスクを回避することも可能となります。
 
-## SORACOM Gate とは
+## <a name="6-0">SORACOM Gate とは</a>
 
 SORACOM Gate（以下、Gate）はお客様のネットワークとデバイスを LAN 接続するサービスで、IoT デバイスへのセキュアな接続を実現します。SORACOM外のネットワークに、ゲートウェイとなるサーバ（以下、Gate Peer）を作成し SORACOM Virtual Private Gateway (以下、VPG) と仮想的な L2 ネットワークを構築することで、お客様のVPCからデバイスへのセキュアな接続とデバイス間での通信が可能となります。
 
-### Gate の特徴
+### Gate の特徴</a>
 Gate には IoT デバイスの活用に役立つ2つの特徴があります。
 
 #### お客様VPCからデバイスへの直接アクセス機能
@@ -317,7 +355,7 @@ Gate を有効化すると、VPGとIoTデバイスが同じ仮想的なサブネ
 
 次章では、Canal と Gate を組み合わせ、Amazon Web Services(AWS) 上に構築したお客様の仮想プライベートクラウド環境(Amazon Virtual Private Cloud、以下、VPC)と、デバイスが双方向で通信できる環境を構築する手順を紹介します。
 
-## SORACOM Gate のセットアップ
+## <a name="7-0">SORACOM Gate のセットアップ</a>
 セットアップから接続確認までは6つのステップに分かれています。
 
 - [ステップ 5: Gate Peer となる EC2 インスタンスを登録する](#step5)
@@ -329,7 +367,7 @@ Gate を有効化すると、VPGとIoTデバイスが同じ仮想的なサブネ
 
 ![](img/gs_gate/overview.png)
 
-### ステップ 5: Gate Peer となる EC2 インスタンスを登録する
+### ステップ 5: Gate Peer となる EC2 インスタンスを登録する</a>
 VPG 設定画面＞「高度な設定」で、「お客様の Gate Peer 一覧」にある「Gate Peer を追加」ボタンをクリックします。
 
 ![](img/gs_gate/register_gate_peer_1.png)
@@ -341,7 +379,7 @@ VPG 設定画面＞「高度な設定」で、「お客様の Gate Peer 一覧�
 
 ![](img/gs_gate/register_gate_peer_2.png)
 
-### ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する
+### ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する</a>
 Gate Peer の登録が完了したら、続いて VXLAN の設定を行います。
 
 #### AWS マネジメントコンソールでの設定
@@ -360,7 +398,7 @@ VPG 設定画面＞「高度な設定」の、「VPG の Gate Peer 一覧」で�
 
 ![](img/gs_gate/vpg_ip.png)
 
-### Gate Peer に SSH 接続し、VXLAN の設定を投入
+### Gate Peer に SSH 接続し、VXLAN の設定を投入</a>
 続いて Gate Peer となる EC2 インスタンスに VXLAN の設定を投入します。Gate Peer に SSH 接続し、以下の順序でコマンドを root 権限で実行します。
 
 > 本ステップは Amazon Linux または Ubuntu を Gate Peer として利用する想定で書かれています。他の OS では設定方法が異なる場合があります。  
@@ -407,14 +445,14 @@ Use 'dstport 0' to get default and quiet this message
 
 上記はコマンド引数の指定形式に対するメッセージです。今回はportオプションを使ってVXLANのsrc/dst portを指定しているため、そのまま進んで構いません。
 
-### ステップ 7: Gate を有効化する
+### ステップ 7: Gate を有効化する</a>
 Gate を有効化します。有効化すると、Gate Peer と VPG での通信が可能となり、さらにデバイス間での通信も可能となります。
 
 VPG 設定画面＞「高度な設定」の、「Gate を有効にする」を ON に設定し、保存します。
 
 ![](img/gs_gate/vpg_gate_open.png)
 
-### ステップ 8: Gate Peer からデバイスに接続できることを確認する
+### ステップ 8: Gate Peer からデバイスに接続できることを確認する</a>
 ここまでの設定が終わると、お客様の VPC とデバイスが Gate で接続された状態になっています。Gate Peer からデバイスに接続できることを確認しましょう。
 
 まず、Air SIM を使ってデバイスをネットワークに接続します。
@@ -446,7 +484,7 @@ Gate の機能を使わない時には、ユーザコンソールまたは close
 
 > Gate の有効化・無効化を切り替える際には数秒間の通信断が発生します。
 
-### ステップ 9: 使い終わったリソースを削除する
+### ステップ 9: 使い終わったリソースを削除する</a>
 SORACOM VPG と Canal, Gate Peer となる AWS EC2 には利用料金がかかります。不要であれば削除しておきましょう。
 
 #### VPG を削除する
@@ -461,10 +499,10 @@ VPC ピア接続とグループの解除が終わったら、続いて「高度�
 #### Gate Peer を削除する
 Cloud Formation スタックの削除を行ってください。削除手順は[AWS CloudFormation ユーザーガイド](https://aws.amazon.com/jp/documentation/cloudformation/)をご覧ください。
 
-## おわりに
+## <a name="8-0">おわりに</a>
 以上で SORACOM Canal および Gate のハンズオンは終了となります。
 
-## 参考: トンネリング技術とオーバレイネットワークの概要
+## <a name="9-0">参考: トンネリング技術とオーバレイネットワークの概要</a>
 Gate で使用している仮想的な L2 ネットワークは、トンネリング技術と、その上で構築されるオーバレイネットワークによって実現されています。これらの技術の背景を把握しておくと Gate の特徴がよく理解できますので、ここで簡単に技術解説をします。
 
 「トンネリング」とは、あるネットワークの上に、仮想的に別のネットワークを構築することを意味しています。このとき仮想的に構築されたネットワークは、もともとのネットワークの上に重なる(overlay)ように構成されるため、「オーバレイネットワーク」と呼ばれます。トンネリングを使ったオーバレイネットワークの実現方法にはいろいろな種類がありますが、Gate では VXLAN が使われています。
