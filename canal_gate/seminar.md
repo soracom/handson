@@ -14,16 +14,16 @@
 - [SORACOM Gate とは](#6-0)
   - [Gate の特徴](#6-1)
 - [SORACOM Gate のセットアップ](#7-0)
-  - [ステップ 5: Gate Peer となる EC2 インスタンスを登録する](#7-1)
-  - [ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する](#7-2)
-  - [Gate Peer に SSH 接続し、VXLAN の設定を投入](#7-3)
-  - [ステップ 7: Gate を有効化する](#7-4)
-  - [ステップ 8: Gate Peer からデバイスに接続できることを確認する](#7-5)
-  - [ステップ 9: 使い終わったリソースを削除する](#7-6)
+  - [ステップ 5: Gate を有効化する](#7-1)
+  - [ステップ 6: Gate Peer となる EC2 インスタンスを登録する](#7-2)
+  - [ステップ 7: (AWS の設定) Gate Peer に VXLAN の設定を投入する](#7-3)
+  - [ステップ 8: Gate Peer からデバイスに接続できることを確認する](#7-4)
+  - [ステップ 9: 使い終わったリソースを削除する](#7-5)
 - [おわりに](#8-0)
 - [参考: トンネリング技術とオーバレイネットワークの概要](#9-0)
 
 ----
+
 
 # SORACOM Canal ＆ Gate ハンズオン
 
@@ -360,16 +360,26 @@ Gate を有効化すると、VPGとIoTデバイスが同じ仮想的なサブネ
 ## <a name="7-0">SORACOM Gate のセットアップ</a>
 セットアップから接続確認までは6つのステップに分かれています。
 
-- [ステップ 5: Gate Peer となる EC2 インスタンスを登録する](#step5)
-- [ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する](#step6)
-- [ステップ 7: Gate を有効化する](#step7)
+- [ステップ 5: Gate を有効化する](#step7)
+- [ステップ 6: Gate Peer となる EC2 インスタンスを登録する](#step5)
+- [ステップ 7: (AWS の設定) Gate Peer に VXLAN の設定を投入する](#step6)
 - [ステップ 8: Gate Peer からデバイスに接続できることを確認する](#step8)
 - [ステップ 9: 使い終わったリソースを削除する](#step9)
 - [参考: トンネリング技術の概要](#tunneling)
 
 ![](img/gs_gate/overview.png)
 
-### <a name="7-1">ステップ 5: Gate Peer となる EC2 インスタンスを登録する</a>
+### <a name="7-1">ステップ 5: Gate を有効化する</a>
+Gate を有効化します。
+
+VPG 設定画面＞「高度な設定」の、「Gate を有効にする」を ON に設定し、保存します。
+
+![](img/gs_gate/vpg_gate_open.png)
+
+> この時点で、VPG 配下のデバイス同士は直接通信が出来る状態になります
+> もし複数の Air SIM がある場合には試してみましょう
+
+### <a name="7-2">ステップ 6: Gate Peer となる EC2 インスタンスを登録する</a>
 VPG 設定画面＞「高度な設定」で、「お客様の Gate Peer 一覧」にある「Gate Peer を追加」ボタンをクリックします。
 
 ![](img/gs_gate/register_gate_peer_1.png)
@@ -381,7 +391,7 @@ VPG 設定画面＞「高度な設定」で、「お客様の Gate Peer 一覧�
 
 ![](img/gs_gate/register_gate_peer_2.png)
 
-### <a name="7-2">ステップ 6: (AWS の設定) Gate Peer に VXLAN の設定を投入する</a>
+### <a name="7-3">ステップ 7: (AWS の設定) Gate Peer に VXLAN の設定を投入する</a>
 Gate Peer の登録が完了したら、続いて VXLAN の設定を行います。
 
 #### Gate Peer の情報を確認
@@ -390,7 +400,7 @@ VPG 設定画面＞「高度な設定」の、「VPG の Gate Peer 一覧」で�
 
 ![](img/gs_gate/vpg_ip.png)
 
-### <a name="7-3">Gate Peer に SSH 接続し、VXLAN の設定を投入</a>
+#### Gate Peer に SSH 接続し、VXLAN の設定を投入
 続いて Gate Peer となる EC2 インスタンスに VXLAN の設定を投入します。Gate Peer に SSH 接続し、以下の順序でコマンドを root 権限で実行します。
 
 > Gate Peer となる EC2　インスタンスの Public IP address は、CloudFormation の Outputs に出力されています。  
@@ -449,14 +459,7 @@ Use 'dstport 0' to get default and quiet this message
 
 上記はコマンド引数の指定形式に対するメッセージです。今回はportオプションを使ってVXLANのsrc/dst portを指定しているため、そのまま進んで構いません。
 
-### <a name="7-4">ステップ 7: Gate を有効化する</a>
-Gate を有効化します。有効化すると、Gate Peer と VPG での通信が可能となり、さらにデバイス間での通信も可能となります。
-
-VPG 設定画面＞「高度な設定」の、「Gate を有効にする」を ON に設定し、保存します。
-
-![](img/gs_gate/vpg_gate_open.png)
-
-### <a name="7-5">ステップ 8: Gate Peer からデバイスに接続できることを確認する</a>
+### <a name="7-4">ステップ 8: Gate Peer からデバイスに接続できることを確認する</a>
 ここまでの設定が終わると、お客様の VPC とデバイスが Gate で接続された状態になっています。Gate Peer からデバイスに接続できることを確認しましょう。
 
 まず、Air SIM を使ってデバイスをネットワークに接続します。
@@ -488,7 +491,7 @@ Gate の機能を使わない時には、ユーザコンソールまたは close
 
 > Gate の有効化・無効化を切り替える際には数秒間の通信断が発生します。
 
-### <a name="7-6">ステップ 9: 使い終わったリソースを削除する</a>
+### <a name="7-5">ステップ 9: 使い終わったリソースを削除する</a>
 SORACOM VPG と Canal, Gate Peer となる AWS EC2 には利用料金がかかります。不要であれば削除しておきましょう。
 
 #### VPG を削除する
