@@ -167,6 +167,127 @@ pi@raspberrypi ~ $
 
 Windowsの場合には、PuttyやTeraTerm等を使ってログインしてください。その際、ユーザ名に pi を指定する必要があります。
 
+
+### Ruby のインストール
+このテキストでは、Ruby で書かれたスクリプトを実行しますので、Ruby の実行環境が必要となります。
+Raspbian のパッケージで提供されている Ruby はバージョンが古い(2.1系)ため、(現時点で)最新安定板の 2.3.1 を使用します。
+
+Raspberry Pi 上でビルドを行うと非常に時間がかかるため、今回はビルド済みのバイナリをコピーして使用します。
+
+#### コマンド
+```bash
+curl -O http://type100.local/ruby.tgz && tar zxvf ruby.tgz
+```
+
+#### 実行結果
+```text
+pi@raspberrypi:~ $ curl -O http://type100.local/ruby.tgz && tar zxvf ruby.tgz
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                               Dload  Upload   Total   Spent    Left  Speed
+100 42.6M  100 42.6M    0     0  10.7M      0  0:00:03  0:00:03 --:--:-- 10.7M
+.bashrc
+.rbenv/
+.rbenv/.travis.yml
+  :
+(中略)
+  :
+.rbenv/version
+```
+
+早速インストールした Ruby を試してみましょう
+
+#### コマンド
+```bash
+source .bashrc
+ruby -v
+```
+
+#### 実行結果
+```text
+pi@raspberrypi:~ $ source .bashrc
+pi@raspberrypi:~ $ ruby -v
+ruby 2.3.1p112 (2016-04-26 revision 54768) [armv7l-linux-eabihf]
+```
+
+### (参考)自分で Ruby のビルドを行う
+rbenv を利用します。rbenv のインストールに git コマンドが必要なため、先に git をインストールします。
+
+#### コマンド
+```bash
+sudo apt-get update
+sudo apt install git
+```
+
+git がインストールできたら、rbenv のレポジトリを clone します。
+
+#### コマンド
+```
+git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+source .bashrc
+rbenv
+```
+
+#### 実行結果
+```
+pi@raspberrypi:~ $ git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+Cloning into '/home/pi/.rbenv'...
+remote: Counting objects: 2542, done.
+remote: Total 2542 (delta 0), reused 0 (delta 0), pack-reused 2542
+Receiving objects: 100% (2542/2542), 461.07 KiB | 375.00 KiB/s, done.
+Resolving deltas: 100% (1598/1598), done.
+Checking connectivity... done.
+pi@raspberrypi:~ $ git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+Cloning into '/home/pi/.rbenv/plugins/ruby-build'...
+remote: Counting objects: 6993, done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 6993 (delta 2), reused 0 (delta 0), pack-reused 6981
+Receiving objects: 100% (6993/6993), 1.36 MiB | 495.00 KiB/s, done.
+Resolving deltas: 100% (4153/4153), done.
+Checking connectivity... done.
+pi@raspberrypi:~ $ echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+pi@raspberrypi:~ $ echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+pi@raspberrypi:~ $ source .bashrc
+pi@pi@raspberrypi:~ $ rbenv
+rbenv 1.0.0-33-gc7dcaf1
+Usage: rbenv <command> [<args>]
+
+Some useful rbenv commands are:
+   commands    List all available rbenv commands
+   local       Set or show the local application-specific Ruby version
+   global      Set or show the global Ruby version
+   shell       Set or show the shell-specific Ruby version
+   install     Install a Ruby version using ruby-build
+   uninstall   Uninstall a specific Ruby version
+   rehash      Rehash rbenv shims (run this after installing executables)
+   version     Show the current Ruby version and its origin
+   versions    List all Ruby versions available to rbenv
+   which       Display the full path to an executable
+   whence      List all Ruby versions that contain the given executable
+
+See `rbenv help <command>' for information on a specific command.
+For full documentation, see: https://github.com/rbenv/rbenv#readme
+```
+
+ここから実際に Ruby をビルドする作業となります。(現時点で)最新安定板の 2.3.1 をインストールします。
+
+#### コマンド
+```bash
+rbenv install 2.3.1
+```
+
+#### 実行結果
+```text
+pi@raspberrypi:~ $ rbenv install 2.3.1
+Downloading ruby-2.3.1.tar.bz2...
+-> https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.bz2
+Installing ruby-2.3.1...
+```
+
+Raspberry Pi 2 でおよそ xx 分、Raspberry Pi 3 でおよそ yy 分程度かかります。
+
 ## <a name="section3">3章 Air SIMを使って、インターネットに接続する
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
 
