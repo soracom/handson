@@ -143,10 +143,20 @@ SORACOMではSIMの登録や「使用開始」「休止」「解約」といっ�
 >
 > 例: ５番のドングルであれば、 192.168.123.105
 
+### Mac をお使いの場合
+
 自分の端末からRaspberry Piに接続(SSH)します。
 ターミナルを立ち上げ、以下のコマンドを実行してください。
 
+#### コマンド
+```bash
+ssh pi@192.168.123.xxx (割り当てられたIPアドレスを指定してください)
+yes (初回接続時のみ)
+raspberry
 ```
+
+#### 実行結果
+```text
 ~$ ssh pi@192.168.123.xxx (割り当てられたIPアドレスを指定してください)
 The authenticity of host '192.168.123.xxx (192.168.123.xxx)' can't be established.
 ECDSA key fingerprint is db:ed:1b:37:f2:98:c6:f4:d8:6d:cf:5c:31:6a:16:58.
@@ -162,11 +172,14 @@ Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 Last login: Thu Sep 24 15:51:43 2015 from 192.168.123.254
 pi@raspberrypi ~ $
-
 ```
 
-Windowsの場合には、PuttyやTeraTerm等を使ってログインしてください。その際、ユーザ名に pi を指定する必要があります。
+### Windows をお使いの場合
+Windowsの場合には、TeraTerm等を使ってログインしてください。その際、ユーザ名に pi、パスワードに raspberry を指定する必要があります。
 
+![teraterm](../common/image/connect-air-01.png)
+
+![teraterm](../common/image/connect-air-02.png)
 
 ### Ruby のインストール
 このテキストでは、Ruby で書かれたスクリプトを実行しますので、Ruby の実行環境が必要となります。
