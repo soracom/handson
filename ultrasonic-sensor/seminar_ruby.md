@@ -715,7 +715,8 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 
 ![](image/6-9.png)
 
-
+> 下記からコピー＆ペーストしてください  
+> search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
 
 [保存]をクリックします。
 
