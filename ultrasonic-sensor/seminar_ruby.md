@@ -1,4 +1,4 @@
-# 「SORACOM x RaspberryPi ハンズオン <br> 〜超音波センサー編〜」
+# 「SORACOM x RaspberryPi × Ruby ハンズオン <br> 〜超音波センサー編〜」
 
 # ハンズオン用テキスト
 
