@@ -763,14 +763,16 @@ pi@raspberrypi:~ $ ruby send_to_cloud.rb
 距離(cm) 4.9 <= 10.0 , 回数: 3 / 3
 - ステータスが 'in' (何か物体がある) に変化しました
 - Beam 経由でデータを送信します
-{"_index"=>"sensor", "_type"=>"event", "_id"=>"AVhWLEpfs5NL1_gtA_V0", "_version"=>1, "created"=>true} ← 正常にデータが送信されたら created:
+{"_index"=>"sensor", "_type"=>"event", "_id"=>"AVhWLEpfs5NL1_gtA_V0", "_version"=>1, "created"=>true}
 距離(cm) 80.3 > 10.0 , 回数: 1 / 3
 距離(cm) 194.4 > 10.0 , 回数: 2 / 3
 距離(cm) 326.6 > 10.0 , 回数: 3 / 3
 - ステータスが 'out' (何も物体がない) に変化しました
 - Beam 経由でデータを送信します
-{"_index"=>"sensor", "_type"=>"event", "_id"=>"AVhWLGXDs5NL1_gtA_V1", "_version"=>1, "created"=>true} ← 正常にデータが送信されたら created: True  になります
+{"_index"=>"sensor", "_type"=>"event", "_id"=>"AVhWLGXDs5NL1_gtA_V1", "_version"=>1, "created"=>true}
 ```
+
+>  正常にデータが送信されたら上記のようにレスポンスの created が true  になります
 
 #### <a name = "section6-8">4.	クラウド上でデータを確認する
 Elasticsearch Service 上にインストールされている Kibana にアクセスします。
