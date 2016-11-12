@@ -463,9 +463,9 @@ host $(curl ifconfig.io)
 
 #### 実行結果
 ```
-pi@raspberrypi:~ $ curl ifconfig.me
+pi@raspberrypi:~ $ curl ifconfig.io
 54.250.252.xx (IPアドレスが表示されます)
-pi@raspberrypi:~ $ host $(curl -s ifconfig.me)
+pi@raspberrypi:~ $ host $(curl -s ifconfig.io)
 xx.252.250.54.in-addr.arpa domain name pointer ec2-54-250-252-66.ap-northeast-1.compute.amazonaws.com.
 ```
 
