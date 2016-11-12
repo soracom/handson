@@ -870,47 +870,43 @@ IFTTTへのデータ転送を設定します。IFTTTへのデータ転送は[HTT
 
 
 
-#### <a name = "section7-5">5.	プログラムのダウンロード・実行
+### <a name = "section7-5">5.	プログラムのダウンロード・実行
 
 IFTTTへの送信をおこないます。
 以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
 
 ESの場合と同様に、Beamを使用する(「send_to_ifttt.py」の実行時)には、SORACOM Airで通信している必要があります。
 
+#### コマンド
 ```
-pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/send_to_ifttt.py
---2016-03-24 03:24:30--  http://soracom-files.s3.amazonaws.com/send_to_ifttt.py
-soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com) をDNSに問いあわせています...<br>
- 54.231.226.26
-soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.226.26|:80 に接続しています... 接続しました。
-HTTP による接続要求を送信しました、応答を待っています... 200 OK<br>
-長さ: 2457 (2.4K) [text/plain]
-`send_to_ifttt.py' に保存中
+ruby send_to_ifttt.rb
+```
 
-100%[====================================================>] 2,457       --.-K/s 時間 0s
-
-2016-03-24 03:24:31 (31.7 MB/s) - `send_to_ifttt.py' へ保存完了 [2457/2457]
-
-pi@raspberrypi ~ $ python send_to_ifttt.py
+#### 実行結果
+```
+pi@raspberrypi:~ $ ruby send_to_ifttt.rb
+- メタデータサービスにアクセスして IMSI を確認中 ... 440103128085585
 - 条件設定
-障害物を 10 cm 以内に 3 回検知したら IFTTT にデータを送信します
+障害物を 10 cm 以内に 3 回検知したらクラウドにデータを送信します
 センサーを手で遮ったり、何か物を置いてみたりしてみましょう
 - 準備完了
-距離(cm): 5.3 <= 10 , 回数: 1 / 3
-距離(cm): 5.6 <= 10 , 回数: 2 / 3
-距離(cm): 5.2 <= 10 , 回数: 3 / 3
-- ステータスが 'in'(何か物体がある) に変化しました
+距離(cm) 3.3 <= 10.0 , 回数: 1 / 3
+距離(cm) 4.5 <= 10.0 , 回数: 2 / 3
+距離(cm) 4.0 <= 10.0 , 回数: 3 / 3
+- ステータスが 'in' (何か物体がある) に変化しました
 - Beam 経由でデータを送信します
-status changed to 'in' : {"value3": "", "value2": "5", "value1": "in"}
-<Response [200]> ← 正常にデータが送信されたら 200 になります
-距離(cm): 54.9 > 10 , 回数: 1 / 3
-距離(cm): 55.2 > 10 , 回数: 2 / 3
-距離(cm): 55.3 > 10 , 回数: 3 / 3
-- ステータスが 'out'(何も物体がない) に変化しました
+送信するデータ: {"value1":"in","value2":"4","value3":""}
+[200] Congratulations! You've fired the sensor event
+距離(cm) 112.5 > 10.0 , 回数: 1 / 3
+距離(cm) 112.1 > 10.0 , 回数: 2 / 3
+距離(cm) 144.9 > 10.0 , 回数: 3 / 3
+- ステータスが 'out' (何も物体がない) に変化しました
 - Beam 経由でデータを送信します
-status changed to 'out' : {"value3": "", "value2": "9", "value1": "out"}
-<Response [200]> ← 正常にデータが送信されたら 200 になります
+送信するデータ: {"value1":"out","value2":"12","value3":""}
+[200] Congratulations! You've fired the sensor event
 ```
+
+> レスポンスが [200] Congratulations! You've fired the sensor event となったら、IFTTTへの通信は成功しています
 
 すると、下記のようなツイートが行われます。
 ![](image/7-10.png)
