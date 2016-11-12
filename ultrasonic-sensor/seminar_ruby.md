@@ -224,14 +224,15 @@ ruby 2.3.1p112 (2016-04-26 revision 54768) [armv7l-linux-eabihf]
 
 ### (参考)自分で Ruby のビルドを行う
 rbenv を利用します。rbenv のインストールに git コマンドが必要なため、先に git をインストールします。
+また、後ほど Ruby を ビルドするのに必要となるパッケージもインストールしておきます。
 
 #### コマンド
 ```bash
 sudo apt-get update
-sudo apt install git
+sudo apt install git libssl-dev libreadline-dev
 ```
 
-git がインストールできたら、rbenv のレポジトリを clone します。
+次に rbenv のレポジトリを clone します。
 
 #### コマンド
 ```
@@ -299,7 +300,7 @@ Downloading ruby-2.3.1.tar.bz2...
 Installing ruby-2.3.1...
 ```
 
-Raspberry Pi 2 でおよそ xx 分、Raspberry Pi 3 でおよそ yy 分程度かかります。
+Raspberry Pi 3 でおよそ 30 分程度、Raspberry Pi 2 でおよそ １時間程度、かかります。
 
 ## <a name="section3">3章 Air SIMを使って、インターネットに接続する
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
@@ -557,14 +558,14 @@ pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
 
 ## <a name = "section5">5章 超音波センサーを使って距離を計測する
 
-#### <a name = "section5-1">1.	超音波センサーの動作原理
+### <a name = "section5-1">1.	超音波センサーの動作原理
 超音波の反射時間を利用して非接触で測距するモジュールです。外部からトリガパルスを入力すると超音波パルス（８波）が送信され、出力された反射時間信号をマイコンで計算することによって距離を測ることができます。
 ![](image/5-1.png)
 
  -具体的にはセンサーの Trig ピンにパルス(短い時間)電圧をかけて測定を開始<br>
  -EchoピンがHIGHである時間の長さを計測
 
-#### <a name = "section5-2">2.	配線
+### <a name = "section5-2">2.	配線
 
 1.必要なパーツが揃っているか確認しましょう
 
@@ -592,30 +593,36 @@ pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
 
 ![](image/5-6.png)
 
-#### <a name = "section5-3">3.センサーをテストしてみる
+### <a name = "section5-3">3.センサーをテストしてみる
 以下のコマンドで、プログラムをダウンロード・実行し、正しくセンサー値が読み出せるか試しましょう
 
+#### コマンド
 ```
-pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/sensor_test.py
---2016-03-23 18:07:17--  http://soracom-files.s3.amazonaws.com/sensor_test.py
-Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 54.231.225.133
-Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.225.133|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 870 [text/plain]
-Saving to: ‘sensor_test.py’
+curl -O http://soracom-files.s3.amazonaws.com/ruby_scripts.tgz
+tar zxvf ruby_scripts.tgz
+ruby sensor_test.rb
+```
 
-sensor_test.py      100%[===================>]     870  3.72KB/s   in 0.2s
-
-2016-03-23 18:07:19 (3.72 KB/s) - ‘sensor_test.py’ saved [870/870]
-
-pi@raspberrypi ~ $ python sensor_test.py
-distance: 38.6 cm
-distance: 38.9 cm
-distance: 2.3 cm  ← センサーの前に手をかざして変化を確認しましょう
+#### 実行結果
+```
+pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/ruby_scripts.tgz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  2118  100  2118    0     0   7624      0 --:--:-- --:--:-- --:--:--  7646
+pi@raspberrypi:~ $ tar zxvf ruby_scripts.tgz
+GPIO.rb
+send_to_cloud.rb
+send_to_ifttt.rb
+sensor_test.rb
+pi@raspberrypi3:~ $ ruby sensor_test.rb
+距離: 40.8 cm
+距離: 40.4 cm
+距離: 39.8 cm
      :
+(Ctrl+C で止めることができます)
 ```
 
-#### <a name = "section5-4">4.トラブルシュート
+### <a name = "section5-4">4.トラブルシュート
 
 何も出力されない場合<br>
 接続するピンを間違えている可能性が高いです<br>
