@@ -738,57 +738,39 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 
 
 
-#### <a name = "section6-7">3.	プログラムのダウンロード・実行
+### <a name = "section6-7">3.	プログラムのダウンロード・実行
 
 クラウドへの送信をおこないます。
-以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
+以下のコマンドを実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
 
-Beamを使用する(「send_to_cloud.py」の実行時)には、SORACOM Airで通信している必要があります。
+> Beamを使用する(「send_to_cloud.py」の実行時)には、SORACOM Airで通信している必要があります。
 
+#### コマンド
 ```
-pi@raspberrypi:~ $ sudo apt-get install -y python-pip  
-:
-pi@raspberrypi ~ $ sudo pip install elasticsearch
-:
-pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/send_to_cloud.py
---2016-03-24 02:40:12--  http://soracom-files.s3.amazonaws.com/send_to_cloud.py
-soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com) をDNSに問いあわせています... 54.231.224.18
-soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.224.18|:80 に接続しています... 接続しました。
-HTTP による接続要求を送信しました、応答を待っています... 200 OK
-長さ: 2678 (2.6K) [text/plain]
-`send_to_cloud.py' に保存中
+ruby send_to_cloud.rb
+```
 
-100%[===================================================>] 2,678       --.-K/s 時間 0s
-
-2016-03-24 02:40:12 (47.1 MB/s) - `send_to_cloud.py' へ保存完了 [2678/2678]
-
-
-pi@raspberrypi ~ $ python send_to_cloud.py
-- メタデータサービスにアクセスして IMSI を確認中 ... 440103125380131
+#### 実行結果
+```
+pi@raspberrypi:~ $ ruby send_to_cloud.rb
+- メタデータサービスにアクセスして IMSI を確認中 ... 440103128085585
 - 条件設定
 障害物を 10 cm 以内に 3 回検知したらクラウドにデータを送信します
 センサーを手で遮ったり、何か物を置いてみたりしてみましょう
 - 準備完了
-距離(cm): 6.5 <= 10 , 回数: 1 / 3
-距離(cm): 5.6 <= 10 , 回数: 2 / 3
-距離(cm): 4.9 <= 10 , 回数: 3 / 3
-- ステータスが 'in'(何か物体がある) に変化しました
+距離(cm) 5.8 <= 10.0 , 回数: 1 / 3
+距離(cm) 5.3 <= 10.0 , 回数: 2 / 3
+距離(cm) 4.9 <= 10.0 , 回数: 3 / 3
+- ステータスが 'in' (何か物体がある) に変化しました
 - Beam 経由でデータを送信します
-
-{u'_type': u'event', u'_id': u'AVRRGrS4IfRhQRmTbOsN', u'created': True, u'_version': 1, u'_index': u'sensor'} ← 正常にデータが送信されたら created: True  になります
-
-
-距離(cm): 55.3 > 10 , 回数: 1 / 3<br>
-距離(cm): 55.3 > 10 , 回数: 2 / 3<br>
-距離(cm): 55.2 > 10 , 回数: 3 / 3<br>
-
-- ステータスが 'out'(何も物体がない) に変化しました
-
+{"_index"=>"sensor", "_type"=>"event", "_id"=>"AVhWLEpfs5NL1_gtA_V0", "_version"=>1, "created"=>true} ← 正常にデータが送信されたら created:
+距離(cm) 80.3 > 10.0 , 回数: 1 / 3
+距離(cm) 194.4 > 10.0 , 回数: 2 / 3
+距離(cm) 326.6 > 10.0 , 回数: 3 / 3
+- ステータスが 'out' (何も物体がない) に変化しました
 - Beam 経由でデータを送信します
-{u'_type': u'event', u'_id': u'AVRRGsWEIfRhQRmTbOsO', u'created': True, u'_version': 1, u'_index': u'sensor'} ← 正常にデータが送信されたら created: True  になります
+{"_index"=>"sensor", "_type"=>"event", "_id"=>"AVhWLGXDs5NL1_gtA_V1", "_version"=>1, "created"=>true} ← 正常にデータが送信されたら created: True  になります
 ```
-
- 
 
 #### <a name = "section6-8">4.	クラウド上でデータを確認する
 Elasticsearch Service 上にインストールされている Kibana にアクセスします。
