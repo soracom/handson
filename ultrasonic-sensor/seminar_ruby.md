@@ -330,11 +330,9 @@ USBドングルを使用するために、以下のパッケージをインス�
 -	usb-modeswitch
 -	wvdial
 
-
-###### usb-modeswitchとwvdialのインストールコマンド
-
+#### コマンド
 ```
-pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
+sudo apt-get install -y usb-modeswitch wvdial
 ```
 
 ```
@@ -351,6 +349,14 @@ http://soracom-files.s3.amazonaws.com/connect_air.sh
 
 以下のコマンドを実行し、このスクリプトをダウンロードし、接続用シェルスクリプトを作成します。
 
+#### コマンド
+```
+curl -O http://soracom-files.s3.amazonaws.com/connect_air.sh
+chmod +x connect_air.sh
+sudo mv connect_air.sh /usr/local/sbin/
+```
+
+#### 実行結果
 ```
 pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/connect_air.sh
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -358,13 +364,18 @@ pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/connect_air.sh
 100  1420  100  1420    0     0   2416      0 --:--:-- --:--:-- --:--:--  2414
 pi@raspberrypi ~ $ chmod +x connect_air.sh
 pi@raspberrypi ~ $ sudo mv connect_air.sh /usr/local/sbin/
-
 ```
 
 ### <a name = "section3−4">4.	Air SIM を使って、インターネットに接続する
 
 接続の準備ができましたので、接続スクリプトを実行します。接続スクリプトは root 権限で実行する必要があるため、sudoで実行します。
 
+#### コマンド
+```
+sudo /usr/local/sbin/connect_air.sh
+```
+
+#### 実行結果
 ```
 pi@raspberrypi:~ $ sudo /usr/local/sbin/connect_air.sh
 Bus 001 Device 004: ID 1c9e:98ff OMEGA TECHNOLOGY
@@ -377,9 +388,7 @@ Access device 004 on bus 001
 Current configuration number is 1
 Use interface number 0
 Use endpoints 0x01 (out) and 0x81 (in)
-```
 
-```
 USB description data (for identification)
 
 -------------------------
@@ -439,25 +448,28 @@ CONNECT 14400000
 --> pppd: ���v�r[01]�r[01]
 --> secondary DNS address 100.127.1.53
 --> pppd: ���v�r[01]�r[01]
-
 ```
 
 上記のように表示されると接続完了です。
 
 AWS を経由してインターネット接続できていることを確認します。
-別のターミナルを立ち上げ、以下のコマンドを実行します。
+別のターミナルを立ち上げて Raspberry Pi にログインし、以下のコマンドを実行します。
 
+#### コマンド
 ```
-pi@raspberrypi ~ $ curl ifconfig.io
-54.65.XXX.XXX  (IPアドレスが表示されます)
-pi@raspberrypi ~ $ host 54.65.xxx.xxx
-xxx.xxx.65.54.in-addr.arpa domain name pointer ec2-54-65-xx-xxx.ap-northeast-1.compute.amazonaws.com.
+curl ifconfig.io
+host $(curl ifconfig.io)
+```
+
+#### 実行結果
+```
+pi@raspberrypi:~ $ curl ifconfig.me
+54.250.252.xx (IPアドレスが表示されます)
+pi@raspberrypi:~ $ host $(curl -s ifconfig.me)
+xx.252.250.54.in-addr.arpa domain name pointer ec2-54-250-252-66.ap-northeast-1.compute.amazonaws.com.
 ```
 
 CurlコマンドによるIPアドレスとhostコマンドにより、EC2からインターネットに接続されていることがわかりました。
-
-
- 
 
 ## <a name = "section4"> 4章 ユーザーコンソールによる通信の確認
 インターネットに接続できましたので、ユーザーコンソールからデータ通信量、利用料金を確認して、監視機能を設定しましょう。
@@ -614,7 +626,7 @@ GPIO.rb
 send_to_cloud.rb
 send_to_ifttt.rb
 sensor_test.rb
-pi@raspberrypi3:~ $ ruby sensor_test.rb
+pi@raspberrypi:~ $ ruby sensor_test.rb
 距離: 40.8 cm
 距離: 40.4 cm
 距離: 39.8 cm
