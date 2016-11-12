@@ -846,7 +846,7 @@ Twitter の認証画面になるので、ご自身のアカウントでログイ
 Twitter の Tweet text には、例えば下記のような文言を入れてみてください ![](image/ifttt-13.png)
 
 
-> センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracomhandson
+> センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracom
 
 Finish をおして、アプレットの作成が完了します。
 
@@ -936,7 +936,7 @@ pi@raspberrypi:~ $ ruby send_to_ifttt.rb
 
 
 ハッシュタグで検索してみましょう
-https://twitter.com/search?f=tweets&q=%23soracomhandson&src=typd
+https://twitter.com/search?f=tweets&q=%23soracom&src=typd
 
 
 おめでとうございます！皆さんは、SORACOM x RaspberryPiハンズオン〜超音波センサー編〜を完了しました。SORACOMを使ったハンズオンを楽しんで頂けましたでしょうか？
