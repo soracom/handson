@@ -782,7 +782,7 @@ https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.co
 
 ![](image/6-11.png)
 
-全ての SIM カードからの情報が集まっていますので、自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi=[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
+全ての SIM カードからの情報が集まっていますので、自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi:[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
 
 最短で5秒毎に更新する事が出来ますので、リアルタイムにデータが受信されるのを確認してみましょう。
 
