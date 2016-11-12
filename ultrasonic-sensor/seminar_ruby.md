@@ -796,47 +796,68 @@ IFTTTというサービスを使うと、デバイスから簡単に様々なサ
 #### <a name = "section7-1">1.	IFTTT とは
 IFTTT(https://ifttt.com/) とは、IF-This-Then-That の略で、もし「これ」が起きたら「あれ」を実行する、つまり「これ」がトリガーとなって、「あれ」をアクションとして実行する、サービスとなります。
 様々なサービスや機器と連携していて、何度かクリックするだけで簡単な仕組みを作る事が出来ます。
-今回のハンズオンでは、HTTPSのリクエストをトリガーとして、アクションとして Twitter につぶやくために、IFTTTTを使います。
+今回のハンズオンでは、HTTPSのリクエストをトリガーとして、アクションとして Twitter につぶやくために、IFTTT を使います。
 
 #### <a name = "section7-1">2.	IFTTTの設定
 まずアカウントをお持ちでない方は、IFTTT のサイト https://ifttt.com/ で、Sign Up してください。
 
-![](image/7-1.png)
+![](image/ifttt-1.png)
 
  
 
-#### <a name = "section7-3">3.	レシピの作成
-次にサービス同士の組み合わせ(Recipe=レシピと呼ばれます)を作成します。
-https://ifttt.com/myrecipes/personal にアクセスして、Create a Recipe をクリックします。
+#### <a name = "section7-3">3.	アプレットの作成
+次にサービス同士の組み合わせ(Applet=アプレットと呼ばれます)を作成します。
 
-This をクリックし、テキストボックスに maker と入れると、下記のような画面となるので、Maker を選び、サービスに接続します。![](image/7-2.png)
+左上のメニューから、 My Applets をクリックするか、 https://ifttt.com/my_applets にアクセスします。
 
-![](image/7-3.png)
+![](image/ifttt-2.png)
 
+![](image/ifttt-3.png)
+
+This をクリックし、テキストボックスに maker と入れると、下記のような画面となるので、Maker を選び、Connect を押してサービスに接続します。
+
+![](image/ifttt-4.png)
+![](image/ifttt-5.png)
 
 トリガーとして Receve a web request を選びます。
-![](image/7-4.png)
-
+![](image/ifttt-6.png)
 
  Event Name を設定します(ここでは、sensor とします)
 
+ ![](image/ifttt-7.png)
+
 これでトリガーの設定は完了です。次にアクションとして、Twitter の設定を行います。
 That をクリックし、テキストボックスに twitter と入れ、Twitter チャンネルを選び、Connect を押します。
+
+![](image/ifttt-8.png)
+![](image/ifttt-9.png)
+![](image/ifttt-10.png)
+
 Twitter の認証画面になるので、ご自身のアカウントでログインして認証を完了してください。
 
-アクションは左上の、Post a tweet を選んでください。![](image/7-5.png)
+![](image/ifttt-11.png)
+
+アクションは左上の、Post a tweet を選んでください。
+
+![](image/ifttt-12.png)
 
 
-Twitter の Tweet text には、例えば下記のような文言を入れてみてください。![](image/7-6.png)
+Twitter の Tweet text には、例えば下記のような文言を入れてみてください ![](image/ifttt-13.png)
 
 
-センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracomhandson
+> センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracomhandson
+
+Finish をおして、アプレットの作成が完了します。
+
+![](image/ifttt-14.png)
+
+最後に Maker channel のページ https://ifttt.com/maker を開いて、右側の Settings を開きます。
+
+![](image/ifttt-15.png)
 
 
- 
-
-最後に Maker channel のページ https://ifttt.com/maker を開いて、key を確認します(後ほど使います)
-![](image/7-7.png)
+URL の中の key を確認します(後ほど使いますので、どこかにメモしておいてください)
+![](image/ifttt-16.png)
 
 #### <a name = "section7-4">4.	SORACOM Beam の設定
 
