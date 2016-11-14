@@ -142,33 +142,37 @@ Air SIMを取り外します。Air SIMの端子を触らないように気をつ
 ![](image/3-6.jpg)
 
 
-### <a name="section3−2">2.	必要なパッケージのインストール</a>
+### <a name = "section3−2">2.	必要なパッケージのインストール
 
 USBドングルを使用するために、以下のパッケージをインストールし、RaspberryPiをセットアップします。
--	usb-modeswitch
+-	usb-modeswitch (Raspbian のバージョンによっては、デフォルトでインストールされている事もあります)
 -	wvdial
 
-
-#### usb-modeswitchとwvdialのインストールコマンド
-
+#### コマンド
 ```
-pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
+sudo apt-get install -y usb-modeswitch wvdial
 ```
 
-```
- 	パッケージのインストール中、
-  Sorry.  You can retry the autodetection at any time by running "wvdialconf".
-     (Or you can create /etc/wvdial.conf yourself.)
+> 	パッケージのインストール中、
+>  Sorry.  You can retry the autodetection at any time by running "wvdialconf".
+>     (Or you can create /etc/wvdial.conf yourself.)
 と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
-```
 
-### <a name="section3−3">3.	接続スクリプトのダウンロード</a>
+###  <a name = "section3−3">3.	接続スクリプトのダウンロード
 
 以下に、モデムの初期化、APNの設定、ダイアルアップなどを行うスクリプトが用意されています。
 http://soracom-files.s3.amazonaws.com/connect_air.sh
 
 以下のコマンドを実行し、このスクリプトをダウンロードし、接続用シェルスクリプトを作成します。
 
+#### コマンド
+```
+curl -O http://soracom-files.s3.amazonaws.com/connect_air.sh
+chmod +x connect_air.sh
+sudo mv connect_air.sh /usr/local/sbin/
+```
+
+#### 実行結果
 ```
 pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/connect_air.sh
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
@@ -176,13 +180,18 @@ pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/connect_air.sh
 100  1420  100  1420    0     0   2416      0 --:--:-- --:--:-- --:--:--  2414
 pi@raspberrypi ~ $ chmod +x connect_air.sh
 pi@raspberrypi ~ $ sudo mv connect_air.sh /usr/local/sbin/
-
 ```
 
-### <a name="section3−4">4.	Air SIM を使って、インターネットに接続する</a>
+### <a name = "section3−4">4.	Air SIM を使って、インターネットに接続する
 
 接続の準備ができましたので、接続スクリプトを実行します。接続スクリプトは root 権限で実行する必要があるため、sudoで実行します。
 
+#### コマンド
+```
+sudo /usr/local/sbin/connect_air.sh
+```
+
+#### 実行結果
 ```
 pi@raspberrypi:~ $ sudo /usr/local/sbin/connect_air.sh
 Bus 001 Device 004: ID 1c9e:98ff OMEGA TECHNOLOGY
@@ -195,9 +204,7 @@ Access device 004 on bus 001
 Current configuration number is 1
 Use interface number 0
 Use endpoints 0x01 (out) and 0x81 (in)
-```
 
-```
 USB description data (for identification)
 
 -------------------------
@@ -257,33 +264,35 @@ CONNECT 14400000
 --> pppd: ���v�r[01]�r[01]
 --> secondary DNS address 100.127.1.53
 --> pppd: ���v�r[01]�r[01]
-
 ```
 
 上記のように表示されると接続完了です。
 
 AWS を経由してインターネット接続できていることを確認します。
-別のターミナルを立ち上げ、以下のコマンドを実行します。
+別のターミナルを立ち上げて Raspberry Pi にログインし、以下のコマンドを実行します。
 
+#### コマンド
 ```
-pi@raspberrypi ~ $ curl ifconfig.io
-54.65.XXX.XXX  (IPアドレスが表示されます)
-pi@raspberrypi ~ $ host 54.65.xxx.xxx
-xxx.xxx.65.54.in-addr.arpa domain name pointer ec2-54-65-xx-xxx.ap-northeast-1.compute.amazonaws.com.
+curl ifconfig.io
+host $(curl ifconfig.io)
+```
+
+#### 実行結果
+```
+pi@raspberrypi:~ $ curl ifconfig.io
+54.250.252.xx (IPアドレスが表示されます)
+pi@raspberrypi:~ $ host $(curl -s ifconfig.io)
+xx.252.250.54.in-addr.arpa domain name pointer ec2-54-250-252-66.ap-northeast-1.compute.amazonaws.com.
 ```
 
 CurlコマンドによるIPアドレスとhostコマンドにより、EC2からインターネットに接続されていることがわかりました。
 
-
- 
-
 ## <a name="section4">4章 ユーザーコンソールによる通信の確認</a>
 インターネットに接続できましたので、ユーザーコンソールからデータ通信量、利用料金を確認して、監視機能を設定しましょう。
 
-
 ### <a name="section4-1">1.	データ通信量と利用料金の確認</a>
 
-### <a name="section4-2">2. Air SIMのデータ通信量の確認</a>
+#### Air SIMのデータ通信量の確認
 ユーザーコンソールでは、データ通信量をSORACOM AirのSIM(以降、Air SIM)ごとにチャート形式で確認することができます。<br>
 データ通信量を確認したいAir SIMにチェックを入れ [詳細] ボタンをクリックします。
 ![](image/4-1.png)
@@ -297,7 +306,7 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 
 ![](image/4-2.png)
 
-### <a name="section4-3">3. 利用料金の確認</a>
+#### 利用料金の確認
 
 ユーザーコンソールからデータ通信料金と基本料金を確認できます。
 メイン画面上部のナビゲーションバーから [課金情報] を選択します。
@@ -323,7 +332,7 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 ✓	タグ、グループ
 ```
 
-### <a name="section4-4">4. 監視機能の確認</a>
+### <a name="section4-4">2 監視機能の確認</a>
 通信量にしきい値を設定し、超えた場合にメールでの通知と通信帯域制限をすることができます。監視できる項目は以下のとおりです。
 ●	各 SIM の日次通信量
 ●	各 SIM の今月の合計通信量
@@ -337,10 +346,7 @@ Air SIMに監視の設定をしましょう。当ハンズオンの間に通知�
 
 「SIM詳細」画面で [監視] タブを開き、[SIM] をクリックして、監視設定を行ったら [設定を更新] ボタンをクリックして保存します。  
 
-
 ![](image/4-5.png)
-
-
 
 ここでの設定は、対象のAir SIMごとに有効になります。
 
@@ -351,11 +357,26 @@ Air SIMに監視の設定をしましょう。当ハンズオンの間に通知�
 ✓	(登録した)全てのSIM
 ```
 
-
 すぐに、メール通知を確認したい場合は、Raspberry Piから以下のコマンドを実行して、1MiBのダウンロードを実施してみてください。
 
+#### コマンド
 ```
-pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
+wget http://soracom-files.s3.amazonaws.com/1MB
+```
+
+#### 実行結果
+```
+pi@raspberrypi:~ $ wget http://soracom-files.s3.amazonaws.com/1MB
+--2016-11-14 07:50:37--  http://soracom-files.s3.amazonaws.com/1MB
+Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 52.219.4.17
+Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|52.219.4.17|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1048576 (1.0M) [binary/octet-stream]
+Saving to: ‘1MB’
+
+1MB                       100%[====================================>]   1.00M  --.-KB/s   in 0.5s
+
+2016-11-14 07:50:38 (512KB/s) - ‘1MB’ saved [1048576/1048576]
 ```
 
 以下のような通知が届きます。(通知は最大で5分程度かかります。)
@@ -369,21 +390,16 @@ pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
 ●	3章 Air SIMを使って、インターネットに接続する<br>
 ●	4章 ユーザーコンソールによる通信の確認<br>
 
-
-
-
- 
-
 ## <a name="section5">5章 超音波センサーを使って距離を計測する</a>
 
-#### <a name="section5-1">1.	超音波センサーの動作原理</a>
+### <a name="section5-1">1.	超音波センサーの動作原理</a>
 超音波の反射時間を利用して非接触で測距するモジュールです。外部からトリガパルスを入力すると超音波パルス（８波）が送信され、出力された反射時間信号をマイコンで計算することによって距離を測ることができます。
 ![](image/5-1.png)
 
- -具体的にはセンサーの Trig ピンにパルス(短い時間)電圧をかけて測定を開始<br>
- -EchoピンがHIGHである時間の長さを計測
+- 具体的にはセンサーの Trig ピンにパルス(短い時間)電圧をかけて測定を開始
+- EchoピンがHIGHである時間の長さを計測
 
-#### <a name="section5-2">2.	配線</a>
+### <a name="section5-2">2.	配線</a>
 
 1.必要なパーツが揃っているか確認しましょう
 
@@ -406,42 +422,36 @@ pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
 
 4.ラズパイにケーブルを刺します<br>
 
-●	刺すピンを間違えると故障の原因になるので、十分気をつけてください<br>
 ●	赤いケーブルを最後に接続してください
+●	刺すピンを間違えると故障の原因になるので、十分気をつけてください<br>
 
 ![](image/5-6.png)
 
-#### <a name="section5-3">3.センサーをテストしてみる</a>
+### <a name="section5-3">3.センサーをテストしてみる</a>
 以下のコマンドで、プログラムをダウンロード・実行し、正しくセンサー値が読み出せるか試しましょう
 
+#### コマンド
 ```
-pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/sensor_test.py
---2016-03-23 18:07:17--  http://soracom-files.s3.amazonaws.com/sensor_test.py
-Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 54.231.225.133
-Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.225.133|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 870 [text/plain]
-Saving to: ‘sensor_test.py’
+curl -O http://soracom-files.s3.amazonaws.com/sensor_test.py
+python sensor_test.py
+```
 
-sensor_test.py      100%[===================>]     870  3.72KB/s   in 0.2s
-
-2016-03-23 18:07:19 (3.72 KB/s) - ‘sensor_test.py’ saved [870/870]
-
+#### 実行結果
+```
+pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/sensor_test.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1197  100  1197    0     0  17386      0 --:--:-- --:--:-- --:--:-- 17602
 pi@raspberrypi ~ $ python sensor_test.py
-distance: 38.6 cm
-distance: 38.9 cm
-distance: 2.3 cm  ← センサーの前に手をかざして変化を確認しましょう
+距離: 40.8 cm
+距離: 40.4 cm
+距離: 39.8 cm
      :
+(Ctrl+C で止めることができます)
 ```
 
-#### <a name="section5-4">4.トラブルシュート</a>
-
-何も出力されない場合<br>
-接続するピンを間違えている可能性が高いです<br>
-もう一度ケーブルを接続する位置を確かめましょう
-
-
- 
+#### トラブルシュート
+何も画面に出力されない場合は、接続するピンを間違えている可能性が高いですので、もう一度ケーブルを接続する位置を確かめましょう。
 
 ## <a name="section6">6章 クラウドにデータを送る</a>
 
@@ -450,7 +460,7 @@ distance: 2.3 cm  ← センサーの前に手をかざして変化を確認し�
 今回のハンズオンではAWSのElasticsearch Service(以下、ES)へデータを送って、可視化を行います。このハンズオンでは簡略化のため、すでにハンズオン用に事前にセットアップされたESのエンドポイントを用いてハンズオンを行います。
 
 
-#### <a name="section6-1">1.	SORACOM Beamとは</a>
+### <a name="section6-1">1.	SORACOM Beamとは</a>
 
 SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理や接続先の設定を、クラウドにオフロードできるサービスです。Beam を利用することによって、暗号化処理が難しいデバイスに代わって、デバイスからサーバー間の通信を暗号化することが可能になります。
 プロトコル変換を行うこともできます。例えば、デバイスからはシンプルなTCP、UDPで送信し、BeamでHTTP/HTTPSに変換してクラウドや任意のサーバーに転送することができます。
@@ -461,7 +471,7 @@ SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理�
 
 また、上記のプロトコル変換に加え、Webサイト全体を Beam で転送することもできます。(Webサイトエントリポイント) 全てのパスに対して HTTP で受けた通信を、HTTP または HTTPS で転送を行う設定です。
 
-#### <a name="section6-2">2.	SORACOM Beamの設定</a>
+### <a name="section6-2">2.	SORACOM Beamの設定</a>
 当ハンズオンでは、以下の2つのBeamを使用します。
 
 ●	ESへのデータ転送設定 (Webエンドポイント)<br>
@@ -471,7 +481,7 @@ SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理�
 BeamはAir SIMのグループに対して設定するので、まず、グループを作成します。
 
 
-###### <a name="section6-3">グループの作成</a>
+#### グループの作成
 
 コンソールのメニューから[グループ]から、[追加]をクリックします。
 ![](image/6-3.png)
@@ -484,18 +494,14 @@ BeamはAir SIMのグループに対して設定するので、まず、グルー
 次に、SIMをこのグループに紐付けします。
 ![](image/6-5.png)
 
-###### <a name="section6-4">SIMのグループ割り当て</a>
+#### SIMのグループ割り当て
 ![](image/6-6.png)
 
 SIM管理画面から、SIMを選択して、操作→所属グループ変更を押します
 
-
-
-
-
 つづいて、Beamの設定を行います。
 
-###### <a name="section6-5">ESへのデータ転送設定</a>
+#### ESへのデータ転送設定
 先ほど作成したグループを選択し、[SORACOM Beam 設定] のタブを選択します。
 
 ![](image/6-7.png)
@@ -512,17 +518,16 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 ●	ホスト名： search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
 ```
 
-
 ![](image/6-9.png)
 
-
+>	下記からコピーペーストしてください
+> *** search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com ***
 
 [保存]をクリックします。
 
 以上でBeamの設定は完了です。
 
-
-###### <a name="section6-6">メタデータサービスの設定</a>
+#### メタデータサービスの設定
 次にメタデータサービスを設定してください。
 メタデータサービスとは、SORACOM Beamではなく、SORACOM Airのサービスとなります。
 デバイス自身が使用している Air SIM の情報を HTTP 経由で取得、更新することができます。
@@ -538,31 +543,31 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 
 
 
-#### <a name="section6-7">3.	プログラムのダウンロード・実行</a>
+### <a name="section6-7">3.	プログラムのダウンロード・実行</a>
 
 クラウドへの送信をおこないます。
 以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
 
 Beamを使用する(「send_to_cloud.py」の実行時)には、SORACOM Airで通信している必要があります。
 
+#### コマンド
+```
+sudo apt-get install -y python-pip  
+sudo pip install elasticsearch
+curl -O http://soracom-files.s3.amazonaws.com/send_to_cloud.py
+python send_to_cloud.py
+```
+
+#### 実行結果
 ```
 pi@raspberrypi:~ $ sudo apt-get install -y python-pip  
 :
 pi@raspberrypi ~ $ sudo pip install elasticsearch
 :
-pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/send_to_cloud.py
---2016-03-24 02:40:12--  http://soracom-files.s3.amazonaws.com/send_to_cloud.py
-soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com) をDNSに問いあわせています... 54.231.224.18
-soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.224.18|:80 に接続しています... 接続しました。
-HTTP による接続要求を送信しました、応答を待っています... 200 OK
-長さ: 2678 (2.6K) [text/plain]
-`send_to_cloud.py' に保存中
-
-100%[===================================================>] 2,678       --.-K/s 時間 0s
-
-2016-03-24 02:40:12 (47.1 MB/s) - `send_to_cloud.py' へ保存完了 [2678/2678]
-
-
+pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/send_to_cloud.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  3153  100  3153    0     0  43279      0 --:--:-- --:--:-- --:--:-- 43791
 pi@raspberrypi ~ $ python send_to_cloud.py
 - メタデータサービスにアクセスして IMSI を確認中 ... 440103125380131
 - 条件設定
@@ -575,8 +580,7 @@ pi@raspberrypi ~ $ python send_to_cloud.py
 - ステータスが 'in'(何か物体がある) に変化しました
 - Beam 経由でデータを送信します
 
-{u'_type': u'event', u'_id': u'AVRRGrS4IfRhQRmTbOsN', u'created': True, u'_version': 1, u'_index': u'sensor'} ← 正常にデータが送信されたら created: True  になります
-
+{u'_type': u'event', u'_id': u'AVRRGrS4IfRhQRmTbOsN', u'created': True, u'_version': 1, u'_index': u'sensor'}
 
 距離(cm): 55.3 > 10 , 回数: 1 / 3<br>
 距離(cm): 55.3 > 10 , 回数: 2 / 3<br>
@@ -585,24 +589,20 @@ pi@raspberrypi ~ $ python send_to_cloud.py
 - ステータスが 'out'(何も物体がない) に変化しました
 
 - Beam 経由でデータを送信します
-{u'_type': u'event', u'_id': u'AVRRGsWEIfRhQRmTbOsO', u'created': True, u'_version': 1, u'_index': u'sensor'} ← 正常にデータが送信されたら created: True  になります
+{u'_type': u'event', u'_id': u'AVRRGsWEIfRhQRmTbOsO', u'created': True, u'_version': 1, u'_index': u'sensor'}
 ```
+>  正常にデータが送信されたらレスポンス内の created が True  になります
 
- 
-
-#### <a name="section6-8">4.	クラウド上でデータを確認する</a>
+### <a name="section6-8">4.	クラウド上でデータを確認する</a>
 Elasticsearch Service 上にインストールされている Kibana にアクセスします。
 
-https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com/_plugin/kibana/
+*** https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com/_plugin/kibana/ ***
 
 ![](image/6-11.png)
 
-全ての SIM カードからの情報が集まっていますので、自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi=[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
+全ての SIM カードからの情報が集まっていますので、自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi:[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
 
 最短で5秒毎に更新する事が出来ますので、リアルタイムにデータが受信されるのを確認してみましょう。
-
-
- 
 
 ## <a name="section7">7章 Twitterと連携してみる</a>
 
