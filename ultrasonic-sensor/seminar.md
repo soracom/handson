@@ -153,10 +153,10 @@ USBドングルを使用するために、以下のパッケージをインス�
 sudo apt-get install -y usb-modeswitch wvdial
 ```
 
-> 	パッケージのインストール中、
->  Sorry.  You can retry the autodetection at any time by running "wvdialconf".
->     (Or you can create /etc/wvdial.conf yourself.)
-と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
+> パッケージのインストール中、  
+>  Sorry.  You can retry the autodetection at any time by running "wvdialconf".  
+>     (Or you can create /etc/wvdial.conf yourself.)  
+> と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
 
 ###  <a name = "section3−3">3.	接続スクリプトのダウンロード
 
@@ -334,9 +334,10 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 
 ### <a name="section4-4">2 監視機能の確認</a>
 通信量にしきい値を設定し、超えた場合にメールでの通知と通信帯域制限をすることができます。監視できる項目は以下のとおりです。
-●	各 SIM の日次通信量
-●	各 SIM の今月の合計通信量
-●	全ての SIM の今月の合計通信
+
+-	各 SIM の日次通信量
+-	各 SIM の今月の合計通信量
+-	全ての SIM の今月の合計通信
 
 例えば、全ての Air SIM の合計通信量が5000MB以上になった場合にメール通知を受けたい場合や、ある Air SIM の日次通信量が100MB以上になった場合にはその日の通信速度を制限するというような処理を行いたい場合に、この機能を利用することができます。
 
@@ -361,22 +362,15 @@ Air SIMに監視の設定をしましょう。当ハンズオンの間に通知�
 
 #### コマンド
 ```
-wget http://soracom-files.s3.amazonaws.com/1MB
+curl -o /dev/null http://soracom-files.s3.amazonaws.com/1MB
 ```
 
 #### 実行結果
 ```
-pi@raspberrypi:~ $ wget http://soracom-files.s3.amazonaws.com/1MB
---2016-11-14 07:50:37--  http://soracom-files.s3.amazonaws.com/1MB
-Resolving soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)... 52.219.4.17
-Connecting to soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|52.219.4.17|:80... connected.
-HTTP request sent, awaiting response... 200 OK
-Length: 1048576 (1.0M) [binary/octet-stream]
-Saving to: ‘1MB’
-
-1MB                       100%[====================================>]   1.00M  --.-KB/s   in 0.5s
-
-2016-11-14 07:50:38 (512KB/s) - ‘1MB’ saved [1048576/1048576]
+pi@raspberrypi:~ $ curl -o /dev/null http://soracom-files.s3.amazonaws.com/1MB
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 1024k  100 1024k    0     0   512k      0 --:--:-- --:--:-- --:--:--  512k
 ```
 
 以下のような通知が届きます。(通知は最大で5分程度かかります。)
