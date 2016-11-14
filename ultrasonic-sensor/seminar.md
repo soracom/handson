@@ -2,69 +2,19 @@
 
 # ハンズオン用テキスト
 
-
-### 2016年05月14日
-### 株式会社ソラコム
-
-
-#### [1章 ユーザーコンソールを使用してAir SIMを管理する](#section1)
-[SORACOM ユーザーアカウントの作成と設定](#section1-1) <br>
-[SORACOM アカウントの作成](#section1-2)<br>
-[ユーザーコンソールへのログイン](#section1-3)<br>
-[支払情報の設定](#section1-4)<br>
-[Air SIM の登録](#section1-5)<br>
-[ユーザーコンソールでの Air SIM の登録](#section1-6)<br>
-
-#### [2章 Raspberry Piへの接続](#section2)
-
-#### [3章 Air SIMを使って、インターネットに接続する](#section3)
-[Raspberry Pi に USBドングルを接続する](#section3-1)<br>
-[必要なパッケージのインストール](#section3-2)<br>
-[接続スクリプトのダウンロード](#section3-3)<br>
-[Air SIM を使って、インターネットに接続する](#section3-4)<br>
-
-#### [4章 ユーザーコンソールによる通信の確認](#section4)
-[データ通信量と利用料金の確認](#section4-1)<br>
-[Air SIMのデータ通信量の確認](#section4-2)<br>
-[利用料金の確認](#section4-3)<br>
-[監視機能の確認](#section4-4)<br>
-
-#### [5章 超音波センサーを使って距離を計測する](#section5)
-[超音波センサーの動作原理](#section5-1)<br>
-[配線](#section5-2)<br>
-[センサーをテストしてみる](#section5-3)<br>
-[トラブルシュート](#section5-4)
-<br>
-
-#### [6章 クラウドにデータを送る](#section6)
-[SORACOM Beamとは](#section6-1)<br>
-[SORACOM Beamの設定](#section6-2)<br>
-[グループの作成](#section6-3)<br>
-[SIMのグループ割り当て](#section6-4)<br>
-[ESへのデータ転送設定](#section6-5)<br>
-[メタデータサービスの設定](#section6-6)<br>
-[プログラムのダウンロード・実行](#section6-7)<br>
-[クラウド上でデータを確認する](#section6-8)<br>
-
-#### [7章 Twitterと連携してみる](#section7)
-[IFTTT とは](#section7-1)<br>
-[IFTTTの設定](#section7-2)<br>
-[レシピの作成](#seciton7-3)<br>
-[SORACOM Beam の設定](#seciton7-4)<br>
-[プログラムのダウンロード・実行](#section7-5)<br>
-
-## はじめに
+目次
+----
 
 このハンズオンでは、SORACOMとRaspberry Piと超音波センサを用いてクラウドにデータを送り可視化したり、IFTTTを利用してデータ転送からTwitterへの呟きに連動させます。まずは、SORACOMのユーザーアカウントを作成してみましょう。
 
-## <a name="section1">1章 ユーザーコンソールを使用してAir SIMを管理する
+## <a name="section1">1章 ユーザーコンソールを使用してAir SIMを管理する</a>
 ここでは、SORACOM ユーザーコンソール(以降、ユーザーコンソール)を使用して、SORACOM AirのSIM (以降、Air SIM)をSORACOMのユーザーアカウントに登録します。ユーザーコンソールを使用するために、ユーザーアカウントの作成、および、支払情報の設定(クレジットカード情報)の登録を行います。
 
 
-#### <a name="section1-1">1.SORACOM ユーザーアカウントの作成と設定
+### <a name="section1-1">SORACOM ユーザーアカウントの作成と設定</a>
 ユーザーコンソールを使用するためには、SORACOMユーザーアカウント(以降、SORACOMアカウント)の作成が必要となります。アカウントの作成には、メールアドレスが必要となります。
 
-#### <a name="section1-2">SORACOM アカウントの作成
+### <a name="section1-2">SORACOM アカウントの作成</a>
 ユーザーコンソールをご利用いただくためには、まずSORACOM アカウントを作成してください。
 https://console.soracom.io/#/signup にアクセスします。
 「アカウント作成」画面が表示されますのでメールアドレスおよびパスワードを入力して、[アカウントを作成] ボタンをクリックします。
@@ -82,33 +32,23 @@ https://console.soracom.io/#/signup にアクセスします。
 
 自動的にログイン画面に遷移しますので、メールアドレスとパスワードを入力してログインしてください。
 
-#### <a name="section1-3">ユーザーコンソールへのログイン
+### <a name="section1-3">ユーザーコンソールへのログイン</a>
 ログイン画面が表示されるので、アカウント作成時に登録したメールアドレスとパスワードを入力し、 [ログイン] ボタンをクリックしてください。(ログイン画面が表示されない場合はブラウザで https://console.soracom.io にアクセスします。)
 ![](image/4.png)
 
-
-
 以下のような「SIM管理」画面が表示されたらログイン完了です。引き続き、支払情報の設定に進みましょう！
 ![](image/5.png)
-
-
-
 
-#### <a name="section1-4">支払情報の設定
+### <a name="section1-4">支払情報の設定</a>
 通信料の支払い方法はクレジットカードになります。クレジットカードの情報を登録するには、メイン画面上部のユーザー名から[お支払い方法設定]を開きます。
 
 ![](image/6.png)
 
-
 お支払方法で各情報を入力し、支払い方法を登録します。
 
-
 ![](image/7.png)
-
 
-### <a name="section1-5">3.Air SIM の登録
-
-#### <a name="section1-6">ユーザーコンソールでの Air SIM の登録
+### <a name="section1-6">ユーザーコンソールでの Air SIM の登録</a>
 
 ユーザーコンソールにログインして、Air SIM の登録を行います。左上の [SIM登録] ボタンをクリックします。
 ![](image/8.png)
@@ -134,25 +74,34 @@ SORACOMではSIMの登録や「使用開始」「休止」「解約」といっ�
 なお、初めての通信、もしくは、ユーザーコンソール/APIで使用開始処理を行うことで、状態は「使用中」に変わります。 まだ通信を行いたくない場合は、ユーザーコンソールもしくはAPIで休止処理を行ってください。これにより「休止中」の状態となり通信は行われません。
 
 
-## <a name = "section2">2章 Raspberry Piへの接続
-### Raspberry Piへの接続
+## <a name="section2">2章 Raspberry Piへの接続</a>
 
-> SORACOMが実施するハンズオンでは、事前にOSを初期化した Raspberry Pi を用意してあります。
-> 割り当てられたRaspberryPiと、そのIPアドレスをご確認ください。
-> 使用する Raspberry Pi のアドレスは、 192.168.123.(100+ドングルの番号) です
->
-> 例: ５番のドングルであれば、 192.168.123.105
+SORACOMが実施するハンズオンでは、事前にOSを初期化した Raspberry Pi を用意してあります。
+割り当てられたRaspberryPiと、そのIPアドレスをご確認ください。
+使用する Raspberry Pi のアドレスは、 192.168.123.ドングルの番号 です
+
+> 例: ５番のドングルであれば、 192.168.123.5
+
+### 1. Mac をお使いの場合
 
 自分の端末からRaspberry Piに接続(SSH)します。
 ターミナルを立ち上げ、以下のコマンドを実行してください。
 
+#### コマンド
+```bash
+ssh pi@192.168.123.xxx (割り当てられたIPアドレスを指定してください)
+yes (初回接続時のみ)
+raspberry
 ```
+
+#### 実行結果
+```text
 ~$ ssh pi@192.168.123.xxx (割り当てられたIPアドレスを指定してください)
 The authenticity of host '192.168.123.xxx (192.168.123.xxx)' can't be established.
 ECDSA key fingerprint is db:ed:1b:37:f2:98:c6:f4:d8:6d:cf:5c:31:6a:16:58.
 Are you sure you want to continue connecting (yes/no)? yes
 Warning: Permanently added '192.168.123.xxx' (ECDSA) to the list of known hosts.
-pi@192.168.123.3's password: (raspberry と入力)
+pi@192.168.123.xxx's password: (raspberry と入力)
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -160,17 +109,21 @@ individual files in /usr/share/doc/*/copyright.
 
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
-Last login: Thu Sep 24 15:51:43 2015 from 192.168.123.254
+Last login: Thu Sep 24 15:51:43 2015 from 192.168.123.yyy
 pi@raspberrypi ~ $
-
 ```
 
-Windowsの場合には、PuttyやTeraTerm等を使ってログインしてください。その際、ユーザ名に pi を指定する必要があります。
+### 2. Windows をお使いの場合
+Windowsの場合には、TeraTerm等を使ってログインしてください。その際、ユーザ名に pi、パスワードに raspberry を指定する必要があります。
 
-## <a name="section3">3章 Air SIMを使って、インターネットに接続する
+![teraterm](image/connect-air-01.png)
+
+![teraterm](image/connect-air-02.png)
+
+## <a name="section3">3章 Air SIMを使って、インターネットに接続する</a>
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
 
-### <a name = "section3−１">1.	Raspberry Pi に USBドングルを接続する
+### <a name="section3−１">1.	Raspberry Pi に USBドングルを接続する</a>
 
 ![](image/3-1.jpg)
 
@@ -189,14 +142,14 @@ Air SIMを取り外します。Air SIMの端子を触らないように気をつ
 ![](image/3-6.jpg)
 
 
-### <a name = "section3−2">2.	必要なパッケージのインストール
+### <a name="section3−2">2.	必要なパッケージのインストール</a>
 
 USBドングルを使用するために、以下のパッケージをインストールし、RaspberryPiをセットアップします。
 -	usb-modeswitch
 -	wvdial
 
 
-###### usb-modeswitchとwvdialのインストールコマンド
+#### usb-modeswitchとwvdialのインストールコマンド
 
 ```
 pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
@@ -209,7 +162,7 @@ pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
 と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
 ```
 
-###  <a name = "section3−3">3.	接続スクリプトのダウンロード
+### <a name="section3−3">3.	接続スクリプトのダウンロード</a>
 
 以下に、モデムの初期化、APNの設定、ダイアルアップなどを行うスクリプトが用意されています。
 http://soracom-files.s3.amazonaws.com/connect_air.sh
@@ -226,7 +179,7 @@ pi@raspberrypi ~ $ sudo mv connect_air.sh /usr/local/sbin/
 
 ```
 
-### <a name = "section3−4">4.	Air SIM を使って、インターネットに接続する
+### <a name="section3−4">4.	Air SIM を使って、インターネットに接続する</a>
 
 接続の準備ができましたので、接続スクリプトを実行します。接続スクリプトは root 権限で実行する必要があるため、sudoで実行します。
 
@@ -324,13 +277,13 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 
  
 
-## <a name = "section4"> 4章 ユーザーコンソールによる通信の確認
+## <a name="section4">4章 ユーザーコンソールによる通信の確認</a>
 インターネットに接続できましたので、ユーザーコンソールからデータ通信量、利用料金を確認して、監視機能を設定しましょう。
 
 
-### <a name = "section4-1">1.	データ通信量と利用料金の確認
+### <a name="section4-1">1.	データ通信量と利用料金の確認</a>
 
-#### <a name = "section4-2">Air SIMのデータ通信量の確認
+### <a name="section4-2">2. Air SIMのデータ通信量の確認</a>
 ユーザーコンソールでは、データ通信量をSORACOM AirのSIM(以降、Air SIM)ごとにチャート形式で確認することができます。<br>
 データ通信量を確認したいAir SIMにチェックを入れ [詳細] ボタンをクリックします。
 ![](image/4-1.png)
@@ -344,7 +297,7 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 
 ![](image/4-2.png)
 
-#### <a name = "section4-3">利用料金の確認
+### <a name="section4-3">3. 利用料金の確認</a>
 
 ユーザーコンソールからデータ通信料金と基本料金を確認できます。
 メイン画面上部のナビゲーションバーから [課金情報] を選択します。
@@ -370,7 +323,7 @@ CurlコマンドによるIPアドレスとhostコマンドにより、EC2から�
 ✓	タグ、グループ
 ```
 
-#### <a name = "section4-4">監視機能の確認
+### <a name="section4-4">4. 監視機能の確認</a>
 通信量にしきい値を設定し、超えた場合にメールでの通知と通信帯域制限をすることができます。監視できる項目は以下のとおりです。
 ●	各 SIM の日次通信量
 ●	各 SIM の今月の合計通信量
@@ -421,16 +374,16 @@ pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
 
  
 
-## <a name = "section5">5章 超音波センサーを使って距離を計測する
+## <a name="section5">5章 超音波センサーを使って距離を計測する</a>
 
-#### <a name = "section5-1">1.	超音波センサーの動作原理
+#### <a name="section5-1">1.	超音波センサーの動作原理</a>
 超音波の反射時間を利用して非接触で測距するモジュールです。外部からトリガパルスを入力すると超音波パルス（８波）が送信され、出力された反射時間信号をマイコンで計算することによって距離を測ることができます。
 ![](image/5-1.png)
 
  -具体的にはセンサーの Trig ピンにパルス(短い時間)電圧をかけて測定を開始<br>
  -EchoピンがHIGHである時間の長さを計測
 
-#### <a name = "section5-2">2.	配線
+#### <a name="section5-2">2.	配線</a>
 
 1.必要なパーツが揃っているか確認しましょう
 
@@ -458,7 +411,7 @@ pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
 
 ![](image/5-6.png)
 
-#### <a name = "section5-3">3.センサーをテストしてみる
+#### <a name="section5-3">3.センサーをテストしてみる</a>
 以下のコマンドで、プログラムをダウンロード・実行し、正しくセンサー値が読み出せるか試しましょう
 
 ```
@@ -481,7 +434,7 @@ distance: 2.3 cm  ← センサーの前に手をかざして変化を確認し�
      :
 ```
 
-#### <a name = "section5-4">4.トラブルシュート
+#### <a name="section5-4">4.トラブルシュート</a>
 
 何も出力されない場合<br>
 接続するピンを間違えている可能性が高いです<br>
@@ -490,14 +443,14 @@ distance: 2.3 cm  ← センサーの前に手をかざして変化を確認し�
 
  
 
-## <a name = "section6">6章 クラウドにデータを送る
+## <a name="section6">6章 クラウドにデータを送る</a>
 
 ![](image/6-1.png)
 センサーで障害物を検知した時に、SORACOM Beam を使ってクラウドへデータを送ってみましょう。
 今回のハンズオンではAWSのElasticsearch Service(以下、ES)へデータを送って、可視化を行います。このハンズオンでは簡略化のため、すでにハンズオン用に事前にセットアップされたESのエンドポイントを用いてハンズオンを行います。
 
 
-#### <a name = "section6-1">1.	SORACOM Beamとは
+#### <a name="section6-1">1.	SORACOM Beamとは</a>
 
 SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理や接続先の設定を、クラウドにオフロードできるサービスです。Beam を利用することによって、暗号化処理が難しいデバイスに代わって、デバイスからサーバー間の通信を暗号化することが可能になります。
 プロトコル変換を行うこともできます。例えば、デバイスからはシンプルなTCP、UDPで送信し、BeamでHTTP/HTTPSに変換してクラウドや任意のサーバーに転送することができます。
@@ -508,7 +461,7 @@ SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理�
 
 また、上記のプロトコル変換に加え、Webサイト全体を Beam で転送することもできます。(Webサイトエントリポイント) 全てのパスに対して HTTP で受けた通信を、HTTP または HTTPS で転送を行う設定です。
 
-#### <a name = "section6-2">2.	SORACOM Beamの設定
+#### <a name="section6-2">2.	SORACOM Beamの設定</a>
 当ハンズオンでは、以下の2つのBeamを使用します。
 
 ●	ESへのデータ転送設定 (Webエンドポイント)<br>
@@ -518,7 +471,7 @@ SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理�
 BeamはAir SIMのグループに対して設定するので、まず、グループを作成します。
 
 
-###### <a name = "section6-3">グループの作成
+###### <a name="section6-3">グループの作成</a>
 
 コンソールのメニューから[グループ]から、[追加]をクリックします。
 ![](image/6-3.png)
@@ -531,7 +484,7 @@ BeamはAir SIMのグループに対して設定するので、まず、グルー
 次に、SIMをこのグループに紐付けします。
 ![](image/6-5.png)
 
-###### <a name = "section6-4">SIMのグループ割り当て
+###### <a name="section6-4">SIMのグループ割り当て</a>
 ![](image/6-6.png)
 
 SIM管理画面から、SIMを選択して、操作→所属グループ変更を押します
@@ -542,7 +495,7 @@ SIM管理画面から、SIMを選択して、操作→所属グループ変更�
 
 つづいて、Beamの設定を行います。
 
-###### <a name = "section6-5">ESへのデータ転送設定
+###### <a name="section6-5">ESへのデータ転送設定</a>
 先ほど作成したグループを選択し、[SORACOM Beam 設定] のタブを選択します。
 
 ![](image/6-7.png)
@@ -569,7 +522,7 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 以上でBeamの設定は完了です。
 
 
-###### <a name = "section6-6">メタデータサービスの設定
+###### <a name="section6-6">メタデータサービスの設定</a>
 次にメタデータサービスを設定してください。
 メタデータサービスとは、SORACOM Beamではなく、SORACOM Airのサービスとなります。
 デバイス自身が使用している Air SIM の情報を HTTP 経由で取得、更新することができます。
@@ -585,7 +538,7 @@ ESへのデータ転送は[Webエントリポイント]を使用します。[SOR
 
 
 
-#### <a name = "section6-7">3.	プログラムのダウンロード・実行
+#### <a name="section6-7">3.	プログラムのダウンロード・実行</a>
 
 クラウドへの送信をおこないます。
 以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
@@ -637,7 +590,7 @@ pi@raspberrypi ~ $ python send_to_cloud.py
 
  
 
-#### <a name = "section6-8">4.	クラウド上でデータを確認する
+#### <a name="section6-8">4.	クラウド上でデータを確認する</a>
 Elasticsearch Service 上にインストールされている Kibana にアクセスします。
 
 https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com/_plugin/kibana/
@@ -651,24 +604,24 @@ https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.co
 
  
 
-## <a name = "section7">7章 Twitterと連携してみる
+## <a name="section7">7章 Twitterと連携してみる</a>
 
 IFTTTというサービスを使うと、デバイスから簡単に様々なサービスと連携を行う事が出来ます。
 この章では、センサーで障害物を検知した際に、SORACOM Beam 経由で IFTTT の Maker Channel を呼び出し、Twitter へとリアルタイムに通知を行ってみましょう。
 
-#### <a name = "section7-1">1.	IFTTT とは
+#### <a name="section7-1">1.	IFTTT とは</a>
 IFTTT(https://ifttt.com/) とは、IF-This-Then-That の略で、もし「これ」が起きたら「あれ」を実行する、つまり「これ」がトリガーとなって、「あれ」をアクションとして実行する、サービスとなります。
 様々なサービスや機器と連携していて、何度かクリックするだけで簡単な仕組みを作る事が出来ます。
 今回のハンズオンでは、HTTPSのリクエストをトリガーとして、アクションとして Twitter につぶやくために、IFTTTTを使います。
 
-#### <a name = "section7-1">2.	IFTTTの設定
+#### <a name="section7-1">2.	IFTTTの設定</a>
 まずアカウントをお持ちでない方は、IFTTT のサイト https://ifttt.com/ で、Sign Up してください。
 
 ![](image/7-1.png)
 
  
 
-#### <a name = "section7-3">3.	レシピの作成
+#### <a name="section7-3">3.	レシピの作成</a>
 次にサービス同士の組み合わせ(Recipe=レシピと呼ばれます)を作成します。
 https://ifttt.com/myrecipes/personal にアクセスして、Create a Recipe をクリックします。
 
@@ -701,7 +654,7 @@ Twitter の Tweet text には、例えば下記のような文言を入れてみ
 最後に Maker channel のページ https://ifttt.com/maker を開いて、key を確認します(後ほど使います)
 ![](image/7-7.png)
 
-#### <a name = "section7-4">4.	SORACOM Beam の設定
+#### <a name="section7-4">4.	SORACOM Beam の設定</a>
 
 IFTTTへのデータ転送を設定します。IFTTTへのデータ転送は[HTTPエントリポイント]を使用します。[SORACOM Beam 設定] から[HTTPエントリポイント]をクリックします。
 ![](image/7-8.png)
@@ -733,7 +686,7 @@ IFTTTへのデータ転送を設定します。IFTTTへのデータ転送は[HTT
 
 
 
-#### <a name = "section7-5">5.	プログラムのダウンロード・実行
+#### <a name="section7-5">5.	プログラムのダウンロード・実行</a>
 
 IFTTTへの送信をおこないます。
 以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
