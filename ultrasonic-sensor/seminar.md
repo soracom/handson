@@ -196,6 +196,7 @@ sudo apt-get install -y usb-modeswitch wvdial
 ### <a name="3-3"> <a name="section3−3">3.	接続スクリプトのダウンロード</a></a>
 
 以下に、モデムの初期化、APNの設定、ダイアルアップなどを行うスクリプトが用意されています。
+
 http://soracom-files.s3.amazonaws.com/connect_air.sh
 
 以下のコマンドを実行し、このスクリプトをダウンロードし、接続用シェルスクリプトを作成します。
@@ -386,12 +387,10 @@ Air SIMに監視の設定をしましょう。当ハンズオンの間に通知�
 
 ここでの設定は、対象のAir SIMごとに有効になります。
 
-```
- 	監視の設定は、以下の3つを対象することができます。
-✓	Air SIM<br>
-✓	(Air SIMの所属する)グループ<br>
-✓	(登録した)全てのSIM
-```
+監視の設定は、以下の3つを対象することができます。
+- Air SIM
+- (Air SIMの所属する)グループ
+- (登録した)全てのSIM
 
 すぐに、メール通知を確認したい場合は、Raspberry Piから以下のコマンドを実行して、1MiBのダウンロードを実施してみてください。
 
@@ -485,6 +484,7 @@ pi@raspberrypi ~ $ python sensor_test.py
 ## <a name="6-0">6章 クラウドにデータを送る</a>
 
 ![](image/6-1.png)
+
 センサーで障害物を検知した時に、SORACOM Beam を使ってクラウドへデータを送ってみましょう。
 
 今回のハンズオンではAWSのElasticsearch Service(以下、ES)へデータを送って、可視化を行います。このハンズオンでは簡略化のため、すでにハンズオン用に事前にセットアップされたESのエンドポイントを用いてハンズオンを行います。
@@ -496,6 +496,7 @@ SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理�
 プロトコル変換を行うこともできます。例えば、デバイスからはシンプルなTCP、UDPで送信し、BeamでHTTP/HTTPSに変換してクラウドや任意のサーバーに転送することができます。
 
 現在、以下のプロトコル変換に対応しています。
+
 ![](image/6-2.png)
 
 
@@ -514,14 +515,17 @@ BeamはAir SIMのグループに対して設定するので、まず、グルー
 #### グループの作成
 
 コンソールのメニューから[グループ]から、[追加]をクリックします。
+
 ![](image/6-3.png)
 
 
 グループ名を入力して、[グループ作成]をクリックしてください。
+
 ![](image/6-4.png)
 
 
 次に、SIMをこのグループに紐付けします。
+
 ![](image/6-5.png)
 
 #### SIMのグループ割り当て
@@ -538,20 +542,19 @@ SIM管理画面から、SIMを選択して、操作→所属グループ変更�
 
 
 ESへのデータ転送は[Webエントリポイント]を使用します。[SORACOM Beam 設定] から[Webサイトエントリポイント]をクリックします。
+
 ![](image/6-8.png)
 
 表示された画面で以下のように設定してください。
 
-```
-●	設定名：ES(別の名前でも構いません)
-●	転送先のプロトコル：HTTPS
-●	ホスト名： search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
-```
+-	設定名：ES(別の名前でも構いません)
+-	転送先のプロトコル：HTTPS
+-	ホスト名： search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
 
 ![](image/6-9.png)
 
->	*** ホスト名は下記からコピーペーストしてください ***  
-> *** search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com ***
+>	ホスト名は下記からコピーペーストしてください
+> search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
 
 [保存]をクリックします。
 
@@ -624,7 +627,7 @@ pi@raspberrypi ~ $ python send_to_cloud.py
 ### <a name="6-4">4.	クラウド上でデータを確認する</a>
 Elasticsearch Service 上にインストールされている Kibana にアクセスします。
 
-*** https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com/_plugin/kibana/ ***
+https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com/_plugin/kibana/
 
 ![](image/6-11.png)
 
@@ -647,8 +650,6 @@ IFTTT(https://ifttt.com/) とは、IF-This-Then-That の略で、もし「これ
 
 ![](image/ifttt-1.png)
 
- 
-
 ### <a name="7-3">3.	アプレットの作成</a>
 次にサービス同士の組み合わせ(Applet=アプレットと呼ばれます)を作成します。
 
@@ -661,9 +662,11 @@ IFTTT(https://ifttt.com/) とは、IF-This-Then-That の略で、もし「これ
 This をクリックし、テキストボックスに maker と入れると、下記のような画面となるので、Maker を選び、Connect を押してサービスに接続します。
 
 ![](image/ifttt-4.png)
+
 ![](image/ifttt-5.png)
 
 トリガーとして Receve a web request を選びます。
+
 ![](image/ifttt-6.png)
 
  Event Name を設定します(ここでは、sensor とします)
@@ -674,7 +677,9 @@ This をクリックし、テキストボックスに maker と入れると、�
 That をクリックし、テキストボックスに twitter と入れ、Twitter チャンネルを選び、Connect を押します。
 
 ![](image/ifttt-8.png)
+
 ![](image/ifttt-9.png)
+
 ![](image/ifttt-10.png)
 
 Twitter の認証画面になるので、ご自身のアカウントでログインして認証を完了してください。
@@ -686,8 +691,9 @@ Twitter の認証画面になるので、ご自身のアカウントでログイ
 ![](image/ifttt-12.png)
 
 
-Twitter の Tweet text には、例えば下記のような文言を入れてみてください ![](image/ifttt-13.png)
+Twitter の Tweet text には、例えば下記のような文言を入れてみてください
 
+![](image/ifttt-13.png)
 
 > センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracomhandson
 
@@ -699,29 +705,28 @@ Finish をおして、アプレットの作成が完了します。
 
 ![](image/ifttt-15.png)
 
-
 URL の中の key を確認します(後ほど使いますので、どこかにメモしておいてください)
+
 ![](image/ifttt-16.png)
 
 ### <a name="7-4">4.	SORACOM Beam の設定</a>
 
 IFTTTへのデータ転送を設定します。IFTTTへのデータ転送は[HTTPエントリポイント]を使用します。[SORACOM Beam 設定] から[HTTPエントリポイント]をクリックします。
+
 ![](image/7-8.png)
-
-
 
 表示された画面で以下のように設定してください。
 
-●	設定名：IFTTT(別の名前でも構いません)
-●	エントリポイントパス： /
-●	転送先プロトコル：HTTPS
-●	転送先ホスト名：maker.ifttt.com
-●	転送先パス： /trigger/sensor/with/key/{maker_key}
-○	{maker_key} は、Maker Channelをコネクトすると発行される文字列です。以下のページから確認できます。
-○	https://ifttt.com/maker
+- 設定名：IFTTT(別の名前でも構いません)
+- エントリポイントパス： /
+- 転送先プロトコル：HTTPS
+- 転送先ホスト名：maker.ifttt.com
+- 転送先パス： /trigger/sensor/with/key/{maker_key}
+
+> {maker_key} は、Maker Channelをコネクトすると発行される文字列です。以下のページから確認できます。
+>	https://ifttt.com/maker
 
 ![](image/7-9.png)
-
 
 [保存]をクリックします。
 以上でBeamの設定は完了です。
@@ -772,15 +777,16 @@ status changed to 'out' : {"value3": "", "value2": "9", "value1": "out"}
 > 正常にデータが送信されたらレスポンスコードが 200 になります
 
 すると、下記のようなツイートが行われます。
+
 ![](image/7-10.png)
 
 ハッシュタグで検索してみましょう
-https://twitter.com/search?f=tweets&q=%23soracomhandson&src=typd
 
+https://twitter.com/search?f=tweets&q=%23soracomhandson&src=typd
 
 おめでとうございます！皆さんは、SORACOM x RaspberryPiハンズオン〜超音波センサー編〜を完了しました。SORACOMを使ったハンズオンを楽しんで頂けましたでしょうか？
 
 さらにSORACOMに興味を持っていただいた方は、以下の Getting Startedもご覧ください！
 
-SORACOM Getting Started
-https://dev.soracom.io/jp/start/
+> SORACOM Getting Started
+> https://dev.soracom.io/jp/start/
