@@ -1,17 +1,21 @@
 #!/bin/bash
+
+# 第一引数がデータの送信間隔となる(デフォルトは60秒)
 if [ "$1" = "" ]
 then
-	interval=5
+	interval=60
 else
 	interval=$1
 fi
 
-while [ 1 ] 
+while [ 1 ]
 do
 	(
-		temp=$(tail -1 /sys/bus/w1/devices/28-*/w1_slave | tr = \ | awk '{print $11/1000}')
-		payload='{"temperature":'$temp'}'
+		# 温度を読み取り、temp にセット
+		temp=$(awk -F= 'END {print $2/1000}' < /sys/bus/w1/devices/28-*/w1_slave)
+		payload='{"temperature":'$temp'}' # 送信するJSON文字列を作る
 		echo -n payload=$payload
+		# HTTP で POST する
 		curl -X POST -d $payload http://harvest.soracom.io && echo " OK" || echo " NG"
 	) &
 	sleep $interval

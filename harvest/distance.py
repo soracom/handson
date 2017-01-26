@@ -1,19 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
 import time
-import requests
-import json
 
 # 距離を読む関数
 def read_distance():
     # 必要なライブラリのインポート・設定
     import RPi.GPIO as GPIO
+    GPIO.setwarnings(False)
 
     # 使用するピンの設定
-    GPIO.setmode(GPIO.BOARD)
-    TRIG = 11 # ボード上の11番ピン(GPIO17)
-    ECHO = 13 # ボード上の13番ピン(GPIO27)
+    GPIO.setmode(GPIO.BCM)
+    TRIG = 17 # ボード上の11番ピン(GPIO17)
+    ECHO = 27 # ボード上の13番ピン(GPIO27)
 
     # ピンのモードをそれぞれ出力用と入力用に設定
     GPIO.setup(TRIG,GPIO.OUT)
@@ -37,9 +35,6 @@ def read_distance():
             signalon = time.time()
             break
 
-    # GPIO を初期化しておく
-    GPIO.cleanup()
-
     # 時刻の差から、物体までの往復の時間を求め、距離を計算する
     timepassed = signalon - signaloff
     distance = timepassed * 17000
@@ -50,19 +45,15 @@ def read_distance():
     else:
         return None
 
-# 第一引数を interval に設定
-interval=5 if len(sys.argv)==1 else int(sys.argv[1])
+# 直接実行した時にだけ実行される
+if __name__ == '__main__':
+	while True:
+		start_time = time.time()
+		distance = read_distance()
+		if distance:
+			print "距離: %.1f cm" % (distance)
 
-while True:
-    start_time = time.time()
-    distance = read_distance()
-    if distance:
-        print "%.1f cm" % (distance)
-        headers = {'Content-Type': 'application/json'}
-        payload = {'distance': round(distance*10)/10 }
-        print requests.post('http://harvest.soracom.io', data=json.dumps(payload), headers=headers)
-
-    # １秒間に１回実行するためのウェイトを入れる
-    wait = start_time + interval - start_time
-    if wait > 0:
-        time.sleep(wait)
+	   # １秒間に１回実行するためのウェイトを入れる
+		wait = start_time + 1 - start_time
+		if wait > 0:
+			time.sleep(wait)
