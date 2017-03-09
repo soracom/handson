@@ -160,24 +160,25 @@ Windowsの場合には、TeraTerm等を使ってログインしてください�
 ## <a name="3-0">3章 Air SIMを使って、インターネットに接続する</a>
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
 
-### <a name="3-1">Raspberry Pi に USBドングルを接続する</a>
-
-![](image/3-1.jpg)
-
+### <a name="3-1">Raspberry Pi に USBドングルを接続する</a>
+#### SIMのサイズを変換する
+![](image/3-1.jpg)
 Air SIMを取り外します。Air SIMの端子を触らないように気をつけます。
 
 ![](image/3-2.jpg)
 ![](image/3-3.jpg)
 
+#### FS01BUの場合
 
 ![](image/3-4.jpg)
 ![](image/3-5.jpg)
 
-
-#### Air SIMをドングルから取り出す際の注意
+> Air SIMをドングルから取り出す際の注意
 
 ![](image/3-6.jpg)
 
+#### AK-020の場合
+![](image/AK-020.PNG)
 
 ### <a name="3-2">必要なパッケージのインストール</a>
 
