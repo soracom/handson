@@ -8,7 +8,7 @@
 [SORACOM User Account Creation and Setting](#section1-1) <br>
 [SORACOM Account Creation](#section1-2)<br>
 [Login to User Console](#section1-3)<br>
-[Payment Information Setting](#section1-4)<br>
+[Payment Setting](#section1-4)<br>
 [Registration of Air SIM](#section1-5)<br>
 [Registration of Air SIM through User Console](#section1-6)<br>
 
@@ -50,57 +50,56 @@
 [SORACOM Beam の設定](#seciton7-4)<br>
 [プログラムのダウンロード・実行](#section7-5)<br>
 
-## Introduction
 
+## Introduction
 In this hands on, you will learn to send and visualize the data from the device to Cloud using SORACOM, Raspberry Pi and Ultrasonic sensor, then trigger the Tweet using IFTTT. First let's start with creation of SORACOM Account.
 
-## <a name="section1">1章 ユーザーコンソールを使用してAir SIMを管理する
-ここでは、SORACOM ユーザーコンソール(以降、ユーザーコンソール)を使用して、SORACOM AirのSIM (以降、Air SIM)をSORACOMのユーザーアカウントに登録します。ユーザーコンソールを使用するために、ユーザーアカウントの作成、および、支払情報の設定(クレジットカード情報)の登録を行います。
+## <a name="section1">1st Chapter: Manage Air SIM using SORACOM User Console
+In this chapter, you are will learn how to register a SORACOM Air SIM ("Air SIM") using SORACOM User Console ("User Console"). To use the User Console, first you will create a User Account, and set up a Payment information.
 
+#### <a name="section1-1">1.SORACOM User Account Creation and Setting
+Creation of a SORACOM User Account ("SORACOM Account") is required to use SORACOM User Console ("User Console"). Email address is required for the account creation.
 
-#### <a name="section1-1">1.SORACOM ユーザーアカウントの作成と設定
-ユーザーコンソールを使用するためには、SORACOMユーザーアカウント(以降、SORACOMアカウント)の作成が必要となります。アカウントの作成には、メールアドレスが必要となります。
+#### <a name="section1-2">SORACOM Account Creation
+First, create soracom Account to use User Console. 
+Please access https://console.soracom.io/#/signup
+"Account Creation" Screen will be displaied. Please enter Email Address and Password, and click "Create Account" button.
 
-#### <a name="section1-2">SORACOM アカウントの作成
-ユーザーコンソールをご利用いただくためには、まずSORACOM アカウントを作成してください。
-https://console.soracom.io/#/signup にアクセスします。
-「アカウント作成」画面が表示されますのでメールアドレスおよびパスワードを入力して、[アカウントを作成] ボタンをクリックします。
+![Account Creation](image/g_1.png)
 
-![アカウント作成](image/1.png)
+*It is not allowed to share an Air SIM accross multiple SORACOM Accounts. If it is required, please create and register a SORACOM Account with a shared email address, for example.
 
-複数人でAir SIMの管理を行う場合は、事前にメーリングリストのアドレスを取得するなど、共有のメールアドレスをご利用ください。
-下記の画面が表示されるので、メールを確認してください。
+As screen below, please confirm the email address.
 
-![](image/2.png)
+![](image/g_2.png)
 
-メールが届いたらリンクをクリックしてください。
+Once the email is delivered, Please click the link  to complete your registrationplease.
 
-![](image/3.png)
+![](image/g_3.png)
 
-自動的にログイン画面に遷移しますので、メールアドレスとパスワードを入力してログインしてください。
+It automatically takes you to the Login screen. Please enter "Email Address" and "Password" and click "Login".
 
-#### <a name="section1-3">ユーザーコンソールへのログイン
-ログイン画面が表示されるので、アカウント作成時に登録したメールアドレスとパスワードを入力し、 [ログイン] ボタンをクリックしてください。(ログイン画面が表示されない場合はブラウザで https://console.soracom.io にアクセスします。)
-![](image/4.png)
+#### <a name="section1-3">Login to User Console
+At the login screen, Please enter "Email Address" and "Password" and click "Login".
+(If the login screen is not displyed, please access https://console.soracom.io)
 
+![](image/g_4.png)
 
+If you see the screen below, you have loged in sccessfully.
 
-以下のような「SIM管理」画面が表示されたらログイン完了です。引き続き、支払情報の設定に進みましょう！
-![](image/5.png)
-
-
+![](image/g_5.png)
 
 
-#### <a name="section1-4">支払情報の設定
-通信料の支払い方法はクレジットカードになります。クレジットカードの情報を登録するには、メイン画面上部のユーザー名から[お支払い方法設定]を開きます。
+#### <a name="section1-4">Payment Setting
+Credit card (or Debit Card) will be used for the payments. To register the credit/debit card, select 'Payment Setting' pulldown menu on the top right corner as shown below. 
 
-![](image/6.png)
-
-
-お支払方法で各情報を入力し、支払い方法を登録します。
+![](image/g_6.png)
 
 
-![](image/7.png)
+Please fill in the billing information and agree to the Terms and Conditions.
+
+
+![](image/g_7.png)
 
 
 ### <a name="section1-5">3.Air SIM の登録
