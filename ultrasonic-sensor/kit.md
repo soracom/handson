@@ -1,4 +1,4 @@
-# 「SORACOM x RaspberryPi ハンズオン <br> 〜超音波センサー編〜」
+# IoT 体験キット 〜距離測定センサー〜
 
 # ハンズオン用テキスト
 
@@ -882,7 +882,7 @@ status changed to 'out' : {"value3": "", "value2": "9", "value1": "out"}
 https://twitter.com/search?f=tweets&q=%23soracomhandson&src=typd
 
 
-おめでとうございます！皆さんは、SORACOM x RaspberryPiハンズオン〜超音波センサー編〜を完了しました。SORACOMを使ったハンズオンを楽しんで頂けましたでしょうか？
+おめでとうございます！皆さんは、IoT 体験キット 〜距離測定センサー〜を完了しました。SORACOMを使ったハンズオンを楽しんで頂けましたでしょうか？
 
 さらにSORACOMに興味を持っていただいた方は、以下の Getting Startedもご覧ください！
 
