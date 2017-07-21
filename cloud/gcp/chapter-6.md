@@ -3,7 +3,7 @@
 
 この章では、Chap5で紹介したGCPの各サービスを利用して、Raspberry Piから収集されたデータをリアルタイムでBigQueryに集約するための環境を構築します。改めて本ハンズオンの全体像を確認してみましょう。以下のような流れになっています。
 
-＜ここに図をいれる＞
+![](./images/chapter-6/handson_env.png)
 
 1. Raspberry Piで取得したデータをCloud Pub/SubにメッセージとしてPublishする
 2. Publishされたメッセージは、Pushメッセージとして、指定したエンドポイントに通知される。エンドポイントはGAEで構築する
@@ -48,7 +48,7 @@
   - Name, Typeは上述の通り、また、全てのカラムを必須とするため、Modeは"REQUIRED"とします
 - 最後に"Create Table"ボタンを押す
 
-＜ここに図を挿入予定＞
+![](./images/chapter-6/create_table.png)
 
 この手順でテーブルの作成は完了です。実際にWebUI上に作成したテーブルが、データセット配下に表れていることを確認してください。
 
