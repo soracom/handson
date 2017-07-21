@@ -207,3 +207,8 @@ notebook形式のサンプル
 ![](./images/chapter-5/datalab2.png)
 
 Cloud Datalabはブロック単位でプログラムを書くことができます。また、ブロックを分ければ同じnotebookの中にMarkdownとPythonのプログラムを同居させることができます。各ブロックはそれぞれ独立に実行することができるため、インタラクティブな作業に向いています。
+
+最後に作成したdatalab環境をを削除します。
+```
+$ datalab delete --delete-disk datalab-test
+```
