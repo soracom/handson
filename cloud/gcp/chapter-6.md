@@ -59,12 +59,12 @@
 
 ### app.yaml内の環境変数
 
-|環境変数名|説明|
-|:--:|:--:|
-|PROJECT_ID|本ハンズオンで利用しているGCPのプロジェクトIDです。|
-|PUBSUB_VERIFICATION_TOKEN|Cloud Pub/Subがpushする時に使うtokenです。任意の文字列を設定してください|
-|BQ_DATASET_NAME|本ハンズオンで利用するBigQueryのデータセット名です。作成したデータセット名としてください。|
-|BQ_TABLE_NAME|本ハンズオンで利用するBigQueryのテーブル名です。作成したテーブル名としてください。|
+|環境変数名|説明|値（変更可能）
+|:--:|:--:|:--:|
+|PROJECT_ID|本ハンズオンで利用しているGCPのプロジェクトIDです。| ご自身のproject_id|
+|PUBSUB_VERIFICATION_TOKEN|Cloud Pub/Subがpushする時に使うtokenです。任意の文字列を設定してください|soracom|
+|BQ_DATASET_NAME|本ハンズオンで利用するBigQueryのデータセット名です。作成したデータセット名としてください。|soracom_handson
+|BQ_TABLE_NAME|本ハンズオンで利用するBigQueryのテーブル名です。作成したテーブル名としてください。|raspi_env|
 
 ### アプリケーションの解説
 
@@ -75,11 +75,14 @@ GAEのアプリケーションは以下のようになっています。
   - これは、push配信を行うサブスクライバーに配信先URLを指定する必要があり、そちらと合わせる形で今回はこのようなURLとしています。実際には、サブスクライバー側と同一のURLとなるのであれば、任意のURLを作成して問題ありません。
 - token（`PUBSUB_VERIFICATION_TOKEN`として設定したもの）が含まれているPOSTのみ受け付ける仕組みになっていること
   - これは、エンドポイントへのアクセスがPub/Subからのpush配信であることを示すためのものです。
+- `appengine_config.py`は今回のデモで必要となる追加モジュールの情報が含まれています。
 
 ### アプリケーションのデプロイ
 
 ```bash
 $ cd /path/to/handson/dir/cloud/gcp/src/gae
+# 必要となるモジュールを所定の場所にインストール
+$ pip install -t lib -r requirements.txt
 $ gcloud app deploy
 ```
 
@@ -108,7 +111,7 @@ $ gcloud beta pubsub topics list
 $ gcloud beta pubsub subscriptions create push-subscriber \
     --topic soracom_handson \
     --push-endpoint \
-        https://[your_project_name].appspot.com/pubsub/push?token=[token] \
+        https://[your_project_id].appspot.com/pubsub/push?token=soracom \
     --ack-deadline 30
 
 # --topicには、トピック名を指定
