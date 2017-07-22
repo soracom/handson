@@ -63,7 +63,7 @@
 |:--:|:--:|:--:|
 |PROJECT_ID|本ハンズオンで利用しているGCPのプロジェクトIDです。| ご自身のproject_id|
 |PUBSUB_VERIFICATION_TOKEN|Cloud Pub/Subがpushする時に使うtokenです。任意の文字列を設定してください|soracom|
-|BQ_DATASET_NAME|本ハンズオンで利用するBigQueryのデータセット名です。作成したデータセット名としてください。|soracom_handson
+|BQ_DATASET_NAME|本ハンズオンで利用するBigQueryのデータセット名です。作成したデータセット名としてください。|soracom_handson|
 |BQ_TABLE_NAME|本ハンズオンで利用するBigQueryのテーブル名です。作成したテーブル名としてください。|raspi_env|
 
 ### アプリケーションの解説

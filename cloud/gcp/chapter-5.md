@@ -186,7 +186,7 @@ $ gcloud app deploy
 Cloud Datalabとは、[Jupyter](http://jupyter.org/)というデータ分析者に人気のあるツールをベースとして、GCPとの各種サービスとの統合されたインタラクティブな分析環境です。必要となるデータ分析のモジュールも一通りインストールされており、データ分析において非常に使い勝手の良いサービスとなっています。Cloud DatalabはCloud Shellにインストール済みの`datalab`コマンドを使えば簡単に利用を始めることができます。
 
 ```
-$ datalab --zone asia-northeast1-a create datalab-test
+$ datalab create --zone asia-northeast1-a datalab-test
 ```
 
 ネットワークやディスク、またDockerコンテナのデプロイなど様々な処理が行われるため、少々起動まで時間があかかります。最終的に以下のような表示が出たらデプロイが完了したので、ウェブでプレビューをクリックし、"ポートの変更" > "ポート8081"をクリックしてください。
