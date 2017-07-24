@@ -7,7 +7,3 @@
 ## Chapter 5: Google Cloud Platformのアカウント作成とセットアップ
 ## Chapter 6: センシングデータ収集用の環境のセットアップ
 ## Chapter 7: センサーデータの可視化と分析
-
----
-
-![](images/chapter-0/logo.png)
