@@ -11,8 +11,7 @@ $ datalab create --zone asia-northeast1-a handson
 ```
 
 ## Cloud Datalabを使った分析と可視化
-Cloud Datalabで行う分析用のコードは`cloud/gcp/src/datalab/`配下に設置しています。datalabには、.ipynbファイルをアップロードして取り込むことができます。
-アップロードは、Datalabの画面から行うことができます。
+Cloud Datalabで行う分析用のコードは`cloud/gcp/src/datalab/`配下に設置しています。datalabには、.ipynbファイルをアップロードして取り込むことができます。アップロードファイルはローカルにデータがある必要があるため、Githubのリポジトリからリポジトリを`git`コマンド、あるいはzipファイルダウンロードを行い、ローカルマシンにリポジトリを準備します。アップロードは、Datalabの画面から行うことができます。
 
 ![](./images/chapter-7/datalab_upload.png)
 
