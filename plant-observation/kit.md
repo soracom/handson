@@ -283,13 +283,15 @@ pi@raspberrypi:~ $ crontab -l
 ```
 
 ### <a name="section4-3">クラウド上でデータを確認する</a>
-Elasticsearch Service 上にインストールされている Kibana にアクセスします。  
-http://bit.ly/kibana4　（新しいウィンドウで開いてください）
+Elasticsearch Service 上にインストールされている Kibana にアクセスします。
+
+<a href="http://bit.ly/kibana4" target="_blank">http://bit.ly/kibana4</a> （新しいウィンドウで開きます）
 
 ![](image/5-11.png)
 
-さらに、折れ線グラフとして可視化されている様子を見てみましょう。  
-http://bit.ly/temp-graph　（新しいウィンドウで開いてください）
+さらに、折れ線グラフとして可視化されている様子を見てみましょう。
+
+<a href="http://bit.ly/temp-graph" target="_blank">http://bit.ly/temp-graph</a> （新しいウィンドウで開きます）
 
 > 全ての SIM カードからの情報が集まっていますので、もし自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi=[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
 
