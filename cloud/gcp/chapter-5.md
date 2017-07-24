@@ -214,9 +214,15 @@ Datalabを起動した画面
 notebook形式のサンプル
 ![](./images/chapter-5/datalab2.png)
 
-Cloud Datalabはブロック単位でプログラムを書くことができます。また、ブロックを分ければ同じnotebookの中にMarkdownとPythonのプログラムを同居させることができます。各ブロックはそれぞれ独立に実行することができるため、インタラクティブな作業に向いています。Datalabの説明は改めてChapter-7で行うため、紹介としてはここまでとします。
+Cloud Datalabはブロック単位でプログラムを書くことができます。また、ブロックを分ければ同じnotebookの中にMarkdownとPythonのプログラムを同居させることができます。各ブロックはそれぞれ独立に実行することができるため、インタラクティブな作業に向いています。DatalabはGCE上にDatalabのDockerイメージをデプロイして実行されています。Cloud Shellを踏み台として、Datalabにアクセスする仕組みとなっています。Ctrl+cで`datalab`コマンドを終了させても、作成した後のDatalabがデプロイされたインスタンスは動き続けています。再度Cloud Shellを踏み台とするには以下のコマンドを実行します。
 
-最後に作成したdatalab環境をを削除します。
+```
+$ datalab connect datalab-test
+```
+
+Datalabの説明は改めてChapter-7で行うため、紹介としてはここまでとします。
+最後に作成したdatalab環境を削除します。上述した通り、Datalabは一度起動した後は明示的に削除しない限りGCEのインスタンスが課金対象として動作し続けてしまいます。
+
 ```
 $ datalab delete --delete-disk datalab-test
 ```
