@@ -14,7 +14,7 @@ Google Cloud Platformとは、Googleが提供しているクラウドサービ�
 1. Google Cloud Shellを使う
 2. Google Cloud SDKをローカルマシンにインストールする
 
-双方にはメリット・デメリットがあるため、ユーザーの状況に合わせて選択します。本セッションでは、設定の容易性などから、Google Cloud Shellを使う方法を選択します。Google Cloud Shellは、Google Cloud SDKなどのGCPに必要となる各種ツール類がインストール済みのシェルがブラウザから利用可能になるというものです。Google Cloud Shellは、GCPのコンソールから1クリックで立ち上げて利用することが可能になります。詳しくは、
+双方にはメリット・デメリットがあるため、ユーザーの状況に合わせて選択します。本ハンズオンでは、設定の容易性などから、Google Cloud Shellを使う方法を選択します。Google Cloud Shellは、Google Cloud SDKなどのGCPに必要となる各種ツール類がインストール済みのシェルがブラウザから利用可能になるというものです。Google Cloud Shellは、GCPのコンソールから1クリックで立ち上げて利用することが可能になります。詳しくは、
 [Google Cloud Platformの簡単スタートアップガイド](https://docs.google.com/presentation/d/1LPBAnXSncyKCFDKC1KgDrTFYoWmx2DD9otfID-6t6Fk/edit#slide=id.p)のP23-P25を参照してください。また、Cloud Shellに予めインストールされているツール群については[こちら](
 https://cloud.google.com/shell/docs/features?hl=ja#persistent_disk_storage)よりご確認ください。
 
@@ -34,7 +34,7 @@ https://cloud.google.com/shell/docs/features?hl=ja#persistent_disk_storage)よ�
 
 ## 本ハンズオンで利用するGCPのサービス
 
-本ハンズオンで利用するGCPのサービスは以下のものになります。
+本ハンズオンで利用するGCPのサービスは以下の4つになります。
 - [Cloud Pub/Sub](https://cloud.google.com/pubsub/?hl=ja)
 - [BigQuery](https://cloud.google.com/bigquery/?hl=ja)
 - [App Engine](https://cloud.google.com/appengine/?hl=ja)
@@ -46,11 +46,16 @@ https://cloud.google.com/shell/docs/features?hl=ja#persistent_disk_storage)よ�
 
 Cloud Pub/Subとは、フルマネージドなメッセージングサービスです。アプリケーション間でのメッセージの送受信ができるようになるため、GCPの各種サービスはもちろんのこと、GCPのサービス以外で作られたアプリケーション間についても、うまく疎結合に設計できるようになります。詳細は[ドキュメント](https://cloud.google.com/pubsub/docs/overview?hl=ja)を一読いただくと良いのですが、以下に基本的な概念を説明します。
 
+![](https://cloud.google.com/pubsub/images/pub_sub_flow.png?hl=ja)
+
+![](https://cloud.google.com/pubsub/images/publishers_subscribers.png?hl=ja)
+
 - `トピック`と呼ばれる名前付きリソースを通じてメッセージの送受信を行う
 - `パブリッシャー`は`トピック`にメッセージを送信する
 - `サブスクライバー`は`トピック`からメッセージを受信する。受信する方法としては、pullとpushがある
   - 設定されたエンドポイントにpushする方法
   - メッセージをpullする方法
+    - 今回のハンズオンではpushを使います
 
 次に`gcloud`コマンドを使ってCloud Pub/Subの動作を体験してみます。
 
@@ -66,6 +71,9 @@ $ gcloud beta pubsub topics publish test_topic "hello"
 
 # メッセージの受信
 $ gcloud beta pubsub subscriptions pull --auto-ack test_subscription
+
+# サブスクリプションの削除
+$ gcloud beta pubsub subscriptions delete test_subscription
 
 # トピックの削除
 # gcloud beta pubsub topics delete test_topic
@@ -206,7 +214,7 @@ Datalabを起動した画面
 notebook形式のサンプル
 ![](./images/chapter-5/datalab2.png)
 
-Cloud Datalabはブロック単位でプログラムを書くことができます。また、ブロックを分ければ同じnotebookの中にMarkdownとPythonのプログラムを同居させることができます。各ブロックはそれぞれ独立に実行することができるため、インタラクティブな作業に向いています。
+Cloud Datalabはブロック単位でプログラムを書くことができます。また、ブロックを分ければ同じnotebookの中にMarkdownとPythonのプログラムを同居させることができます。各ブロックはそれぞれ独立に実行することができるため、インタラクティブな作業に向いています。Datalabの説明は改めてChapter-7で行うため、紹介としてはここまでとします。
 
 最後に作成したdatalab環境をを削除します。
 ```
