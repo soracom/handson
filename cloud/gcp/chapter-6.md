@@ -123,6 +123,84 @@ $ gcloud beta pubsub topics list-subscriptions soracom_handson
 
 
 ## Raspberry Piからデータを流し込んでみましょう
-ここまでで、Raspberry Pi側からデータを受け取るために必要なセットアップは完了しました。実際にRaspberry PiからデータをCloud Pub/Subにpublishし、そのデータがBigQueryに蓄えれられているかを確認してみましょう。
+ここまでで、Raspberry Pi側からデータを受け取るために必要なセットアップは完了しました。実際にRaspberry Piから SORACOM Funnel を経由してデータをCloud Pub/Subにpublishし、そのデータがBigQueryに蓄えれられているかを確認してみましょう。
+
+### SORACOM Funnel とは
+SORACOM Funnel(以下、Funnel) は、デバイスからのデータを特定のクラウドサービスに直接転送するクラウドリソースアダプターです。 Funnel でサポートされるクラウドサービスと、そのサービスの接続先のリソースを指定するだけで、データを指定のリソースにインプットすることができます。
+
+![](https://soracom.jp/img/fig_funnel.png)
+
+Funnel を利用する上での利点としては、HTTP(POST)、TCPソケット、UDPパケットなどの、簡単なプロトコルでデータを送信するだけで、SORACOMプラットフォーム上で各種クラウドサービスへのデータ送信を行え、また認証情報をデバイス上に保存する必要がないという点も挙げられます。
+
+### サービスアカウントの作成
+Funnel で使用するための権限をサービスアカウントとして払い出しましょう。
+
+GCP コンソールの「IAMと管理」->「サービスアカウント」を開き、「＋サービスアカウントを作成」をクリックします。
+
+サービスアカウント名を指定し、キーのタイプは JSON を指定して、作成を押します。
+
+![](images/chapter-6/new_service_account.png)
+
+作成すると、JSON形式のファイルがダウンロードされます(後ほど使用します)。
+
+### Topic の権限設定
+Pub/Sub のトピック詳細から、権限を追加します。
+
+メンバーに先ほど作成したサービスアカウントを指定し、役割として Pub/SUb → Pub/Sub パブリッシャーを選択して、追加を押します。
+
+![](images/chapter-6/add_topic_privileges.png)
+
+### Funnel の設定
+Funnel の設定も、Harvest と同様にグループに対して行います。
+
+SIM一覧画面から、グループ名をクリックし、SORACOM Funnel 設定を開きます。
+
+![](images/chapter-6/funnel_setting.png)
+
+- Funnel 設定を有効にする
+- 転送先サービスに Google Cloud Pub/SUb を選択
+- 転送先トピックを設定
+- 送信データ形式を JSON にする
+- 認証情報の右側の ＋ をクリックし、認証情報を登録
+
+![](images/chapter-6/add_credentials.png)
+
+登録がおわったら、認証情報が選択されているのを確認し、保存を押します
+
+以上で Funnel の設定は完了です。
+
+### センサーデータの送信
+Chapter-4 で使用したスクリプトを利用します。本章では送信先のターゲットとして、 funnel を指定します。
+
+下記のコマンドで、Funnel に対して、60秒間隔でデータを送信します。
+
+#### コマンド
+```
+./report_temperature.sh funnel 60
+```
+
+#### 実行結果
+```
+pi@raspberrypi:~ $ ./report_temperature.sh funnel 60
+Air Temperature: 27.687 (c)
+CPU Temperature: 51.002 (c)
+* Rebuilt URL to: http://funnel.soracom.io/
+* Hostname was NOT found in DNS cache
+*   Trying 100.127.65.43...
+* Connected to funnel.soracom.io (100.127.65.43) port 80 (#0)
+> POST / HTTP/1.1
+> User-Agent: curl/7.38.0
+> Host: funnel.soracom.io
+> Accept: */*
+> content-type:application/json
+> Content-Length: 89
+>
+* upload completely sent off: 89 out of 89 bytes
+< HTTP/1.1 204 No Content
+< Date: Tue, 25 Jul 2017 14:08:32 GMT
+< Connection: keep-alive
+<
+* Connection #0 to host funnel.soracom.io left intact
+```
 
 ### NEXT >> [Chapter 7: センサーデータの可視化と分析](chapter-7.md)
