@@ -8,4 +8,4 @@ SORACOM を初めてお使いになる方は、下記のページを参考にア
 
 > 同一ページ内へのリンクとなります
 
-NEXT >> [Chapter 2: Raspberry Pi をセットアップする](chapter-2.md)
+### NEXT >> [Chapter 2: Raspberry Pi をセットアップする](chapter-2.md)

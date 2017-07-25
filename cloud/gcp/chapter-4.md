@@ -296,7 +296,7 @@ CPU Temperature: 51.54 (c)
 
 以上で、本章は完了となります。
 
-NEXT >> [Chapter 5: Google Cloud Platformのアカウント作成とセットアップ](chapter-5.md)
+### NEXT >> [Chapter 5: Google Cloud Platformのアカウント作成とセットアップ](chapter-5.md)
 
 ----
 ## Appendix

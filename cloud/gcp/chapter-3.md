@@ -142,4 +142,4 @@ rtt min/avg/max/mdev = 340.908/347.329/361.814/8.434 ms
 
 以上で、本章は完了となります。
 
-NEXT >> [Chapter 4: 温度センサーを使ったセンシング](chapter-4.md)
+### NEXT >> [Chapter 4: 温度センサーを使ったセンシング](chapter-4.md)
