@@ -1,0 +1,14 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /.*
+  script: main.app
+
+env_variables:
+    PUBSUB_TOPIC: [PUBSUB_TOPIC_NAME]
+    PUBSUB_VERIFICATION_TOKEN: [YOUR_TOKEN]
+    PROJECT_ID: [PROJECT_ID]
+    BQ_DATASET_NAME: [BIGQUERY_DATASET_NAME]
+    BQ_TABLE_NAME: [BIGQUERY_TABLE_NAME]
