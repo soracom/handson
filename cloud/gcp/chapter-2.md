@@ -123,3 +123,5 @@ pi@raspberrypi:~ $
 ```
 
 無事に接続が出来たら、本章は完了となります。
+
+NEXT >> [Chapter 3: Raspberry Pi を 3G 接続する](chapter-3.md)

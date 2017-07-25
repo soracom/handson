@@ -1,8 +1,21 @@
 # Chapter 4: 温度センサーを使ったセンシング
 
+## 温度センサー DS18B20+
+Raspberry Pi には、GPIO 端子という外部のセンサーや機器などを繋ぐ端子がありますが、Arduino 等とうは違い A/D 変換回路がないため、センサー値を電圧で読み取るようなアナログセンサーをそのまま接続する事はできません。
+
+そこで、本ハンズオンでは、デジタル温度センサーのマキシム・インテグレーテッド・プロダクツ社の、DS18B20+ を使用します。
+
+- [データシート](https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf)
+
+このセンサーは、1-Wire というバスで通信を行うセンサーで、Raspbian では カーネルモジュールでの対応があるため、簡単に扱う事ができます。
+
+まずは、このセンサーの温度データを Raspberry Pi で読み取ってみましょう。
+
 ## セットアップ
 ### 配線する
-Raspberry Pi の GPIO(General Purpose Input/Output)端子に、温度センサーを接続します。
+Raspberry Pi の GPIO(General Purpose Input/Output)端子に、温度センサー DS18B20+ を接続します。
+
+#### 温度センサーの向きを間違えると破損の原因になりますので、十分注意して接続してください
 
 ![回路図](images/chapter-4/circuit.png)
 
@@ -128,13 +141,154 @@ pi@raspberrypi:~ $ cat /sys/class/thermal/thermal_zone0/temp
 ```
 
 ## 温度情報を手軽に可視化してみる
-SORACOM Harvest を使って、この温度情報を簡単に可視化してみましょう。
+SORACOM Harvest (以下、Harvest) を使って、この温度情報を手軽に可視化してみましょう。
 
-### SORACOM Harvest とは
-TODO
+### Harvest とは
+Harves は、IoTデバイスからのデータを収集、蓄積するサービスです。
 
-### SORACOM Harvest の設定をする
-TODO
+SORACOM Air が提供するモバイル通信を使って、センサーデータや位置情報等を、モバイル通信を介して容易に手間なくクラウド上の「SORACOM」プラットフォームに蓄積することができます。
+保存されたデータには受信時刻や SIM の ID が自動的に付与され、「SORACOM」のユーザーコンソール内で、グラフ化して閲覧したり、API を通じて取得することができます。なお、アップロードされたデータは、40日間保存されます。
 
-### SORACOM Harvest にデータを送って可視化する
-TODO
+#### 容易なデータ収集と蓄積
+Harvest を利用することで、お客様は IoT デバイスと SORACOM Air があれば、別途サーバーやストレージを準備することなく、データの送信、保存、可視化までの一連の流れを手軽に実現することができます。アプリケーションの準備が整わずともIoTデバイスのデータの可視化を実現します。
+
+![](https://soracom.jp/img/fig_harvest.png)
+
+プロトコルは、HTTP、TCP、UDPに対応しています。
+デバイスは、これらの簡易な実装だけでクラウドサービスへのデータのインプットが可能となります。
+
+データは 40日間に渡って保存されます。より本格的なデータ収集・分析を行いたい場合には、任意のタイミングで他のクラウドやストレージにデータを移行し、お客様ご自身でデータ分析基盤を構築することも可能です。
+
+#### データの可視化
+蓄積されたデータはユーザーコンソールから、グラフおよび送信されたメッセージを確認することができます。
+
+![](https://soracom.jp/img/fig_harvest02.png)
+
+### Harvest を有効にする
+Harvest を有効にするには、SIM グループで設定を行う必要があります。ユーザコンソール左上、「Menu」をクリックし「SIM グループ」をクリックします。
+
+グループをまだ作成していない場合、左上の「＋追加」ボタンを押して、グループを作成し、作成されたグループをクリックします。  
+既に作成済みのグループを利用する場合は、そのグループ名をクリックします。
+
+「SORACOM Harvest設定」をクリックし、「保存」を押します。
+
+![Harvestを有効化する](images/chapter-4/enable-harvest.png)
+
+Harvest を有効にすると、SIM あたり１日５円の追加料金が発生します。
+
+![Harvestの課金に関する注意](images/chapter-4/harvest-confirm.png)
+
+Harvest の料金の詳細につきましては、以下のリンクをご参照下さい。
+> https://soracom.jp/services_pricing/#harvest
+
+### グループの割り当て
+
+もしグループを新規作成した場合には、利用している SIM カードに対して、グループを割り当てる必要があります。
+
+ユーザコンソール左上、「Menu」をクリックし「SIM 管理」を選びます。使用している SIM を選択し、「操作」から「所属グループ変更」を選びます。
+
+![](images/chapter-4/group-setting1.png)
+
+作成したグループを選び、「グループ変更」を押します。
+
+![](images/chapter-4/group-setting2.png)
+
+### データ送信のテスト
+それでは、Raspberry Pi からデータを送信してみましょう。実際のセンサーデータを送る前に、コマンドラインでダミーデータを送ってみたいと思います。
+
+#### コマンド
+curl コマンドで、JSON形式データを HTTP POST リクエストで送信します。  
+SORACOM Air SIM で認証が出来ていますので特に認証情報などは必要ありませんが、SORACOM プラットフォーム側ではどの SIM からデータが送信されたかを知ることが出来ます。
+
+```
+curl -vH content-type:application/json -d '{"temperature":29.0}' harvest.soracom.io
+```
+
+#### 実行結果
+```
+pi@raspberrypi:~ $ curl -vH content-type:application/json -d '{"temperature":29.0}' harvest.soracom.io
+* Rebuilt URL to: harvest.soracom.io/
+* Hostname was NOT found in DNS cache
+*   Trying 100.127.111.111...
+* Connected to harvest.soracom.io (100.127.111.111) port 80 (#0)
+> POST / HTTP/1.1
+> User-Agent: curl/7.38.0
+> Host: harvest.soracom.io
+> Accept: */*
+> content-type:application/json
+> Content-Length: 20
+>
+* upload completely sent off: 20 out of 20 bytes
+< HTTP/1.1 201 Created
+< Date: Tue, 25 Jul 2017 12:32:33 GMT
+* Server nginx/1.6.2 is not blacklisted
+< Server: nginx/1.6.2
+< Content-Length: 0
+< Connection: Close
+<
+* Closing connection 0
+```
+
+レスポンスコードが `HTTP/1.1 201 Created` になっていれば、データの作成が完了しています。コンソールで確認してみましょう。
+
+### データの確認
+Harvest に送られたデータを確認するには、ユーザコンソールを使います。
+
+「SIM 管理画面」より SIM を選択し、「操作」から「データを確認」を選びます。
+
+![](images/chapter-4/harvest_test1.png)
+
+すると、下記の図のように、ダミーで送信したデータが送られているのが確認いただけます。
+
+![](images/chapter-4/harvest_test2.png)
+
+### センサーデータを Harvest に送信する
+いよいよ、実際のセンサーデータを Harvest に送ってみましょう。
+
+
+#### コマンド
+```
+curl -O http://soracom-files.s3.amazonaws.com/handson/report_temperature.sh
+chmod +x report_temperature.sh
+./report_temperature.sh harvest 60
+(Ctrl+Cで止める)
+```
+
+#### 実行結果
+```
+pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/handson/report_temperature.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1316  100  1316    0     0    517      0  0:00:02  0:00:02 --:--:--   517
+pi@raspberrypi:~ $ chmod +x report_temperature.sh
+pi@raspberrypi:~ $ ./report_temperature.sh harvest 60
+Air Temperature: 27.875 (c)
+CPU Temperature: 51.54 (c)
+* Rebuilt URL to: http://harvest.soracom.io/
+* Hostname was NOT found in DNS cache
+*   Trying 100.127.111.111...
+* Connected to harvest.soracom.io (100.127.111.111) port 80 (#0)
+> POST / HTTP/1.1
+> User-Agent: curl/7.38.0
+> Host: harvest.soracom.io
+> Accept: */*
+> content-type:application/json
+> Content-Length: 88
+>
+* upload completely sent off: 88 out of 88 bytes
+< HTTP/1.1 201 Created
+< Date: Tue, 25 Jul 2017 12:50:33 GMT
+* Server nginx/1.6.2 is not blacklisted
+< Server: nginx/1.6.2
+< Content-Length: 0
+< Connection: Close
+<
+* Closing connection 0
+```
+
+先ほどの Harvest の画面で、上部の更新ボタンを押してみましょう。追加のデータが表示されると思います。  
+データを送りながら結果を確認する際には、左側の自動更新ボタンも便利ですので、ぜひ活用してみて下さい。
+
+![](images/chapter-4/harvest_test3.png)
+
+NEXT >> [Chapter 5: Google Cloud Platformのアカウント作成とセットアップ](chapter-5.md)

@@ -7,3 +7,5 @@ SORACOM を初めてお使いになる方は、下記のページを参考にア
 - [Air SIM の登録](https://dev.soracom.io/jp/start/console/#registsim)
 
 > 同一ページ内へのリンクとなります
+
+NEXT >> [Chapter 2: Raspberry Pi をセットアップする](chapter-2.md)
