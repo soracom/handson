@@ -291,6 +291,11 @@ CPU Temperature: 51.54 (c)
 
 ![](images/chapter-4/harvest_test3.png)
 
+## まとめ
+これで Raspberry Pi に接続したセンサーから読み取ったデータをクラウドへ送信する準備が整いました。
+
+以上で、本章は完了となります。
+
 NEXT >> [Chapter 5: Google Cloud Platformのアカウント作成とセットアップ](chapter-5.md)
 
 ----
