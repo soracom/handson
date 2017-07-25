@@ -1,11 +1,11 @@
 # Chapter 4: 温度センサーを使ったセンシング
 
 ## 温度センサー DS18B20+
-Raspberry Pi には、GPIO 端子という外部のセンサーや機器などを繋ぐ端子がありますが、Arduino 等とうは違い A/D 変換回路がないため、センサー値を電圧で読み取るようなアナログセンサーをそのまま接続する事はできません。
+Raspberry Pi には、GPIO 端子という外部のセンサーや機器などを繋ぐ端子がありますが、Arduino 等とは違い A/D 変換回路がないため、センサー値をアナログ値(電圧)で読み取るようなアナログセンサーをそのまま接続する事はできません。
 
 そこで、本ハンズオンでは、デジタル温度センサーのマキシム・インテグレーテッド・プロダクツ社の、DS18B20+ を使用します。
 
-- [データシート](https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf)
+- [参考:データシート](https://datasheets.maximintegrated.com/en/ds/DS18B20.pdf)
 
 このセンサーは、1-Wire というバスで通信を行うセンサーで、Raspbian では カーネルモジュールでの対応があるため、簡単に扱う事ができます。
 
@@ -292,3 +292,83 @@ CPU Temperature: 51.54 (c)
 ![](images/chapter-4/harvest_test3.png)
 
 NEXT >> [Chapter 5: Google Cloud Platformのアカウント作成とセットアップ](chapter-5.md)
+
+----
+## Appendix
+
+### スクリプト解説
+スクリプトは、Bashのシェルスクリプトとなっているので、比較的理解しやすいと思います。
+
+- 引数なしで実行した場合には、温度センサーとCPU温度のセンサーを読み取ります。
+- 第一引数に harvest もしくは funnel (Chapter-5 で利用します)を指定した場合には、データ送信を行います。
+- 第二引数に 秒数を指定すると、その秒数のインターバルを置いてデータを連続で送信します。
+
+```
+#!/bin/bash
+# set timezone as JST
+export TZ=JST-9
+
+# check air & cpu temperature
+check_temp(){
+  if [ -f /sys/bus/w1/devices/28-*/w1_slave ]
+  then
+    temp=$(
+      tail -1 /sys/bus/w1/devices/28-*/w1_slave | \
+      tr = \  | \
+      awk '{print $11/1000}'
+    )
+    echo "Air Temperature: $temp (c)"
+  else
+    cat <<EOF
+ERROR: Could not find temperature sensor DS18B20+
+       Please check /boot/config.txt and /etc/modules, and reboot.
+-- /boot/config.txt (at bottom)
+dtoverlay=w1-gpio-pullup,gpiopin=4
+
+-- /etc/modules (at bottom)
+w1-gpio
+w1-therm
+EOF
+  exit 1
+  fi
+
+  if [ -f /sys/class/thermal/thermal_zone0/temp ]
+  then
+    cpu_temp=$(cat /sys/class/thermal/thermal_zone0/temp | awk '{print $1/1000}')
+    echo "CPU Temperature: $cpu_temp (c)"
+  fi
+}
+
+# send temperature data to soracom services (harvest, funnel)
+send_temp(){
+  cat << EOF | curl -v -d @- -H content-type:application/json http://$target.soracom.io
+{
+  "datetime": "$(date +"%Y-%m-%d %H:%M:%S")",
+  "cpu_temperature": $cpu_temp,
+  "temperature": $temp
+}
+EOF
+}
+
+# target could be harvest or funnel
+target=$1
+
+# seconds to wait between sending data
+interval=$2
+
+# main loop
+while [ 1 ]
+do
+  check_temp
+  if [ "$target" != "" ]
+  then
+    send_temp $target
+  fi
+  if [ "$interval" = "" ]
+  then
+    exit 0
+  else
+    sleep $interval
+  fi
+done
+```
