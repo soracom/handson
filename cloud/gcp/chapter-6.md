@@ -124,3 +124,5 @@ $ gcloud beta pubsub topics list-subscriptions soracom_handson
 
 ## Raspberry Piからデータを流し込んでみましょう
 ここまでで、Raspberry Pi側からデータを受け取るために必要なセットアップは完了しました。実際にRaspberry PiからデータをCloud Pub/Subにpublishし、そのデータがBigQueryに蓄えれられているかを確認してみましょう。
+
+### NEXT >> [Chapter 7: センサーデータの可視化と分析](chapter-7.md)

@@ -226,3 +226,4 @@ Datalabの説明は改めてChapter-7で行うため、紹介としてはここ�
 ```
 $ datalab delete --delete-disk datalab-test
 ```
+### NEXT >> [Chapter 6: センシングデータ収集用の環境のセットアップ](chapter-6.md)
