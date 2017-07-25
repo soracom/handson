@@ -25,7 +25,9 @@ SIM カードを切り欠きにあわせてアダプタにはめると、この�
 以下の要領で、SIM カードをモデムに入れ、Raspberry Pi に接続します。
 
 ### FUJISOFT FS01BU の場合
-TODO 画像作成
+![](images/chapter-3/FS01BU-in.png)
+
+![](images/chapter-3/FS01BU-out.jpg)
 
 ### Abit AK-020 の場合
 ![](images/chapter-3/AK-020.png)
@@ -41,7 +43,7 @@ sudo mv connect_air.sh /usr/local/sbin
 sudo /usr/local/sbin/connect_air.sh
 ```
 
-### 実行結果
+### 実行結果(AK-020の場合)
 ```
 pi@raspberrypi:~ $ curl -O https://soracom-files.s3.amazonaws.com/connect_air.sh
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
