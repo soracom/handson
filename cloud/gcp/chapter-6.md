@@ -203,4 +203,18 @@ CPU Temperature: 51.002 (c)
 * Connection #0 to host funnel.soracom.io left intact
 ```
 
+### センサーデータの確認
+Google Pub/Sub にデータが正しく飛んでいるかどうか、確認してみましょう。
+
+#### Cloud Shell で実行
+```
+# テスト用の subscription 作成
+$ gcloud beta pubsub subscriptions create --topic soracom_handson test_subscription
+
+# データの受信
+$ gcloud beta pubsub subscriptions pull --auto-ack test_subscription
+```
+
+無事にデータが届いていたら、本章は完了です。
+
 ### NEXT >> [Chapter 7: センサーデータの可視化と分析](chapter-7.md)
