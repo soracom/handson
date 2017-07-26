@@ -6,6 +6,8 @@
 
 本ハンズオンでは、シングルボードコンピュータ Raspberry Pi に温度センサーを接続し、得られたセンサーデータを SORACOM を通じて GCP に送信し、可視化・分析を行います。
 
+![](images/chapter-6/handson_env.png)
+
 全体の流れは以下のようになっています。
 
 - [Chapter 1: SORACOM アカウント作成](chapter-1.md)
@@ -15,3 +17,7 @@
 - [Chapter 5: Google Cloud Platformのアカウント作成とセットアップ](chapter-5.md)
 - [Chapter 6: センシングデータ収集用の環境のセットアップ](chapter-6.md)
 - [Chapter 7: センサーデータの可視化と分析](chapter-7.md)
+
+早速、１章から始めてみましょう。
+
+### NEXT >> [Chapter 1: SORACOM アカウント作成](chapter-1.md)
