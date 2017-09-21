@@ -759,45 +759,46 @@ IFTTT(https://ifttt.com/) とは、IF-This-Then-That の略で、もし「これ
 様々なサービスや機器と連携していて、何度かクリックするだけで簡単な仕組みを作る事が出来ます。
 今回のハンズオンでは、HTTPSのリクエストをトリガーとして、アクションとして Twitter につぶやくために、IFTTTTを使います。
 
-#### <a name = "section7-1">2.	IFTTTの設定
+#### <a name = "section7-1">2.	IFTTT の設定
 まずアカウントをお持ちでない方は、IFTTT のサイト https://ifttt.com/ で、Sign Up してください。
 
-![](image/7-1.png)
+![](image/iffft_wh00.png)
 
- 
+#### <a name = "section7-3">3.	IFFFT アプレットの作成
+次にサービス同士の組み合わせ(Applet = アプレットと呼ばれます)を作成します。
+https://ifttt.com/my_applets にアクセスして、右上の New Applet をクリックします。
 
-#### <a name = "section7-3">3.	レシピの作成
-次にサービス同士の組み合わせ(Recipe=レシピと呼ばれます)を作成します。
-https://ifttt.com/myrecipes/personal にアクセスして、Create a Recipe をクリックします。
+表示された文字列から this をクリックし、表示された検索ボックスで webhooks 検索します。次に表示された Webhooks のパネルを選択してください。
 
-This をクリックし、テキストボックスに maker と入れると、下記のような画面となるので、Maker を選び、サービスに接続します。![](image/7-2.png)
+![](image/iffft_wh02.png)
 
-![](image/7-3.png)
-
-
-トリガーとして Receve a web request を選びます。
-![](image/7-4.png)
+トリガーとして Receive a web request が書いてあるパネルを選択します。
+![](image/iffft_wh03.png)
 
 
- Event Name を設定します(ここでは、sensor とします)
+Event Name を設定します(ここでは sensor とします)
 
 これでトリガーの設定は完了です。次にアクションとして、Twitter の設定を行います。
-That をクリックし、テキストボックスに twitter と入れ、Twitter チャンネルを選び、Connect を押します。
-Twitter の認証画面になるので、ご自身のアカウントでログインして認証を完了してください。
 
-アクションは左上の、Post a tweet を選んでください。![](image/7-5.png)
+that をクリックし、表示された検索ボックスで Twitter を検索します。次に表示された Twitter のパネルを選択してください。
+IFFFT で初めて Twitter と連携する場合は、認証画面に遷移するのでご自身のアカウントでログインして認証を完了する必要があります。
 
+アクションは左上の、Post a tweet を選んでください。 ![](image/iffft_wh07.png)
 
-Twitter の Tweet text には、例えば下記のような文言を入れてみてください。![](image/7-6.png)
+Twitter の Tweet text には、例えば下記のような文言を入れてみてください。グレーの ``Value1`` などの文字は ``Add ingredient`` をクリックすることにより選択して入力することも可能です。
+![](image/iffft_wh08.png)
 
 
 センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracomhandson
 
 
- 
+最後に Webhooks のページ https://ifttt.com/maker_webhooks を開いて、右上の Documentation をクリックしたあとに表示される画面で key を確認します(後ほど使います)
 
-最後に Maker channel のページ https://ifttt.com/maker を開いて、key を確認します(後ほど使います)
-![](image/7-7.png)
+![](image/iffft_wh10.png)
+
+![](image/iffft_wh11.png)
+
+
 
 #### <a name = "section7-4">4.	SORACOM Beam の設定
 
