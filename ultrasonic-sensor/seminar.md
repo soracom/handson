@@ -664,66 +664,67 @@ IFTTT(https://ifttt.com/) とは、IF-This-Then-That の略で、もし「これ
 ### <a name="7-2">IFTTTの設定</a>
 まずアカウントをお持ちでない方は、IFTTT のサイト https://ifttt.com/ で、Sign Up してください。
 
-![](image/ifttt-1.png)
+![](image/iffft_wh00.png)
 
 ### <a name="7-3">アプレットの作成</a>
 次にサービス同士の組み合わせ(Applet=アプレットと呼ばれます)を作成します。
 
-左上のメニューから、 My Applets をクリックするか、 https://ifttt.com/my_applets にアクセスします。
+Sign up 後の上部のメニューから My Applets を選択し、New Applet ボタンをクリックするか、 https://ifttt.com/create にアクセスすると Applet の新規作成画面が表示されます。
 
-![](image/ifttt-2.png)
+![](image/iffft_wh01.png)
 
-![](image/ifttt-3.png)
+表示された文字列から this をクリックし、表示された検索ボックスで webhooks 検索します。次に表示された Webhooks のパネルを選択してください。
 
-This をクリックし、テキストボックスに maker と入れると、下記のような画面となるので、Maker を選び、Connect を押してサービスに接続します。
+![](image/iffft_wh02.png)
 
-![](image/ifttt-4.png)
+IFFFT のアカウント内で初めて Webhook を利用する場合は Connect ボタンが表示されるのでクリックします。
 
-![](image/ifttt-5.png)
+![](image/iffft_wh03.png)
 
-トリガーとして Receve a web request を選びます。
+トリガーとして Receve a web request が書かれたパネルを選択します。
 
-![](image/ifttt-6.png)
+![](image/iffft_wh04.png)
 
  Event Name を設定します(ここでは、sensor とします)
 
- ![](image/ifttt-7.png)
+ ![](image/iffft_wh05.png)
 
 これでトリガーの設定は完了です。次にアクションとして、Twitter の設定を行います。
-That をクリックし、テキストボックスに twitter と入れ、Twitter チャンネルを選び、Connect を押します。
+that をクリックし、テキストボックスに twitter と入れ、Twitter チャンネルを選び、Connect を押します。
 
-![](image/ifttt-8.png)
+![](image/iffft_wh06.png)
 
-![](image/ifttt-9.png)
+![](image/iffft_wh07.png)
 
-![](image/ifttt-10.png)
+IFFFT のアカウント内で初めて Twitter 連携を利用する場合は Connect ボタンが表示されるのでクリックします。
+
+![](image/iffft_wh08.png)
 
 Twitter の認証画面になるので、ご自身のアカウントでログインして認証を完了してください。
 
-![](image/ifttt-11.png)
+![](image/iffft_wh09.png)
 
-アクションは左上の、Post a tweet を選んでください。
+アクションは左上の、Post a tweet と書いてあるパネルを選択してください。
 
-![](image/ifttt-12.png)
+![](image/iffft_wh10.png)
 
+Twitter の Tweet text には、例えば下記のような文言を入れてみてください。グレーの ``Value1`` などの文字は Add ingredient ボタンをクリックすることにより選択して入力することも可能です。
 
-Twitter の Tweet text には、例えば下記のような文言を入れてみてください
-
-![](image/ifttt-13.png)
+![](image/iffft_wh11.png)
 
 > センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracomhandson
 
 Finish をおして、アプレットの作成が完了します。
 
-![](image/ifttt-14.png)
+![](image/iffft_wh12.png)
 
-最後に Maker channel のページ https://ifttt.com/maker を開いて、右側の Settings を開きます。
+最後に Webhooks のページ https://ifttt.com/maker_webhooks を開いて、右上の Documentation ボタンをクリックします。
 
-![](image/ifttt-15.png)
+![](image/iffft_wh13.png)
 
 URL の中の key を確認します(後ほど使いますので、どこかにメモしておいてください)
 
-![](image/ifttt-16.png)
+![](image/iffft_wh14.png)
 
 ### <a name="7-4">SORACOM Beam の設定</a>
 
@@ -739,8 +740,8 @@ IFTTTへのデータ転送を設定します。IFTTTへのデータ転送は[HTT
 - 転送先ホスト名：maker.ifttt.com
 - 転送先パス： /trigger/sensor/with/key/{maker_key}
 
-> {maker_key} は、Maker Channelをコネクトすると発行される文字列です。以下のページから確認できます。
->	https://ifttt.com/maker
+> {maker_key} は、Webhooks にコネクトすると発行される文字列です。以下のページから確認できます。
+> https://ifttt.com/maker_webhooks
 
 ![](image/7-9.png)
 
