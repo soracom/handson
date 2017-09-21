@@ -783,20 +783,18 @@ Event Name を設定します(ここでは sensor とします)
 that をクリックし、表示された検索ボックスで Twitter を検索します。次に表示された Twitter のパネルを選択してください。
 IFFFT で初めて Twitter と連携する場合は、認証画面に遷移するのでご自身のアカウントでログインして認証を完了する必要があります。
 
-アクションは左上の、Post a tweet を選んでください。 ![](image/iffft_wh07.png)
+アクションは左上の、Post a tweet を選んでください。 ![](image/iffft_wh10.png)
 
 Twitter の Tweet text には、例えば下記のような文言を入れてみてください。グレーの ``Value1`` などの文字は ``Add ingredient`` をクリックすることにより選択して入力することも可能です。
-![](image/iffft_wh08.png)
+![](image/iffft_wh11.png)
 
-
-センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracomhandson
-
+> センサーの状態が "{{Value1}}" に変化しました(前回からの経過時間:{{Value2}}秒) 時刻:{{OccurredAt}} #soracomhandson
 
 最後に Webhooks のページ https://ifttt.com/maker_webhooks を開いて、右上の Documentation をクリックしたあとに表示される画面で key を確認します(後ほど使います)
 
-![](image/iffft_wh10.png)
+![](image/iffft_wh13.png)
 
-![](image/iffft_wh11.png)
+![](image/iffft_wh14.png)
 
 
 
