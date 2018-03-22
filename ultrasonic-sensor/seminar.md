@@ -237,12 +237,15 @@ wvdial is not installed! installing wvdial...
   :
 ok.
 
---- 2. Generate config files
+--- 2. Patching /lib/systemd/system/ifup@.service
+ok.
+
+--- 3. Generate config files
 Adding network interface 'wwan0'.
 Adding udev rules for modem detection.
 ok.
 
---- 3. Connect
+--- 4. Connect
 Found un-initilized modem. Trying to initialize it ...
 Now you are all set.
 
