@@ -283,7 +283,6 @@ ppp0      Link encap:Point-to-Point Protocol
 次に、インターネットへの疎通が出来るかどうかを確認しましょう。
 
 Google Public DNS (8.8.8.8) への到達性を ping コマンドで調べます。
-また、ifconfig.io というサイトにアクセスして、インターネットへ接続する際の IP アドレスを調べます。
 
 #### コマンド
 
@@ -292,8 +291,6 @@ Google Public DNS (8.8.8.8) への到達性を ping コマンドで調べます�
 ```
 ping 8.8.8.8
 (Ctrl+C で止める)
-curl ifconfig.io
-host $(curl -s ifconfig.io)
 ```
 
 #### 実行結果
@@ -308,13 +305,9 @@ PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
 --- 8.8.8.8 ping statistics ---
 4 packets transmitted, 4 received, 0% packet loss, time 3002ms
 rtt min/avg/max/mdev = 340.908/347.329/361.814/8.434 ms
-pi@raspberrypi:~ $ curl ifconfig.io
-xxx.xxx.xxx.xxx
-pi@raspberrypi:~ $ host $(curl -s ifconfig.io)
-xxx.xxx.xxx.xxx.in-addr.arpa domain name pointer ec2-xxx-xxx-xxx-xxx.ap-northeast-1.compute.amazonaws.com.
 ```
 
-SORACOM プラットフォームは AWS(Amazon Web Services)クラウド 上で稼働しているため、外部サイトから見ると AWS からのアクセスに見えることが確認出来ました。
+ping コマンドの応答からインターネットへの疎通が取れていることが確認できました。
 
 ## <a name="4-0">4章 ユーザーコンソールによる通信の確認</a>
 インターネットに接続できましたので、ユーザーコンソールからデータ通信量、利用料金を確認して、監視機能を設定しましょう。

@@ -268,7 +268,7 @@ Windowsの場合は、[TeraTerm](https://osdn.jp/projects/ttssh2/)を使用す�
 ## <a name="section3">3章 Air SIMを使って、インターネットに接続する
 ここでは、先ほど登録したSORACOM AirのSIM (以降、Air SIM)を使用して、Raspberry Piからインターネットに接続します。
 
-### <a name = "section3−１">1.	Raspberry Pi に USBドングルを接続する
+### <a name = "section3−1">1.	Raspberry Pi に USBドングルを接続する
 
 ![](image/3-1.jpg)
 
@@ -406,21 +406,6 @@ CONNECT 14400000
 ```
 
 上記のように表示されると接続完了です。
-
-AWS を経由してインターネット接続できていることを確認します。
-別のターミナルを立ち上げ、以下のコマンドを実行します。
-
-```
-pi@raspberrypi ~ $ curl ifconfig.io
-54.65.XXX.XXX  (IPアドレスが表示されます)
-pi@raspberrypi ~ $ host 54.65.xxx.xxx
-xxx.xxx.65.54.in-addr.arpa domain name pointer ec2-54-65-xx-xxx.ap-northeast-1.compute.amazonaws.com.
-```
-
-CurlコマンドによるIPアドレスとhostコマンドにより、EC2からインターネットに接続されていることがわかりました。
-
-
- 
 
 ## <a name = "section4"> 4章 ユーザーコンソールによる通信の確認
 インターネットに接続できましたので、ユーザーコンソールからデータ通信量、利用料金を確認して、監視機能を設定しましょう。
