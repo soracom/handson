@@ -406,21 +406,6 @@ CONNECT 14400000
 
 上記のように表示されると接続完了です。
 
-AWS を経由してインターネット接続できていることを確認します。
-別のターミナルを立ち上げ、以下のコマンドを実行します。
-
-```
-pi@raspberrypi ~ $ curl ifconfig.io
-54.65.XXX.XXX  (IPアドレスが表示されます)
-pi@raspberrypi ~ $ host 54.65.xxx.xxx
-xxx.xxx.65.54.in-addr.arpa domain name pointer ec2-54-65-xx-xxx.ap-northeast-1.compute.amazonaws.com.
-```
-
-CurlコマンドによるIPアドレスとhostコマンドにより、EC2からインターネットに接続されていることがわかりました。
-
-
- 
-
 ## <a name = "section4"> 4章 ユーザーコンソールによる通信の確認
 インターネットに接続できましたので、ユーザーコンソールからデータ通信量、利用料金を確認して、監視機能を設定しましょう。
 
