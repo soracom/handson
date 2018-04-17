@@ -363,18 +363,6 @@ CONNECT 14400000
 
 > ハンズオンでは、SORACOM Air による 3G 接続を行っていることが前提となります。データアップロードなどを行うときは、必ず connect_air.sh を実行しながらプログラムを実行してください。
 
-AWS を経由してインターネット接続できていることを確認します。
-別のターミナルを立ち上げ、以下のコマンドを実行します。
-
-```
-pi@raspberrypi ~ $ curl ifconfig.io
-54.65.XXX.XXX  (IPアドレスが表示されます)
-pi@raspberrypi ~ $ host 54.65.xxx.xxx
-xxx.xxx.65.54.in-addr.arpa domain name pointer ec2-54-65-xx-xxx.ap-northeast-1.compute.amazonaws.com.
-```
-
-CurlコマンドによるIPアドレスとhostコマンドにより、EC2からインターネットに接続されていることがわかりました。
-
 ### <a name="air-5">connect_air.shの自動起動をセットアップする</a>
 このハンズオンでは、Air SIMを使って定期的にセンサーや写真をクラウドにアップロードを行います。
 
