@@ -277,6 +277,7 @@ Air SIMを取り外します。Air SIMの端子を触らないように気をつ
 ![](image/3-2.jpg)
 ![](image/3-3.jpg)
 
+#### FS01BUの場合
 
 ![](image/3-4.jpg)
 ![](image/3-5.jpg)
@@ -285,6 +286,9 @@ Air SIMを取り外します。Air SIMの端子を触らないように気をつ
 #### Air SIMをドングルから取り出す際の注意
 
 ![](image/3-6.jpg)
+
+#### AK-020の場合
+![](image/AK-020.PNG)
 
 
 ### <a name = "section3−2">2.	必要なパッケージのインストール
