@@ -6,7 +6,6 @@
 - [はじめに](#section1)
 - [概要](#section2)
 - [必要なもの](#section3)
-  - [connect_air.shの自動起動をセットアップする](#section3-1)
 
 - [温度センサー DS18B20+ を使う](#section4)
   - [セットアップ](#section4-1)
@@ -57,23 +56,6 @@
   プルアップ抵抗
 5. ジャンパワイヤ(オス-メス) x 3 (黒・赤・その他の色の３本を推奨)
 6. USB接続のWebカメラ(Raspbianで認識出来るもの)
-
-### <a name="section3-1">connect_air.shの自動起動をセットアップする</a>
-このハンズオンでは、Air SIMを使って定期的にセンサーや写真をクラウドにアップロードを行います。
-
-アップロードのたびにconnect_air.shを実行する手間を省くために、Raspberry Pi が起動したタイミングで自動的に 3G 接続を行うようセットアップします。
-
-nano で /etc/rc.local ファイルを開きます。
-
-```
-pi@raspberrypi:~ $ nano /etc/rc.local
-```
-
-ファイルの中にあるexit 0 の前の行に、```/usr/local/sbin/connect_air.sh & ```と書き込み、[Ctrl+W]で保存します。
-
-保存できたら[Ctrl+X]でnanoを閉じて、設定完了です。
-
-**この設定を行うことでRaspberry Pi が起動すると自動的にAir SIMでネットワーク接続が行われるようになります。データのアップロードには通信料金が発生しますのでご注意ください。**
 
 ##  <a name="section4">温度センサー DS18B20+ を使う</a>
 ### <a name="section4-1">セットアップ</a>
@@ -718,7 +700,7 @@ video:669kB audio:0kB other streams:0kB global headers:0kB muxing overhead: 0.79
 -- 4. cleanup...
 ```
 
-上記の例で出力されたファイルは、 https://raspberrypi.local/timelapse.mp4 でアクセスする事が出来ます。
+上記の例で出力されたファイルは、 http://raspberrypi.local/timelapse.mp4 でアクセスする事が出来ます。
 
 [サンプル動画](http://soracom-files.s3.amazonaws.com/timelapse.mp4)
 
