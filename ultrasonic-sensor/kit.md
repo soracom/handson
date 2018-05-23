@@ -16,9 +16,8 @@
 
 #### [3章 Air SIMを使って、インターネットに接続する](#section3)
 [Raspberry Pi に USBドングルを接続する](#section3-1)<br>
-[必要なパッケージのインストール](#section3-2)<br>
-[接続スクリプトのダウンロード](#section3-3)<br>
-[接続確認する](#section3-4)<br>
+[接続スクリプトのダウンロード](#section3-2)<br>
+[接続確認する](#section3-3)<br>
 
 #### [4章 ユーザーコンソールによる通信の確認](#section4)
 [データ通信量と利用料金の確認](#section4-1)<br>
@@ -290,27 +289,9 @@ Air SIMを取り外します。Air SIMの端子を触らないように気をつ
 #### AK-020の場合
 ![](image/AK-020.PNG)
 
+###  <a name = "section3−2">2. 接続スクリプトのダウンロード
 
-### <a name = "section3−2">2.	必要なパッケージのインストール
 > ここから先の作業は、Raspberry Pi にログインした状態でコマンドを実行してください
-
-USBドングルを使用するために、以下のパッケージをインストールし、RaspberryPiをセットアップします。
--	usb-modeswitch (Raspbian のバージョンによっては、デフォルトでインストールされている事もあります)
--	wvdial
-
-###### コマンド
-
-```
-sudo apt-get install -y usb-modeswitch wvdial
-```
-
-> パッケージのインストール中、  
->  Sorry.  You can retry the autodetection at any time by running "wvdialconf".  
->     (Or you can create /etc/wvdial.conf yourself.)  
-> と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
-
-
-###  <a name = "section3−3">3.	接続スクリプトのダウンロード
 
 以下に、モデムの初期化、APNの設定、ダイアルアップなどを行うスクリプトが用意されています。
 
@@ -360,7 +341,7 @@ Tips:
 
 **このスクリプトをインストールするとRaspberry Pi が起動すると自動的にAir SIMでネットワーク接続が行われるようになります。データの送受信には通信料金が発生しますのでご注意ください。**
 
-### <a name="section3-4">接続確認する</a>
+### <a name="section3-3">接続確認する</a>
 
 接続が出来ている時は、ppp0インターフェースが存在しているはずなので、以下のコマンドで接続状況を確認出来ます。
 
