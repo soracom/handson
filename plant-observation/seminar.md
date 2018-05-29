@@ -21,10 +21,8 @@
 
 - [Air SIMを使って、インターネットに接続する](#air)
   - [Raspberry Pi に USBドングルを接続する](#air-1)
-  - [必要なパッケージのインストール](#air-2)
-  - [接続スクリプトのダウンロード](#air-3)
-  - [Air SIM を使って、インターネットに接続する](#air-4)
-  - [connect_air.shの自動起動の設定](#air-4)
+  - [接続スクリプトのダウンロード](#air-2)
+  - [接続確認する](#air-3)
 
 - [ユーザーコンソールによる通信の確認](#console)
   - [データ通信量と利用料金の確認](#console-1)
@@ -239,148 +237,110 @@ Air SIMを取り外します。Air SIMの端子を触らないように気をつ
 ![](image/setup/3-6.jpg)
 
 
-### <a name = "air-2"> 2.	必要なパッケージのインストール</a>
+###  <a name = "air-2"> 2. 接続スクリプトのダウンロード</a>
+
 > ここから先の作業は、Raspberry Pi にログインした状態でコマンドを実行してください
 
-USBドングルを使用するために、以下のパッケージをインストールし、RaspberryPiをセットアップします。
--	usb-modeswitch
--	wvdial
-
-###### usb-modeswitchとwvdialのインストールコマンド
-
-```
-pi@raspberrypi:~ $ sudo apt-get update
-
-pi@raspberrypi:~ $ sudo apt-get install -y usb-modeswitch wvdial
-```
-
-```
- 	パッケージのインストール中、
-  Sorry.  You can retry the autodetection at any time by running "wvdialconf".
-     (Or you can create /etc/wvdial.conf yourself.)
-と表示されますが、設定ファイル /etc/wvdial.conf は後ほど実行するスクリプトが自動生成しますので、問題ありません。
-```
-
-###  <a name = "air-3"> 3.	接続スクリプトのダウンロード</a>
-
 以下に、モデムの初期化、APNの設定、ダイアルアップなどを行うスクリプトが用意されています。
-http://soracom-files.s3.amazonaws.com/connect_air.sh
+
+https://soracom-files.s3.amazonaws.com/setup_air.sh
 
 以下のコマンドを実行し、このスクリプトをダウンロードし、接続用シェルスクリプトを作成します。
 
+#### コマンド
 ```
-pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/connect_air.sh
+curl -O https://soracom-files.s3.amazonaws.com/setup_air.sh
+sudo bash setup_air.sh
+```
+
+#### 実行結果
+```
+pi@raspberrypi:~ $ curl -O https://soracom-files.s3.amazonaws.com/setup_air.sh
+
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100  1420  100  1420    0     0   2416      0 --:--:-- --:--:-- --:--:--  2414
-pi@raspberrypi ~ $ chmod +x connect_air.sh
-pi@raspberrypi ~ $ sudo mv connect_air.sh /usr/local/sbin/
+100  4040  100  4040    0     0  17211      0 --:--:-- --:--:-- --:--:-- 17264
+pi@raspberrypi:~ $ sudo bash setup_air.sh
+--- 1. Check required packages
+wvdial is not installed! installing wvdial...
+  :
+  :
+ok.
 
+--- 2. Patching /lib/systemd/system/ifup@.service
+ok.
+
+--- 3. Generate config files
+Adding network interface 'wwan0'.
+Adding udev rules for modem detection.
+ok.
+
+--- 4. Connect
+Found un-initilized modem. Trying to initialize it ...
+Now you are all set.
+
+Tips:
+ - When you plug your usb-modem, it will automatically connect.
+ - If you want to disconnect manually or connect again, you can use 'sudo ifdown wwan0' / 'sudo ifup wwan0' commands.
+ - Or you can just execute 'sudo wvdial'.
 ```
 
-### <a name = "air-4"> 4.	Air SIM を使って、インターネットに接続する</a>
+これで、自動的に 3G モデムが初期化され、Raspberry Pi が SORACOM 経由でインターネットに接続します。 また、再起動時やモデムを接続した際にも、自動的に接続されるようになっています。
 
-接続の準備ができましたので、接続スクリプトを実行します。接続スクリプトは root 権限で実行する必要があるため、sudoで実行します。
+**このスクリプトをインストールするとRaspberry Pi が起動すると自動的にAir SIMでネットワーク接続が行われるようになります。データの送受信には通信料金が発生しますのでご注意ください。**
 
+### <a name="air-3">3. 接続確認する</a>
+
+接続が出来ている時は、ppp0インターフェースが存在しているはずなので、以下のコマンドで接続状況を確認出来ます。
+
+#### コマンド
 ```
-pi@raspberrypi:~ $ sudo /usr/local/sbin/connect_air.sh
-Bus 001 Device 004: ID 1c9e:98ff OMEGA TECHNOLOGY
-Look for target devices ...
- No devices in target mode or class found
-Look for default devices ...
-   product ID matched
- Found devices in default mode (1)
-Access device 004 on bus 001
-Current configuration number is 1
-Use interface number 0
-Use endpoints 0x01 (out) and 0x81 (in)
+ifconfig ppp0
 ```
 
+#### 実行結果
 ```
-USB description data (for identification)
-
--------------------------
-Manufacturer: USB Modem
-
-Product: USB Modem
-
- Serial No.: 1234567890ABCDEF
-
--------------------------
-Looking for active driver ...
- OK, driver detached
-Set up interface 0
-Use endpoint 0x01 for message sending ...
-Trying to send message 1 to endpoint 0x01 ...
- OK, message successfully sent
-Reset response endpoint 0x81
-Reset message endpoint 0x01
--> Run lsusb to note any changes. Bye!
-
-insmod /lib/modules/4.1.19-v7+/kernel/drivers/usb/serial/usb_wwan.ko
-insmod /lib/modules/4.1.19-v7+/kernel/drivers/usb/serial/option.ko
-waiting for modem device
-.--> WvDial: Internet dialer version 1.61
---> Cannot get information for serial port.
---> Initializing modem.
---> Sending: ATZ
-ATZ
-OK
---> Sending: ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
-ATQ0 V1 E1 S0=0 &C1 &D2 +FCLASS=0
-OK
---> Sending: AT+CGDCONT=1,"IP","soracom.io"
-AT+CGDCONT=1,"IP","soracom.io"
-OK
---> Modem initialized.
---> Sending: ATD*99***1#
-
---> Waiting for carrier.
-ATD*99***1#
-CONNECT 14400000
---> Carrier detected.  Starting PPP immediately.
---> Starting pppd at Tue Apr 26 04:42:50 2016
---> Pid of pppd: 2395
---> Using interface ppp0
---> pppd: ���v�r[01]�r[01]
---> pppd: ���v�r[01]�r[01]
---> pppd: ���v�r[01]�r[01]
---> pppd: ���v�r[01]�r[01]
---> pppd: ���v�r[01]�r[01]
---> pppd: ���v�r[01]�r[01]
---> local  IP address 10.xxx.xxx.xxx
---> pppd: ���v�r[01]�r[01]
---> remote IP address 10.64.64.64
---> pppd: ���v�r[01]�r[01]
---> primary   DNS address 100.127.0.53
---> pppd: ���v�r[01]�r[01]
---> secondary DNS address 100.127.1.53
---> pppd: ���v�r[01]�r[01]
-
+pi@raspberrypi:~ $ ifconfig ppp0
+ppp0      Link encap:Point-to-Point Protocol
+          inet addr:10.xxx.xxx.xxx  P-t-P:10.64.64.64  Mask:255.255.255.255
+          UP POINTOPOINT RUNNING NOARP MULTICAST  MTU:1500  Metric:1
+          RX packets:133 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:134 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:3
+          RX bytes:2092 (2.0 KiB)  TX bytes:4039 (3.9 KiB)
 ```
 
-上記のように表示されると接続完了です。
+"inet addr" の後ろに表示されているのが、デバイスに割り当てられた IP アドレスとなります。
 
-> ハンズオンでは、SORACOM Air による 3G 接続を行っていることが前提となります。データアップロードなどを行うときは、必ず connect_air.sh を実行しながらプログラムを実行してください。
+次に、インターネットへの疎通が出来るかどうかを確認しましょう。
 
-### <a name="air-5">connect_air.shの自動起動をセットアップする</a>
-このハンズオンでは、Air SIMを使って定期的にセンサーや写真をクラウドにアップロードを行います。
+Google Public DNS (8.8.8.8) への到達性を ping コマンドで調べます。
 
-アップロードのたびにconnect_air.shを実行する手間を省くために、Raspberry Pi が起動したタイミングで自動的に 3G 接続を行うようセットアップします。
+#### コマンド
 
-**この設定を行うことでRaspberry Pi が起動すると自動的にAir SIMでネットワーク接続が行われるようになります。データのアップロードには通信料金が発生しますのでご注意ください。**
-
-nano で /etc/rc.local ファイルを開きます。
+※下記コマンドは、一行ずつ実行してください
 
 ```
-pi@raspberrypi:~ $ sudo nano /etc/rc.local
+ping 8.8.8.8
+(Ctrl+C で止める)
 ```
 
-ファイルの中にあるexit 0 の前の行に、```/usr/local/sbin/connect_air.sh & ```と書き込み、[Ctrl+O]を押し、続いて [Enter] を押して保存します。
+#### 実行結果
+```
+pi@raspberrypi:~ $ ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=55 time=343 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=55 time=342 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=55 time=361 ms
+64 bytes from 8.8.8.8: icmp_seq=4 ttl=55 time=340 ms
+^C
+--- 8.8.8.8 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3002ms
+rtt min/avg/max/mdev = 340.908/347.329/361.814/8.434 ms
+```
 
-保存できたら[Ctrl+X]でnanoを閉じて、設定完了です。
+ping コマンドの応答からインターネットへの疎通が取れていることが確認できました。
 
-![](image/nano.gif)
 
 ## <a name = "console"> ユーザーコンソールによる通信の確認</a>
 インターネットに接続できましたので、ユーザーコンソールからデータ通信量、利用料金を確認して、監視機能を設定しましょう。
