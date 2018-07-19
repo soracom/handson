@@ -157,7 +157,7 @@ sending payload={"temperature":25.437}  ... done.
 ##### トラブルシュート
 以下のようなエラーメッセージが出た場合には、設定を確認して下さい
 - `{"message":"No group ID is specified: xxxxxxxxxxxxxxx"}` → SIM にグループが設定されていない
-- `{"message":"Configuration for SORACOM Harvest is not found"}`  → グループで Harvest を有効にしていない
+- `{"message":"Configuration for SORACOM Harvest is not found"}`  → グループで Harvest を有効にしていない
 
 ### <a name="section4-3">ユーザコンソールで可視化されたデータを確認する</a>
 コンソールから、送信されたデータを確認してみましょう。
