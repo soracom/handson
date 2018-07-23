@@ -27,21 +27,16 @@
   - [超音波センサーの動作原理](#5-1)
   - [配線](#5-2)
   - [センサーをテストしてみる](#5-3)
-- [6章 クラウドにデータを送る](#6-0)
-  - [SORACOM Beamとは](#6-1)
-  - [SORACOM Beamの設定](#6-2)
+- [6章 SORACOM Harvest で可視化してみる](#6-0)
+  - [SORCOM Harvest とは、](#6-1)
+  - [SORACOM Harvest を有効にする](#6-2)
   - [プログラムのダウンロード・実行](#6-3)
-  - [クラウド上でデータを確認する](#6-4)
 - [7章 Twitterと連携してみる](#7-0)
   - [IFTTT とは](#7-1)
   - [IFTTTの設定](#7-2)
   - [アプレットの作成](#7-3)
   - [SORACOM Beam の設定](#7-4)
   - [プログラムのダウンロード・実行](#7-5)
-- [8章 SORACOM Harvest で可視化してみる](#8-0)
-  - [SORCOM Harvest とは、](#8-1)
-  - [SORACOM Harvest を有効にする](#8-2)
-  - [プログラムのダウンロード・実行](#8-3)
 - [おわりに](#9-0)
 
 ----
@@ -453,159 +448,76 @@ pi@raspberrypi ~ $ python sensor_test.py
 #### トラブルシュート
 何も画面に出力されない場合は、接続するピンを間違えている可能性が高いですので、もう一度ケーブルを接続する位置を確かめましょう。
 
-## <a name="6-0">6章 クラウドにデータを送る</a>
+## <a name="6-0">6章 SORACOM Harvest で可視化してみる</a>
+SORACOM のサービス、Harvest を体験してみましょう。
 
-![](image/6-1.png)
+### <a name="6-1">SORCOM Harvest とは、</a>
+SORACOM Harvest(以下、Harvest) は、IoTデバイスからのデータを収集、蓄積するサービスです。
 
-センサーで障害物を検知した時に、SORACOM Beam を使ってクラウドへデータを送ってみましょう。
+SORACOM Air が提供するモバイル通信を使って、センサーデータや位置情報等を、モバイル通信を介して容易に手間なくクラウド上の「SORACOM」プラットフォームに蓄積することができます。
+保存されたデータには受信時刻や SIM の ID が自動的に付与され、「SORACOM」のユーザーコンソール内で、グラフ化して閲覧したり、API を通じて取得することができます。なお、アップロードされたデータは、40日間保存されます。
 
-今回のハンズオンではAWSのElasticsearch Service(以下、ES)へデータを送って、可視化を行います。このハンズオンでは簡略化のため、すでにハンズオン用に事前にセットアップされたESのエンドポイントを用いてハンズオンを行います。
+![](https://soracom.jp/img/fig_harvest.png)
 
+> 注意: SORACOM Harvest を使うには追加の費用がかかります  
+> 書き込みリクエスト: 1日 2000リクエストまで、1SIMあたり 1日5円  
+> 1日で2000回を超えると、1リクエスト当り0.004円  
 
-### <a name="6-1">SORACOM Beamとは</a>
+### <a name="6-2">SORACOM Harvest を有効にする</a>
+SORACOM Harvest を使うには、Group の設定で、Harvest を有効にする必要があります。
 
-SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理や接続先の設定を、クラウドにオフロードできるサービスです。Beam を利用することによって、暗号化処理が難しいデバイスに代わって、デバイスからサーバー間の通信を暗号化することが可能になります。
-プロトコル変換を行うこともできます。例えば、デバイスからはシンプルなTCP、UDPで送信し、BeamでHTTP/HTTPSに変換してクラウドや任意のサーバーに転送することができます。
+グループ設定を開き、SORACOM Harvest を開いて、ON にして、保存を押します。
 
-現在、以下のプロトコル変換に対応しています。
-
-![](image/6-2.png)
-
-
-また、上記のプロトコル変換に加え、Webサイト全体を Beam で転送することもできます。(Webサイトエントリポイント) 全てのパスに対して HTTP で受けた通信を、HTTP または HTTPS で転送を行う設定です。
-
-### <a name="6-2">SORACOM Beamの設定</a>
-当ハンズオンでは、以下の2つのBeamを使用します。
-
-●	ESへのデータ転送設定 (Webエンドポイント)<br>
-●	IFTTTへのデータ転送設定 (HTTP → HTTPSへの変換)
-
-ここでは、ESへのデータ転送設定 (Webエンドポイント)を設定します。
-BeamはAir SIMのグループに対して設定するので、まず、グループを作成します。
-
-
-#### グループの作成
-
-コンソールのメニューから[グループ]から、[追加]をクリックします。
-
-![](image/6-3.png)
-
-
-グループ名を入力して、[グループ作成]をクリックしてください。
-
-![](image/6-4.png)
-
-
-次に、SIMをこのグループに紐付けします。
-
-![](image/6-5.png)
-
-#### SIMのグループ割り当て
-![](image/6-6.png)
-
-SIM管理画面から、SIMを選択して、操作→所属グループ変更を押します
-
-つづいて、Beamの設定を行います。
-
-#### ESへのデータ転送設定
-先ほど作成したグループを選択し、[SORACOM Beam 設定] のタブを選択します。
-
-![](image/6-7.png)
-
-
-ESへのデータ転送は[Webエントリポイント]を使用します。[SORACOM Beam 設定] から[Webサイトエントリポイント]をクリックします。
-
-![](image/6-8.png)
-
-表示された画面で以下のように設定してください。
-
--	設定名：ES(別の名前でも構いません)
--	転送先のプロトコル：HTTPS
--	ホスト名： search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
-
-![](image/6-9.png)
-
->	ホスト名は下記からコピーペーストしてください
-> search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
-
-[保存]をクリックします。
-
-以上でBeamの設定は完了です。
-
-#### メタデータサービスの設定
-次にメタデータサービスを設定してください。
-メタデータサービスとは、SORACOM Beamではなく、SORACOM Airのサービスとなります。
-デバイス自身が使用している Air SIM の情報を HTTP 経由で取得、更新することができます。
-
-当ハンズオンでは、メタデータサービスを使用して、ESにデータを送信する際にSIMのID(IMSI)を付与して送信します。
-
-先ほど作成したグループを選択し、[SORACOM Air 設定] のタブを選択します。
-
-![](image/6-10.png)
-
-
-[メタデータサービス設定]を[ON]にして、[保存]をクリックします。
+![](image/8-1.png)
 
 ### <a name="6-3">プログラムのダウンロード・実行</a>
 
-クラウドへの送信をおこないます。
-以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
-
-Beamを使用する(「send_to_cloud.py」の実行時)には、SORACOM Airで通信している必要があります。
-
 #### コマンド
 ```
-sudo apt-get install -y python-pip  
-sudo pip install elasticsearch
-curl -O http://soracom-files.s3.amazonaws.com/send_to_cloud.py
-python send_to_cloud.py
+sudo apt-get install -y python-pip
+sudo pip install request
+curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
+python send_to_harvest.py
 ```
 
 #### 実行結果
 ```
-pi@raspberrypi:~ $ sudo apt-get install -y python-pip  
-:
-pi@raspberrypi ~ $ sudo pip install elasticsearch
-:
-pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/send_to_cloud.py
+pi@raspberrypi:~ $ sudo apt-get install -y python-pip
+ :
+pi@raspberrypi:~ $ sudo pip install request
+ :
+pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100  3153  100  3153    0     0  43279      0 --:--:-- --:--:-- --:--:-- 43791
-pi@raspberrypi ~ $ python send_to_cloud.py
-- メタデータサービスにアクセスして IMSI を確認中 ... 440103125380131
-- 条件設定
-障害物を 10 cm 以内に 3 回検知したらクラウドにデータを送信します
-センサーを手で遮ったり、何か物を置いてみたりしてみましょう
-- 準備完了
-距離(cm): 6.5 <= 10 , 回数: 1 / 3
-距離(cm): 5.6 <= 10 , 回数: 2 / 3
-距離(cm): 4.9 <= 10 , 回数: 3 / 3
-- ステータスが 'in'(何か物体がある) に変化しました
-- Beam 経由でデータを送信します
+100  2443  100  2443    0     0   3966      0 --:--:-- --:--:-- --:--:--  3972
+pi@raspberrypi:~ $ python send_to_harvest.py
+- 距離を計測します
+距離: 15.1 cm
+- データを送信します
+<Response [201]>
 
-{u'_type': u'event', u'_id': u'AVRRGrS4IfRhQRmTbOsN', u'created': True, u'_version': 1, u'_index': u'sensor'}
-
-距離(cm): 55.3 > 10 , 回数: 1 / 3<br>
-距離(cm): 55.3 > 10 , 回数: 2 / 3<br>
-距離(cm): 55.2 > 10 , 回数: 3 / 3<br>
-
-- ステータスが 'out'(何も物体がない) に変化しました
-
-- Beam 経由でデータを送信します
-{u'_type': u'event', u'_id': u'AVRRGsWEIfRhQRmTbOsO', u'created': True, u'_version': 1, u'_index': u'sensor'}
+- 距離を計測します
+距離: 4.4 cm
+- データを送信します
+<Response [201]>
 ```
->  正常にデータが送信されたらレスポンス内の created が True  になります
 
-### <a name="6-4">クラウド上でデータを確認する</a>
-Elasticsearch Service 上にインストールされている Kibana にアクセスします。
+> 正常にデータが送信されたらレスポンスコードが 201 になります
 
-https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com/_plugin/kibana/
+#### データの確認
+コンソールから、送信されたデータを確認してみましょう。
 
-![](image/6-11.png)
+SIMを選択して、操作から「データを確認」を選びます。
 
-全ての SIM カードからの情報が集まっていますので、自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi:[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
+![](image/8-2.png)
 
-最短で5秒毎に更新する事が出来ますので、リアルタイムにデータが受信されるのを確認してみましょう。
+グラフが表示されていると思います。
+
+![](image/8-3.png)
+
+スクリプトのデフォルト設定では５秒に一度データが送信されるので、自動更新のボタンをオンにすると、グラフも自動的に更新されます。
+
+とても簡単に可視化が出来たのがおわかりいただけたと思います。
 
 ## <a name="7-0">7章 Twitterと連携してみる</a>
 
@@ -756,71 +668,6 @@ status changed to 'out' : {"value3": "", "value2": "9", "value1": "out"}
 ハッシュタグで検索してみましょう
 
 https://twitter.com/search?f=tweets&q=%23soracomhandson&src=typd
-
-## <a name="8-0">8章 SORACOM Harvest で可視化してみる</a>
-SORACOM の最新サービス、Harvest を体験してみましょう。
-
-### <a name="8-1">SORCOM Harvest とは、</a>
-SORACOM Harvest(以下、Harvest) は、IoTデバイスからのデータを収集、蓄積するサービスです。
-
-SORACOM Air が提供するモバイル通信を使って、センサーデータや位置情報等を、モバイル通信を介して容易に手間なくクラウド上の「SORACOM」プラットフォームに蓄積することができます。
-保存されたデータには受信時刻や SIM の ID が自動的に付与され、「SORACOM」のユーザーコンソール内で、グラフ化して閲覧したり、API を通じて取得することができます。なお、アップロードされたデータは、40日間保存されます。
-
-![](https://soracom.jp/img/fig_harvest.png)
-
-> 注意: SORACOM Harvest を使うには追加の費用がかかります  
-> 書き込みリクエスト: 1日 2000リクエストまで、1SIMあたり 1日5円  
-> 1日で2000回を超えると、1リクエスト当り0.004円  
-
-### <a name="8-2">SORACOM Harvest を有効にする</a>
-SORACOM Harvest を使うには、Group の設定で、Harvest を有効にする必要があります。
-
-グループ設定を開き、SORACOM Harvest を開いて、ON にして、保存を押します。
-
-![](image/8-1.png)
-
-### <a name="8-3">プログラムのダウンロード・実行</a>
-
-#### コマンド
-```
-curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
-python send_to_harvest.py
-```
-
-#### 実行結果
-```
-pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  2443  100  2443    0     0   3966      0 --:--:-- --:--:-- --:--:--  3972
-pi@raspberrypi:~ $ python send_to_harvest.py
-- 距離を計測します
-距離: 15.1 cm
-- データを送信します
-<Response [201]>
-
-- 距離を計測します
-距離: 4.4 cm
-- データを送信します
-<Response [201]>
-```
-
-> 正常にデータが送信されたらレスポンスコードが 201 になります
-
-#### データの確認
-コンソールから、送信されたデータを確認してみましょう。
-
-SIMを選択して、操作から「データを確認」を選びます。
-
-![](image/8-2.png)
-
-グラフが表示されていると思います。
-
-![](image/8-3.png)
-
-スクリプトのデフォルト設定では５秒に一度データが送信されるので、自動更新のボタンをオンにすると、グラフも自動的に更新されます。
-
-とても簡単に可視化が出来たのがおわかりいただけたと思います。
 
 ## <a name="9-0">おわりに</a>
 
