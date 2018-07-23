@@ -29,18 +29,13 @@
 [超音波センサーの動作原理](#section5-1)<br>
 [配線](#section5-2)<br>
 [センサーをテストしてみる](#section5-3)<br>
-[トラブルシュート](#section5-4)
-<br>
+[トラブルシュート](#section5-4)<br>
 
-#### [6章 クラウドにデータを送る](#section6)
-[SORACOM Beamとは](#section6-1)<br>
-[SORACOM Beamの設定](#section6-2)<br>
-[グループの作成](#section6-3)<br>
-[SIMのグループ割り当て](#section6-4)<br>
-[ESへのデータ転送設定](#section6-5)<br>
-[メタデータサービスの設定](#section6-6)<br>
-[プログラムのダウンロード・実行](#section6-7)<br>
-[クラウド上でデータを確認する](#section6-8)<br>
+#### [6章 クラウドにデータを送る](#6-0)
+[SORACOM Harvest とは](#6-1)<br>
+[SORACOM Harvest を有効にする](#6-2)<br>
+[プログラムのダウンロード・実行](#6-3)<br>
+[データの確認](#6-4)<br>
 
 #### [7章 Twitterと連携してみる](#section7)
 [IFTTT とは](#section7-1)<br>
@@ -480,15 +475,10 @@ pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
 
 ここまでで、1〜4章までが完了しました。
 
-●	1章 ユーザーコンソールを使用してAir SIMを管理する<br>
-●	2章 Raspberry Piのセットアップ<br>
-●	3章 Air SIMを使って、インターネットに接続する<br>
-●	4章 ユーザーコンソールによる通信の確認<br>
-
-
-
-
- 
+- 1章 ユーザーコンソールを使用してAir SIMを管理する<br>
+- 2章 Raspberry Piのセットアップ<br>
+- 3章 Air SIMを使って、インターネットに接続する<br>
+- 4章 ユーザーコンソールによる通信の確認<br>
 
 ## <a name = "section5">5章 超音波センサーを使って距離を計測する
 
@@ -496,8 +486,8 @@ pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/1MB
 超音波の反射時間を利用して非接触で測距するモジュールです。外部からトリガパルスを入力すると超音波パルス（８波）が送信され、出力された反射時間信号をマイコンで計算することによって距離を測ることができます。
 ![](image/5-1.png)
 
- -具体的にはセンサーの Trig ピンにパルス(短い時間)電圧をかけて測定を開始<br>
- -EchoピンがHIGHである時間の長さを計測
+- 具体的にはセンサーの Trig ピンにパルス(短い時間)電圧をかけて測定を開始
+- EchoピンがHIGHである時間の長さを計測
 
 #### <a name = "section5-2">2.	配線
 
@@ -557,168 +547,83 @@ distance: 2.3 cm  ← センサーの前に手をかざして変化を確認し�
 もう一度ケーブルを接続する位置を確かめましょう
 
 
- 
+## <a name="6-0">6章 SORACOM Harvest で可視化してみる</a>
+SORACOM のサービス、Harvest を体験してみましょう。
 
-## <a name = "section6">6章 クラウドにデータを送る
+### <a name="6-1">SORCOM Harvest とは、</a>
+SORACOM Harvest(以下、Harvest) は、IoTデバイスからのデータを収集、蓄積するサービスです。
 
-![](image/6-1.png)
-センサーで障害物を検知した時に、SORACOM Beam を使ってクラウドへデータを送ってみましょう。
-今回のハンズオンではAWSのElasticsearch Service(以下、ES)へデータを送って、可視化を行います。このハンズオンでは簡略化のため、すでにハンズオン用に事前にセットアップされたESのエンドポイントを用いてハンズオンを行います。
+SORACOM Air が提供するモバイル通信を使って、センサーデータや位置情報等を、モバイル通信を介して容易に手間なくクラウド上の「SORACOM」プラットフォームに蓄積することができます。
+保存されたデータには受信時刻や SIM の ID が自動的に付与され、「SORACOM」のユーザーコンソール内で、グラフ化して閲覧したり、API を通じて取得することができます。なお、アップロードされたデータは、40日間保存されます。
 
+![](https://soracom.jp/img/fig_harvest.png)
 
-#### <a name = "section6-1">1.	SORACOM Beamとは
+> 注意: SORACOM Harvest を使うには追加の費用がかかります  
+> 書き込みリクエスト: 1日 2000リクエストまで、1SIMあたり 1日5円  
+> 1日で2000回を超えると、1リクエスト当り0.004円  
 
-SORACOM Beam とは、IoTデバイスにかかる暗号化等の高負荷処理や接続先の設定を、クラウドにオフロードできるサービスです。Beam を利用することによって、暗号化処理が難しいデバイスに代わって、デバイスからサーバー間の通信を暗号化することが可能になります。
-プロトコル変換を行うこともできます。例えば、デバイスからはシンプルなTCP、UDPで送信し、BeamでHTTP/HTTPSに変換してクラウドや任意のサーバーに転送することができます。
+### <a name="6-2">SORACOM Harvest を有効にする</a>
+SORACOM Harvest を使うには、Group の設定で、Harvest を有効にする必要があります。
 
-現在、以下のプロトコル変換に対応しています。
-![](image/6-2.png)
+グループ設定を開き、SORACOM Harvest を開いて、ON にして、保存を押します。
 
+![](image/8-1.png)
 
-また、上記のプロトコル変換に加え、Webサイト全体を Beam で転送することもできます。(Webサイトエントリポイント) 全てのパスに対して HTTP で受けた通信を、HTTP または HTTPS で転送を行う設定です。
+### <a name="6-3">プログラムのダウンロード・実行</a>
 
-#### <a name = "section6-2">2.	SORACOM Beamの設定
-当ハンズオンでは、以下の2つのBeamを使用します。
-
-●	ESへのデータ転送設定 (Webエンドポイント)<br>
-●	IFTTTへのデータ転送設定 (HTTP → HTTPSへの変換)
-
-ここでは、ESへのデータ転送設定 (Webエンドポイント)を設定します。
-BeamはAir SIMのグループに対して設定するので、まず、グループを作成します。
-
-
-###### <a name = "section6-3">グループの作成
-
-コンソールのメニューから[グループ]から、[追加]をクリックします。
-![](image/6-3.png)
-
-
-グループ名を入力して、[グループ作成]をクリックしてください。
-![](image/6-4.png)
-
-
-次に、SIMをこのグループに紐付けします。
-![](image/6-5.png)
-
-###### <a name = "section6-4">SIMのグループ割り当て
-![](image/6-6.png)
-
-SIM管理画面から、SIMを選択して、操作→所属グループ変更を押します
-
-
-
-
-
-つづいて、Beamの設定を行います。
-
-###### <a name = "section6-5">ESへのデータ転送設定
-先ほど作成したグループを選択し、[SORACOM Beam 設定] のタブを選択します。
-
-![](image/6-7.png)
-
-
-ESへのデータ転送は[Webエントリポイント]を使用します。[SORACOM Beam 設定] から[Webサイトエントリポイント]をクリックします。
-![](image/6-8.png)
-
-表示された画面で以下のように設定してください。
-
+#### コマンド
 ```
-●	設定名：ES(別の名前でも構いません)
-●	転送先のプロトコル：HTTPS
-●	ホスト名： search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com
+sudo apt-get install -y python-pip
+sudo pip install request
+curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
+python send_to_harvest.py
 ```
 
-
-![](image/6-9.png)
-
-
-
-[保存]をクリックします。
-
-以上でBeamの設定は完了です。
-
-
-###### <a name = "section6-6">メタデータサービスの設定
-次にメタデータサービスを設定してください。
-メタデータサービスとは、SORACOM Beamではなく、SORACOM Airのサービスとなります。
-デバイス自身が使用している Air SIM の情報を HTTP 経由で取得、更新することができます。
-
-当ハンズオンでは、メタデータサービスを使用して、ESにデータを送信する際にSIMのID(IMSI)を付与して送信します。
-
-先ほど作成したグループを選択し、[SORACOM Air 設定] のタブを選択します。
-
-![](image/6-10.png)
-
-
-[メタデータサービス設定]を[ON]にして、[保存]をクリックします。
-
-
-
-#### <a name = "section6-7">3.	プログラムのダウンロード・実行
-
-クラウドへの送信をおこないます。
-以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
-
-Beamを使用する(「send_to_cloud.py」の実行時)には、SORACOM Airで通信している必要があります。
-
+#### 実行結果
 ```
 pi@raspberrypi:~ $ sudo apt-get install -y python-pip  
 :
 pi@raspberrypi ~ $ sudo pip install elasticsearch
 :
-pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/send_to_cloud.py
---2016-03-24 02:40:12--  http://soracom-files.s3.amazonaws.com/send_to_cloud.py
-soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com) をDNSに問いあわせています... 54.231.224.18
-soracom-files.s3.amazonaws.com (soracom-files.s3.amazonaws.com)|54.231.224.18|:80 に接続しています... 接続しました。
-HTTP による接続要求を送信しました、応答を待っています... 200 OK
-長さ: 2678 (2.6K) [text/plain]
-`send_to_cloud.py' に保存中
+pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  2443  100  2443    0     0   3966      0 --:--:-- --:--:-- --:--:--  3972
+pi@raspberrypi:~ $ python send_to_harvest.py
+- 距離を計測します
+距離: 15.1 cm
+- データを送信します
+<Response [201]>
 
-100%[===================================================>] 2,678       --.-K/s 時間 0s
-
-2016-03-24 02:40:12 (47.1 MB/s) - `send_to_cloud.py' へ保存完了 [2678/2678]
-
-
-pi@raspberrypi ~ $ python send_to_cloud.py
-- メタデータサービスにアクセスして IMSI を確認中 ... 440103125380131
-- 条件設定
-障害物を 10 cm 以内に 3 回検知したらクラウドにデータを送信します
-センサーを手で遮ったり、何か物を置いてみたりしてみましょう
-- 準備完了
-距離(cm): 6.5 <= 10 , 回数: 1 / 3
-距離(cm): 5.6 <= 10 , 回数: 2 / 3
-距離(cm): 4.9 <= 10 , 回数: 3 / 3
-- ステータスが 'in'(何か物体がある) に変化しました
-- Beam 経由でデータを送信します
-
-{u'_type': u'event', u'_id': u'AVRRGrS4IfRhQRmTbOsN', u'created': True, u'_version': 1, u'_index': u'sensor'} ← 正常にデータが送信されたら created: True  になります
-
-
-距離(cm): 55.3 > 10 , 回数: 1 / 3<br>
-距離(cm): 55.3 > 10 , 回数: 2 / 3<br>
-距離(cm): 55.2 > 10 , 回数: 3 / 3<br>
-
-- ステータスが 'out'(何も物体がない) に変化しました
-
-- Beam 経由でデータを送信します
-{u'_type': u'event', u'_id': u'AVRRGsWEIfRhQRmTbOsO', u'created': True, u'_version': 1, u'_index': u'sensor'} ← 正常にデータが送信されたら created: True  になります
+- 距離を計測します
+距離: 4.4 cm
+- データを送信します
+<Response [201]>
 ```
 
- 
+> 正常にデータが送信されたらレスポンスコードが 201 になります
 
-#### <a name = "section6-8">4.	クラウド上でデータを確認する
-Elasticsearch Service 上にインストールされている Kibana にアクセスします。
+#### トラブルシュート
 
-https://search-handson-z3uroa6oh3aky2j3juhpot5evq.ap-northeast-1.es.amazonaws.com/_plugin/kibana/
+以下のようなエラーメッセージが出た場合には、設定を確認して下さい
 
-![](image/6-11.png)
+* `{"message":"No group ID is specified: xxxxxxxxxxxxxxx"}` → SIM にグループが設定されていない
+* `{"message":"Configuration for SORACOM Harvest is not found"}` → グループで Harvest を有効にしていない
 
-全ての SIM カードからの情報が集まっていますので、自分の SIM だけの情報を見たい場合には、検索ウィンドウに imsi=[自分のSIMカードのIMSI]  と入れてフィルタ出来ます。
+### <a name="6-4">データの確認</a>
+コンソールから、送信されたデータを確認してみましょう。
 
-最短で5秒毎に更新する事が出来ますので、リアルタイムにデータが受信されるのを確認してみましょう。
+SIMを選択して、操作から「データを確認」を選びます。
 
+![](image/8-2.png)
 
- 
+グラフが表示されていると思います。
+
+![](image/8-3.png)
+
+スクリプトのデフォルト設定では５秒に一度データが送信されるので、自動更新のボタンをオンにすると、グラフも自動的に更新されます。
+
+とても簡単に可視化が出来たのがおわかりいただけたと思います。
 
 ## <a name = "section7">7章 Twitterと連携してみる
 
@@ -730,7 +635,7 @@ IFTTT(https://ifttt.com/) とは、IF-This-Then-That の略で、もし「これ
 様々なサービスや機器と連携していて、何度かクリックするだけで簡単な仕組みを作る事が出来ます。
 今回のハンズオンでは、HTTPSのリクエストをトリガーとして、アクションとして Twitter につぶやくために、IFTTTTを使います。
 
-#### <a name = "section7-1">2.	IFTTT の設定
+#### <a name = "section7-2">2.	IFTTT の設定
 まずアカウントをお持ちでない方は、IFTTT のサイト https://ifttt.com/ で、Sign Up してください。
 
 ![](image/iffft_wh00.png)
@@ -769,22 +674,19 @@ Twitter の Tweet text には、例えば下記のような文言を入れてみ
 
 
 
-#### <a name = "section7-4">4.	SORACOM Beam の設定
+#### <a name = "section7-4">4.	SORACOM Beam の設定</a>
 
 IFTTTへのデータ転送を設定します。IFTTTへのデータ転送は[HTTPエントリポイント]を使用します。[SORACOM Beam 設定] から[HTTPエントリポイント]をクリックします。
 ![](image/7-8.png)
 
-
-
 表示された画面で以下のように設定してください。
 
-●	設定名：IFTTT(別の名前でも構いません)
-●	エントリポイントパス： /
-●	転送先プロトコル：HTTPS
-●	転送先ホスト名：maker.ifttt.com
-●	転送先パス： /trigger/sensor/with/key/{maker_key}
-○	{maker_key} は、Maker Channelをコネクトすると発行される文字列です。以下のページから確認できます。
-○	https://ifttt.com/maker
+- 設定名： `IFTTT` (別の名前でも構いません)
+- エントリポイントパス： `/`
+- 転送先プロトコル： *HTTPS*
+- 転送先ホスト名： `maker.ifttt.com`
+- 転送先パス： `/trigger/sensor/with/key/{maker_key}/`
+  - {maker_key} は、Maker Channelをコネクトすると発行される文字列です。 https://ifttt.com/maker から確認できます。 
 
 ![](image/7-9.png)
 
@@ -797,16 +699,12 @@ IFTTTへのデータ転送を設定します。IFTTTへのデータ転送は[HTT
 これにより、認証情報が盗まれるリスクを回避できます。また、変更になった場合もたくさんのデバイスに手を入れることなく、変更を適用することができます。
 ```
 
-
-
-
-
 #### <a name = "section7-5">5.	プログラムのダウンロード・実行
 
 IFTTTへの送信をおこないます。
 以下のコマンドを実行し、プログラムをダウンロード・実行し、Beamを経由して正しくデータが送信できるか確認しましょう。
 
-ESの場合と同様に、Beamを使用する(「send_to_ifttt.py」の実行時)には、SORACOM Airで通信している必要があります。
+SORACOM Harvest の場合と同様に、Beamを使用する(「send_to_ifttt.py」の実行時)には、SORACOM Airで通信している必要があります。
 
 ```
 pi@raspberrypi ~ $ wget http://soracom-files.s3.amazonaws.com/send_to_ifttt.py
