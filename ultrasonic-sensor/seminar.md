@@ -474,12 +474,18 @@ SORACOM Harvest を使うには、Group の設定で、Harvest を有効にす�
 
 #### コマンド
 ```
+sudo apt-get install -y python-pip
+sudo pip install request
 curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
 python send_to_harvest.py
 ```
 
 #### 実行結果
 ```
+pi@raspberrypi:~ $ sudo apt-get install -y python-pip
+ :
+pi@raspberrypi:~ $ sudo pip install request
+ :
 pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
