@@ -474,6 +474,7 @@ SORACOM Harvest を使うには、Group の設定で、Harvest を有効にす�
 
 #### コマンド
 ```
+sudo apt-get update
 sudo apt-get install -y python-pip
 sudo pip install request
 curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
