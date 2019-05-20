@@ -573,17 +573,14 @@ SORACOM Harvest を使うには、Group の設定で、Harvest を有効にす�
 
 #### コマンド
 ```
-sudo apt-get install -y python-pip
-sudo pip install request
+sudo apt-get install -y python-pip libssl-dev
 curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
 python send_to_harvest.py
 ```
 
 #### 実行結果
 ```
-pi@raspberrypi:~ $ sudo apt-get install -y python-pip  
-:
-pi@raspberrypi ~ $ sudo pip install elasticsearch
+pi@raspberrypi:~ $ sudo apt-get install -y python-pip libssl-dev
 :
 pi@raspberrypi:~ $ curl -O http://soracom-files.s3.amazonaws.com/send_to_harvest.py
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
