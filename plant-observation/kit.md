@@ -416,8 +416,11 @@ SORACOM 側の設定は以上になります。
 次に Raspberry Pi の設定を行います。
 
 #### PyJWT のインストール
-Python で Endorse で使われている JWT(JSON Web Token) を扱うためのライブラリ、PyJWTをインストールします。
+Python で Endorse で使われている JWT(JSON Web Token) を扱うためのライブラリ、PyJWTをインストールします。もし Python 3 を利用している場合は pip3 をインストールしてください。
 ```
+pi@raspberrypi:~ $ python --version
+Python 2.7.16
+pi@raspberrypi:~ $ sudo apt install python-pip(結果省略)
 pi@raspberrypi:~ $ sudo pip install pyjwt
 Downloading/unpacking pyjwt
   Downloading PyJWT-1.4.1-py2.py3-none-any.whl
